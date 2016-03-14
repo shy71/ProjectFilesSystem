@@ -38,6 +38,14 @@
     <ClInclude Include="Sector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClCompile Include="Disk.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="dirEntry.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
     <ClInclude Include="Disk.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -52,5 +60,8 @@
     <ResourceCompile Include="FMS5776_7897_4726.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
+    <ClInclude Include="dirEntry.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
