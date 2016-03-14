@@ -65,8 +65,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Disk.cpp" />
+    <ClCompile Include="DAT.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="dirEntry.cpp" />
+    <ClCompile Include="Sector.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="DAT.h" />
+    <ClInclude Include="Sector.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Disk.h" />
