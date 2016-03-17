@@ -1,11 +1,12 @@
 #include "Disk.h"
 
-
-Disk::Disk()
-{
-}
-
-
-Disk::~Disk()
-{
-}
+//
+//Disk::Disk()
+//{
+//
+//}
+//
+//
+//Disk::~Disk()
+//{
+//}

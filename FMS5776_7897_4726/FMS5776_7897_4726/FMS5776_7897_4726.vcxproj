@@ -69,11 +69,12 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="dirEntry.cpp" />
     <ClCompile Include="Sector.cpp" />
+    <ClCompile Include="TestLevel_0.cpp" />
     <ClCompile Include="VolumeHeader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DAT.h" />
-    <ClInclude Include="resource.h" />
+    <ClInclude Include="Dir.h" />
     <ClInclude Include="Sector.h" />
     <ClInclude Include="VolumeHeader.h" />
   </ItemGroup>

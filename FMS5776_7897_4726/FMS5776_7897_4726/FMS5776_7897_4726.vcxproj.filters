@@ -30,6 +30,9 @@
     <ClCompile Include="VolumeHeader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TestLevel_0.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DAT.h">
@@ -44,12 +47,12 @@
     <ClCompile Include="dirEntry.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClInclude Include="Dir.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Disk.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="VolumeHeader.h">
