@@ -3,8 +3,8 @@
 struct SectorDir
 {
 	int sectorNr;
-	dirEntry DirEntry[14];
-	char unUse[12];
+	dirEntry DirEntry[15];
+	
 };
 struct RootDir
 {

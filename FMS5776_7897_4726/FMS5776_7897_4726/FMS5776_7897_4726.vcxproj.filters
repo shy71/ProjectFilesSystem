@@ -50,6 +50,9 @@
     <ClInclude Include="Dir.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="FileHeader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Disk.h">

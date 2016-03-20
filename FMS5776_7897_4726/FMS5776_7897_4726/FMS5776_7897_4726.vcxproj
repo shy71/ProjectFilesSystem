@@ -75,6 +75,7 @@
   <ItemGroup>
     <ClInclude Include="DAT.h" />
     <ClInclude Include="Dir.h" />
+    <ClInclude Include="FileHeader.h" />
     <ClInclude Include="Sector.h" />
     <ClInclude Include="VolumeHeader.h" />
   </ItemGroup>
