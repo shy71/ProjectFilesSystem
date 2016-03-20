@@ -9,5 +9,9 @@ struct FileHeader
 	dirEntry 	fileDesc;
 	DATtype 	FAT;
 	char 	emptyArea[744];
-
+	FileHeader();
 };
+FileHeader::FileHeader()
+{
+	FAT.reset();
+}

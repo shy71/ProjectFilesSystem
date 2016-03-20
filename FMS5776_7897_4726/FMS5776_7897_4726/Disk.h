@@ -34,3 +34,23 @@ public:
 	void readSector(Sector*);
 
 };
+Disk::Disk()
+{
+	//DAT defulat const
+}
+Disk::~Disk()
+{
+	if (mounted)
+		unmountDisk();
+	dskfl.close();
+}
+void Disk::createDisk(string & filename,string & owner)
+{
+	ifstream file(filename);
+	if (file.good)
+		throw "You cant create a disk with a name that is already taken!";
+	ofstream ofile(filename);//error
+	vhd
+
+
+}

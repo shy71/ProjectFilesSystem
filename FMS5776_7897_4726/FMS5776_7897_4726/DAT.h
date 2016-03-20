@@ -8,5 +8,11 @@ struct DAT
 	unsigned int sectorNr;
 	DATtype Dat;
 	char emptyArea[820];
+	DAT();
 };
+DAT::DAT()
+{
+	Dat.set();
+	sectorNr = 1;
+}
 
