@@ -32,5 +32,4 @@ public:
 	void wirteSector(Sector*);
 	void readSector(int, Sector*);
 	void readSector(Sector*);
-
 };

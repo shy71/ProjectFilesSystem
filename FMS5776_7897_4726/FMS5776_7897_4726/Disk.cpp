@@ -46,3 +46,16 @@ void Disk::mountDisk(string &fname)
 	else
 		throw "The disk couldn't be mounted since it doesn't exist";
 }
+
+void Disk::unmountDisk()
+{
+	Sector vhds, dats, rootDirs;
+	strcpy(vhds.RawData, reinterpret_cast<char*>(&vhd));
+	writeSector(0, &vhds);
+	strcpy(dats.RawData, reinterpret_cast<char*>(&dat));
+	writeSector(0, &dats);
+	strcpy(rootDirs.RawData, reinterpret_cast<char*>(&rootDir));
+	writeSector(0, &rootDirs);
+	dskfl.close();
+	mounted = false;
+}
