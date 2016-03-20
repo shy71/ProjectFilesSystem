@@ -15,4 +15,9 @@ struct dirEntry
 	unsigned int keySize;
 	char keyType[2];
 	unsigned char entryStatus;
+	dirEntry();
 };
+dirEntry::dirEntry()
+{
+	entryStatus = '0';
+}

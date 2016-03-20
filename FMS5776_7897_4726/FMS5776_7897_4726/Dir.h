@@ -14,3 +14,8 @@ struct RootDir
 	RootDir(void);
 	~RootDir(void);
 };
+RootDir::RootDir()
+{
+	lsbSector.sectorNr = 3;
+	msbSector.sectorNr = 4;
+}

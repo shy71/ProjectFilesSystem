@@ -1,10 +1,7 @@
 #include "Disk.h"
 
-//
-//Disk::Disk()
-//{
-//
-//}
+
+
 //
 //
 //Disk::~Disk()
@@ -58,4 +55,33 @@ void Disk::unmountDisk()
 	writeSector(0, &rootDirs);
 	dskfl.close();
 	mounted = false;
+}
+Disk::Disk()
+{
+	//DAT defulat const
+}
+Disk::~Disk()
+{
+	if (mounted)
+		unmountDisk();
+	dskfl.close();
+}
+void Disk::createDisk(string & filename, string & owner)//FIX
+{
+	ifstream file(filename);
+	if (file.good)
+		throw "You can't create a disk with a name that is already taken!";
+	ofstream ofile(filename);//error
+}
+void Disk::recreateDisk(string &diskOwner)
+{
+	if (mounted == false)
+	{
+		//dskfl=(*getdskfl());
+		//where does the address come from???
+	}
+}
+fstream* getdskfl()
+{
+
 }
