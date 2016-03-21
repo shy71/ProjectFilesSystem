@@ -2,11 +2,9 @@
 
 
 
-//
-//
-//Disk::~Disk()
-//{
-//}
+Disk::~Disk()
+{
+}
 
 Disk::Disk(string &fname, string &diskOwner, char action)
 {
@@ -34,11 +32,11 @@ void Disk::mountDisk(string &fname)
 	{
 		mounted = true;
 		seekToSector(0);
-		vhd = *reinterpret_cast<VolumeHeader*>(buffer);
+		vhd = *(VolumeHeader*)(buffer);
 		seekToSector(vhd.addrDAT);
-		dat = *reinterpret_cast<DAT*>(buffer);
+		dat = *(DAT*)(buffer);
 		seekToSector(vhd.addrRootDir);
-		rootDir = *reinterpret_cast<RootDir*>(buffer);
+		rootDir = *(RootDir*)(buffer);
 	}
 	else
 		throw "The disk couldn't be mounted since it doesn't exist";
@@ -113,15 +111,14 @@ void Disk::createDisk(string & name, string & owner)//FIX
 		}
 	}
 	unmountDisk();
-
-
 }
-void Disk::recreateDisk(string &diskOwner)
+void Disk::recreateDisk(string &owner)
 {
 	if (mounted == false)
 	{
-		//dskfl=(*getdskfl());
-		//where does the address come from???
+		strcpy_s(vhd.diskOwner, owner.c_str());
+		writeSector(0, (Sector*)(&vhd));
+		vhd.isFormated = false;
 	}
 }
 fstream* Disk::getdskfl()
