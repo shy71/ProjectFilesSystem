@@ -3,7 +3,12 @@
 using namespace std;
 void main()
 {
-	cout << "s" << endl;
+	char arr[12];
+	arr[0] = NULL;
+	strcpy_s(arr, "shy");
+	cout << arr<<endl;
+	//strcat_s(arr, "shy");
+	cout << arr;
 	TestLevel_0 l;
 	l.test_0();
 	system("pause");

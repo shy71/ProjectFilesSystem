@@ -1,5 +1,5 @@
 #include "Disk.h"
-
+#include<iostream>
 
 Disk::Disk(string &fname, string &diskOwner, char action)
 {
@@ -67,11 +67,11 @@ void Disk::createDisk(string & name, string & owner)//FIX
 	struct tm timeinfo;
 	localtime_s(&timeinfo, &t);
 	vhd.sectorNr = 0;
-	strcpy_s(vhd.diskName, name.c_str());
-	strcpy_s(vhd.diskOwner, owner.c_str());
+	strcat_s(vhd.diskName, name.c_str());
+	strcat_s(vhd.diskOwner, owner.c_str());
 	string temp;
 	temp = timeinfo.tm_mday + "/" + (timeinfo.tm_mon + 1) + '/' + (timeinfo.tm_year + 1900);
-	strcpy_s(vhd.prodDate, temp.c_str());
+	strcat_s(vhd.prodDate, temp.c_str());
 	vhd.ClusQty = 1600;
 	vhd.dataClusQty = 1596;
 	vhd.addrDAT = 1;
@@ -98,6 +98,7 @@ void Disk::createDisk(string & name, string & owner)//FIX
 	Sector sec;
 	for (int i = 0; i < 1600; i++)
 	{
+		cout << i << endl;
 		if (dat.Dat[i] == 1)
 		{
 			sec.sectorNr = i * 2;

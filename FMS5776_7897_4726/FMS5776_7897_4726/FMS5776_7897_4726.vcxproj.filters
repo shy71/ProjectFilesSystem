@@ -39,6 +39,9 @@
     <ClCompile Include="Dir.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Extensions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DAT.h">
