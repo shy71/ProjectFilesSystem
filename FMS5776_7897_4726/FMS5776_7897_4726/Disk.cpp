@@ -47,13 +47,14 @@ void Disk::unmountDisk()
 }
 Disk::Disk()
 {
-	//DAT defulat const
+	mounted = false;
 }
 Disk::~Disk()
 {
 	if (mounted)
 		unmountDisk();
-	dskfl.close();
+	if (dskfl.good())
+		dskfl.close();
 }
 void Disk::createDisk(string & name, string & owner)//FIX
 {
