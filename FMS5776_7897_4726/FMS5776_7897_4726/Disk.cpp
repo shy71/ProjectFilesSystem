@@ -1,11 +1,6 @@
 #include "Disk.h"
 
 
-
-Disk::~Disk()
-{
-}
-
 Disk::Disk(string &fname, string &diskOwner, char action)
 {
     ifstream infile(fname);
