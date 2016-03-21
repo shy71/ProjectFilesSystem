@@ -25,13 +25,10 @@ void Disk::mountDisk(string &fname)
 	dskfl.open(fname, ios::binary | ios::in);
 	if (dskfl.good())
 	{
+		readSector(0, (Sector*)(&vhd));
+		readSector(vhd.addrDAT, (Sector*)(&dat));
+		readSector(vhd.addrRootDir, (Sector*)(&rootDir));
 		mounted = true;
-		seekToSector(0);
-		vhd = *(VolumeHeader*)(buffer);
-		seekToSector(vhd.addrDAT);
-		dat = *(DAT*)(buffer);
-		seekToSector(vhd.addrRootDir);
-		rootDir = *(RootDir*)(buffer);
 	}
 	else
 		throw "The disk couldn't be mounted since it doesn't exist";
@@ -44,6 +41,7 @@ void Disk::unmountDisk()
 	writeSector(vhd.addrDATcpy, (Sector*)(&dat));
 	writeSector(vhd.addrRootDir, (Sector*)(&rootDir));
 	writeSector(vhd.addrRootDirCpy, (Sector*)(&rootDir));
+	writeSector(currDiskSectorNr, (Sector*)(buffer));
 	dskfl.close();
 	mounted = false;
 }
