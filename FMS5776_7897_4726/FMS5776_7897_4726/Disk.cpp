@@ -46,13 +46,11 @@ void Disk::mountDisk(string &fname)
 
 void Disk::unmountDisk()
 {
-	//Sector vhds, dats, rootDirs;
-	//strcpy(vhds.RawData, reinterpret_cast<char*>(&vhd));
-	//writeSector(0, &vhds);
-	//strcpy(dats.RawData, reinterpret_cast<char*>(&dat));
-	//writeSector(0, &dats);
-	//strcpy(rootDirs.RawData, reinterpret_cast<char*>(&rootDir));
-	//writeSector(0, &rootDirs);
+	writeSector(0, (Sector*)(&vhd));
+	writeSector(vhd.addrDAT, (Sector*)(&dat));
+	writeSector(vhd.addrDATcpy, (Sector*)(&dat));
+	writeSector(vhd.addrRootDir, (Sector*)(&rootDir));
+	writeSector(vhd.addrRootDirCpy, (Sector*)(&rootDir));
 	dskfl.close();
 	mounted = false;
 }
@@ -71,7 +69,6 @@ void Disk::createDisk(string & name, string & owner)//FIX
 	ifstream file(name,ios::binary | ios::in);
 	if (file.good())
 		throw "You can't create a disk with a name that is already taken!";
-
 	dskfl.open(name, ios::binary | ios::out);//error
 	//create VHD Data
 	time_t t = time(0);   // get time now
