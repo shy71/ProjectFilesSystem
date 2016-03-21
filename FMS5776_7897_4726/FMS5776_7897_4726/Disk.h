@@ -29,7 +29,7 @@ public:
 	fstream* getdskfl();
 	void seekToSector(unsigned int);
 	void writeSector(unsigned int, Sector*);
-	void wirteSector(Sector*);
-	void readSector(int, Sector*);
+	void writeSector(Sector*);
+	void readSector(unsigned int, Sector*);
 	void readSector(Sector*);
 };
