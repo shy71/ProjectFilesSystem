@@ -69,8 +69,9 @@ void Disk::createDisk(string & name, string & owner)//FIX
 	vhd.sectorNr = 0;
 	strcpy_s(vhd.diskName, name.c_str());
 	strcpy_s(vhd.diskOwner, owner.c_str());
-	char *arr = (char*)timeinfo.tm_mday + '/' + timeinfo.tm_mon + '/' + timeinfo.tm_year;
-	strcpy_s(vhd.prodDate, ((char*)timeinfo.tm_mday + '/' + timeinfo.tm_mon + '/' + timeinfo.tm_year));
+	string temp;
+	temp = timeinfo.tm_mday + "/" + (timeinfo.tm_mon + 1) + '/' + (timeinfo.tm_year + 1900);
+	strcpy_s(vhd.prodDate, temp.c_str());
 	vhd.ClusQty = 1600;
 	vhd.dataClusQty = 1596;
 	vhd.addrDAT = 1;

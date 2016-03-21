@@ -81,7 +81,7 @@ public:
 	{
 		try
 		{
-			string diskName = "disk10";
+			string diskName = "disk1122";
 			string ownerName = "oshri";
 
 			printStructSize();

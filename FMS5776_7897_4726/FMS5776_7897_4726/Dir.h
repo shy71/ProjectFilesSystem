@@ -10,6 +10,6 @@ struct RootDir
 {
 	SectorDir msbSector;
 	SectorDir lsbSector;
-	
+	RootDir();
 	void SetClus(unsigned int);
 };
