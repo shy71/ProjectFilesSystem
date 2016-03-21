@@ -131,21 +131,26 @@ fstream* Disk::getdskfl()
 {
 	return &dskfl;
 }
-void Disk::seekToSector(unsigned int)
+void Disk::seekToSector(unsigned int numofsector)
 {
-
+	dskfl.seekp(numofsector*sizeof(Sector), ios::beg);
+	dskfl.seekg(numofsector*sizeof(Sector), ios::beg);
 }
-void Disk::writeSector(unsigned int, Sector*)
+void Disk::writeSector(unsigned int numofsector, Sector* sec)
 {
-
+	seekToSector(numofsector);
+	writeSector(sec);
 }
-void Disk::wirteSector(Sector*)
+void Disk::writeSector(Sector* sec)
 {
-
+	dskfl.write((char *)sec, sizeof(Sector));
 }
-void Disk::readSector(int, Sector*)
-{}
-void Disk::readSector(Sector*)
-{}
-void Disk::writeBuffer(unsigned int)
-{}
+void Disk::readSector(unsigned int numofsector, Sector* sec)
+{
+	seekToSector(numofsector);
+	readSector(sec);
+}
+void Disk::readSector(Sector* sec)
+{
+	dskfl.read((char *)sec, sizeof(Sector));
+}
