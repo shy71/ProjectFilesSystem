@@ -85,12 +85,16 @@ public:
 			string ownerName = "oshri";
 
 			printStructSize();
-			//test_create(diskName, ownerName);
-			//test_mount(diskName);
+			test_create(diskName, ownerName);
+			test_mount(diskName);
 		}
 		catch (exception ex)
 		{
 			cout << ex.what() << endl;
+		}
+		catch (string s)
+		{
+			cout << s << endl;
 		}
 	}
 };

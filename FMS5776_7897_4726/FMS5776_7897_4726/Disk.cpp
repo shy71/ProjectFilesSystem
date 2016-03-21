@@ -60,7 +60,7 @@ void Disk::createDisk(string & name, string & owner)//FIX
 {
 	ifstream file(name,ios::binary | ios::in);
 	if (file.good())
-		throw "You can't create a disk with a name that is already taken!";
+		throw new exception("You can't create a disk with a name that is already taken!");
 	dskfl.open(name, ios::binary | ios::out);//error
 	//create VHD Data
 	time_t t = time(0);   // get time now
