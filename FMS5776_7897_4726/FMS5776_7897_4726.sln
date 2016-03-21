@@ -7,12 +7,18 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FMS5776_7897_4726", "FMS577
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|ARM = Debug|ARM
 		Debug|Win32 = Debug|Win32
+		Release|ARM = Release|ARM
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{16BBAA6E-7A37-4ED8-9176-89B87205C025}.Debug|Win32.ActiveCfg = Debug|Win32
-		{16BBAA6E-7A37-4ED8-9176-89B87205C025}.Debug|Win32.Build.0 = Debug|Win32
+		{16BBAA6E-7A37-4ED8-9176-89B87205C025}.Debug|ARM.ActiveCfg = Debug|ARM
+		{16BBAA6E-7A37-4ED8-9176-89B87205C025}.Debug|ARM.Build.0 = Debug|ARM
+		{16BBAA6E-7A37-4ED8-9176-89B87205C025}.Debug|Win32.ActiveCfg = Release|Win32
+		{16BBAA6E-7A37-4ED8-9176-89B87205C025}.Debug|Win32.Build.0 = Release|Win32
+		{16BBAA6E-7A37-4ED8-9176-89B87205C025}.Release|ARM.ActiveCfg = Release|Win32
+		{16BBAA6E-7A37-4ED8-9176-89B87205C025}.Release|ARM.Build.0 = Release|Win32
 		{16BBAA6E-7A37-4ED8-9176-89B87205C025}.Release|Win32.ActiveCfg = Release|Win32
 		{16BBAA6E-7A37-4ED8-9176-89B87205C025}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection

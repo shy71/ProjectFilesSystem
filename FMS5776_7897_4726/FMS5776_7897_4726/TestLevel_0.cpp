@@ -40,16 +40,16 @@ class TestLevel_0
 
 	}
 
-	/*static void test_create(string diskName, string ownerName)
+	static void test_create(string diskName, string ownerName)
 	{
 		Disk d;
 		cout << "\npre createdisk: " << endl;
 		printDiskInfo(d);
 		cout << "post createdisk: " << endl;
-		d.createdisk(diskName, ownerName);
+		d.createDisk(diskName, ownerName);
 		printDiskInfo(d);
 	}
-
+/*
 	static void test_mount(string diskName)
 	{
 		Disk d;
@@ -81,16 +81,21 @@ public:
 	{
 		try
 		{
-			string diskName = "disk 1";
+			string diskName = "disk10";
 			string ownerName = "oshri";
 
 			printStructSize();
-			//test_create(diskName, ownerName);
+			test_create(diskName, ownerName);
 			//test_mount(diskName);
 		}
 		catch (exception ex)
 		{
 			cout << ex.what() << endl;
 		}
+		catch (char * ex)
+		{
+			cout << ex << endl;
+		}
+		system("PAUSE");
 	}
 };
