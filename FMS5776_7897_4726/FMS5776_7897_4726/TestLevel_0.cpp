@@ -1,5 +1,6 @@
 #include<iostream>
 #include "Disk.h"
+#include "FileHeader.h"
 using namespace std;
 
 class TestLevel_0
@@ -13,7 +14,7 @@ class TestLevel_0
 		cout << "Size Of DAT -->" << sizeof(DAT) << endl;
 		cout << "Size Of DirEntry -->" << sizeof(dirEntry) << endl;
 		cout << "Size Of SectorDir -->" << sizeof(SectorDir) << endl;
-		//cout << "Size Of FileHeader -->" << sizeof(FileHeader) << endl;
+		cout << "Size Of FileHeader -->" << sizeof(FileHeader) << endl;
 
 		cout << "Size Of RootDir -->" << sizeof(RootDir) << endl;
 	}

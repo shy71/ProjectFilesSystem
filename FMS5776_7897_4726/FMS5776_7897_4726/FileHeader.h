@@ -8,6 +8,6 @@ struct FileHeader
 	unsigned int 	sectorNr;
 	dirEntry 	fileDesc;
 	DATtype 	FAT;
-	char 	emptyArea[744];
+	char 	emptyArea[752];
 	FileHeader();
 };
