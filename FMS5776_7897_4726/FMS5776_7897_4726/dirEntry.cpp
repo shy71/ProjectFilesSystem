@@ -1,2 +1,6 @@
-#include "VolumeHeader.h"
+#include "dirEntry.h"
 
+dirEntry::dirEntry()
+{
+	entryStatus = '0';
+}

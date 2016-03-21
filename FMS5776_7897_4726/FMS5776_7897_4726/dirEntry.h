@@ -17,7 +17,3 @@ struct dirEntry
 	unsigned char entryStatus;
 	dirEntry();
 };
-dirEntry::dirEntry()
-{
-	entryStatus = '0';
-}

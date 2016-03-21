@@ -11,11 +11,5 @@ struct RootDir
 	SectorDir msbSector;
 	SectorDir lsbSector;
 	
-	RootDir(void);
-	~RootDir(void);
+	void SetClus(unsigned int);
 };
-RootDir::RootDir()
-{
-	lsbSector.sectorNr = 3;
-	msbSector.sectorNr = 4;
-}

@@ -11,7 +11,3 @@ struct FileHeader
 	char 	emptyArea[744];
 	FileHeader();
 };
-FileHeader::FileHeader()
-{
-	FAT.reset();
-}

@@ -1,11 +1,9 @@
 #include "DAT.h"
 
 
-//DAT::DAT()
-//{
-//}
-//
-//
-//DAT::~DAT()
-//{
-//}
+DAT::DAT()
+{
+	Dat.set();
+	sectorNr = 1;
+}
+

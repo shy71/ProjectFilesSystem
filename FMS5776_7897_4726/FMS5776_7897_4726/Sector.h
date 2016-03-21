@@ -6,5 +6,5 @@ struct Sector
 
 	Sector(void);
 	~Sector(void);
-	int& operator[](int index);
+	char& operator[](int index);
 };

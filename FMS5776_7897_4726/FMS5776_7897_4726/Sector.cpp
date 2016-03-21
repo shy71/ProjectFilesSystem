@@ -1,3 +1,3 @@
 #include "Sector.h"
 
-int& Sector::operator[](int index){ return RawData[index]; }
+char& Sector::operator[](int index){ return RawData[index]; }
