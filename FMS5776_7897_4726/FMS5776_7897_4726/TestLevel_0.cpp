@@ -40,13 +40,13 @@ class TestLevel_0
 
 	}
 
-	/*static void test_create(string diskName, string ownerName)
+	static void test_create(string diskName, string ownerName)
 	{
 		Disk d;
 		cout << "\npre createdisk: " << endl;
 		printDiskInfo(d);
 		cout << "post createdisk: " << endl;
-		d.createdisk(diskName, ownerName);
+		d.createDisk(diskName, ownerName);
 		printDiskInfo(d);
 	}
 
@@ -55,10 +55,10 @@ class TestLevel_0
 		Disk d;
 		cout << "\npre mountdisk: " << endl;
 		printDiskInfo(d);
-		d.mountdisk(diskName);
+		d.mountDisk(diskName);
 		cout << "post mountdisk: " << endl;
 		printDiskInfo(d);
-		d.unmountdisk();
+		d.unmountDisk();
 	}
 
 
@@ -66,15 +66,15 @@ class TestLevel_0
 	{
 		Disk d;
 		Sector sector;
-		d.mountdisk(diskName);
+		d.mountDisk(diskName);
 
 		cout << "\nread sector: " << endl;
 		d.readSector(8, &sector);
-		strcpy_s(sector.rawData, "this is write temp sector");
+		strcpy_s(sector.RawData, "this is write temp sector");
 		d.writeSector(8, &sector);
-		d.unmountdisk();
+		d.unmountDisk();
 
-	}*/
+	}
 
 public:
 	static void test_0()
