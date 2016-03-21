@@ -86,27 +86,19 @@ void Disk::createDisk(string & name, string & owner)//FIX
 	vhd.addrRootDir = 3;
 	vhd.addrDataStart = 8;
 	vhd.isFormated = false;
-	strcpy_s(buffer, reinterpret_cast<char*>(&vhd));
-	currDiskSectorNr = 0;
-	writeBuffer(0);
+	writeSector(0,(Sector*)(&vhd));
 	//create RootDir data
 	rootDir.SetClus(vhd.addrRootDir);
-	strcpy_s(buffer, reinterpret_cast<char *>(&rootDir.lsbSector));
-	currDiskSectorNr = vhd.addrRootDir*2;
-	writeBuffer(vhd.addrRootDir * 2);
-	writeBuffer(vhd.addrRootDirCpy * 2);
-	strcpy_s(buffer, reinterpret_cast<char *>(&rootDir.msbSector));
-	currDiskSectorNr = vhd.addrRootDir * 2+1;
-	writeBuffer(vhd.addrRootDir * 2+1);
-	writeBuffer(vhd.addrRootDirCpy * 2 + 1);
+	writeSector(vhd.addrRootDir * 2, (Sector*)&rootDir.lsbSector);
+	writeSector(vhd.addrRootDirCpy * 2, (Sector*)&rootDir.lsbSector);
+	writeSector(vhd.addrRootDir * 2 + 1, (Sector*)&rootDir.msbSector);
+	writeSector(vhd.addrRootDirCpy * 2 + 1, (Sector*)&rootDir.msbSector);
 	dat.Dat[vhd.addrRootDir].flip();
 	dat.Dat[vhd.addrRootDirCpy].flip();
 	dat.Dat[0].flip();
 	//Create Dat Data
-
-	strcpy_s(buffer, reinterpret_cast<char *>(&dat));
-	writeBuffer(vhd.addrDAT);
-	writeBuffer(vhd.addrDATcpy);
+	writeSector(vhd.addrDAT, (Sector*)&dat);
+	writeSector(vhd.addrDATcpy, (Sector*)&dat);
 	dat.Dat[(int)vhd.addrDATcpy / 2].flip();
 
 	Sector sec;
