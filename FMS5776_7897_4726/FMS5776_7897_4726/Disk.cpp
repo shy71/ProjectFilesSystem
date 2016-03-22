@@ -1,5 +1,9 @@
 #include "Disk.h"
+#include<cstring>
 #include<iostream>
+#ifdef _MSC_VER
+#define _CRT_SECURE_NO_WARNINGS
+#endif
 
 Disk::Disk(string &fname, string &diskOwner, char action)
 {
@@ -67,8 +71,8 @@ void Disk::createDisk(string & name, string & owner)//FIX
 	struct tm timeinfo;
 	localtime_s(&timeinfo, &t);
 	vhd.sectorNr = 0;
-	strcat_s(vhd.diskName, name.c_str());
-	strcat_s(vhd.diskOwner, owner.c_str());
+	strcpy_s(vhd.diskName, name.c_str());
+	strcpy_s(vhd.diskOwner,sizeof(char)*12, owner.c_str());
 	string temp;
 	temp = timeinfo.tm_mday + "/" + (timeinfo.tm_mon + 1) + '/' + (timeinfo.tm_year + 1900);
 	strcat_s(vhd.prodDate, temp.c_str());
