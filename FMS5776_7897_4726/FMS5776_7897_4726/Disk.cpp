@@ -42,8 +42,9 @@ void Disk::unmountDisk()
 	writeSector(vhd.addrDATcpy, (Sector*)(&dat));
 	writeSector(vhd.addrRootDir, (Sector*)(&rootDir));
 	writeSector(vhd.addrRootDirCpy, (Sector*)(&rootDir));
-	writeSector(currDiskSectorNr, (Sector*)(buffer));
-	//dskfl.close();
+	if (currDiskSectorNr > 0 && currDiskSectorNr < 3200)
+		writeSector(currDiskSectorNr, (Sector*)buffer);//&buffer?
+	dskfl.close();
 	mounted = false;
 }
 Disk::Disk()
@@ -74,7 +75,6 @@ void Disk::createDisk(string & name, string & owner)//FIX
 	stringstream temp;
 	temp << timeinfo.tm_mday << "/" << timeinfo.tm_mon + 1 << "/" << timeinfo.tm_year + 1900;
 	strcpy_s(vhd.prodDate, temp.str().c_str());
-	//cout << vhd.prodDate;
 	vhd.ClusQty = 1600;
 	vhd.dataClusQty = 1596;
 	vhd.addrDAT = 1;
