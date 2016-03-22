@@ -7,14 +7,14 @@ Disk::Disk(string &fname, string &diskOwner, char action)
     ifstream infile(fname);
 	if (action == 'c')//create new disk
 	{
-		if (infile.good())
+		if (infile.is_open())
 			throw "There already is a file with that name";
 		createDisk(fname, diskOwner);
 		mountDisk(fname);
 	}
 	else if (action == 'm')
 	{
-		if (infile.good())
+		if (infile.is_open())
 			mountDisk(fname);
 		else
 			throw "There is no disk with that name...";
@@ -24,7 +24,7 @@ Disk::Disk(string &fname, string &diskOwner, char action)
 void Disk::mountDisk(string &fname)
 {
 	dskfl.open(fname, ios::binary | ios::in);
-	if (dskfl.good())
+	if (dskfl.is_open())
 	{
 		readSector(0, (Sector*)(&vhd));
 		readSector(vhd.addrDAT, (Sector*)(&dat));
@@ -43,7 +43,7 @@ void Disk::unmountDisk()
 	writeSector(vhd.addrRootDir, (Sector*)(&rootDir));
 	writeSector(vhd.addrRootDirCpy, (Sector*)(&rootDir));
 	writeSector(currDiskSectorNr, (Sector*)(buffer));
-	dskfl.close();
+	//dskfl.close();
 	mounted = false;
 }
 Disk::Disk()
@@ -54,13 +54,13 @@ Disk::~Disk()
 {
 	if (mounted)
 		unmountDisk();
-	if (dskfl.good())
+	if (dskfl.is_open())
 		dskfl.close();
 }
 void Disk::createDisk(string & name, string & owner)//FIX
 {
 	ifstream file(name,ios::binary | ios::in);
-	if (file.good())
+	if (file.is_open())
 		throw "You can't create a disk with a name that is already taken!";
 	file.close();
 	dskfl.open(name, ios::binary | ios::out);//error
@@ -97,19 +97,6 @@ void Disk::createDisk(string & name, string & owner)//FIX
 	writeSector(vhd.addrDAT, (Sector*)&dat);
 	writeSector(vhd.addrDATcpy, (Sector*)&dat);
 	dat.Dat[(int)vhd.addrDATcpy / 2].flip();
-
-	Sector sec;
-	for (int i = 0; i < 1600; i++)
-	{
-		cout << i << endl;
-		if (dat.Dat[i] == 1)
-		{
-			sec.sectorNr = i * 2;
-			writeSector(sec.sectorNr, &sec);
-			sec.sectorNr = i * 2 + 1;
-			writeSector(sec.sectorNr, &sec);
-		}
-	}
 	dskfl.close();
 	dskfl.open(name, ios::binary | ios::out | ios::in);
 	unmountDisk();

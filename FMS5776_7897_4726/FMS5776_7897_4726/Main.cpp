@@ -11,5 +11,6 @@ void main()
 	cout << arr;
 	TestLevel_0 l;
 	l.test_0();
+	system("del disk7166122");
 	system("pause");
 }
