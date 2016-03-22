@@ -81,13 +81,12 @@ public:
 	{
 		try
 		{
-			string diskName = "disk7166122";
+			string diskName = "disk1";
 			string ownerName = "oshri";
 
 			printStructSize();
 			test_create(diskName, ownerName);
 			test_mount(diskName);
-			cout << "aaa" << endl;
 		}
 		catch (exception ex)
 		{
