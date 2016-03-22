@@ -1,9 +1,7 @@
 #include "Disk.h"
 #include<cstring>
 #include<iostream>
-#ifdef _MSC_VER
-#define _CRT_SECURE_NO_WARNINGS
-#endif
+using namespace std;
 
 Disk::Disk(string &fname, string &diskOwner, char action)
 {
@@ -65,7 +63,8 @@ void Disk::createDisk(string & name, string & owner)//FIX
 	ifstream file(name,ios::binary | ios::in);
 	if (file.good())
 		throw "You can't create a disk with a name that is already taken!";
-	dskfl.open(name, ios::binary | ios::out);//error
+	file.close();
+	//error
 	//create VHD Data
 	time_t t = time(0);   // get time now
 	struct tm timeinfo;
@@ -73,9 +72,9 @@ void Disk::createDisk(string & name, string & owner)//FIX
 	vhd.sectorNr = 0;
 	strcpy_s(vhd.diskName, name.c_str());
 	strcpy_s(vhd.diskOwner,sizeof(char)*12, owner.c_str());
-	string temp;
-	temp = timeinfo.tm_mday + "/" + (timeinfo.tm_mon + 1) + '/' + (timeinfo.tm_year + 1900);
-	strcat_s(vhd.prodDate, temp.c_str());
+	cout << vhd.diskName << endl;
+	string temp =itoa(timeinfo.tm_mday) + "/" + (timeinfo.tm_mon + 1) + '/' + (timeinfo.tm_year + 1900);
+	strcpy_s(vhd.prodDate, temp.c_str());
 	vhd.ClusQty = 1600;
 	vhd.dataClusQty = 1596;
 	vhd.addrDAT = 1;
@@ -84,6 +83,7 @@ void Disk::createDisk(string & name, string & owner)//FIX
 	vhd.addrRootDir = 3;
 	vhd.addrDataStart = 8;
 	vhd.isFormated = false;
+	dskfl.open(name, ios::binary | ios::out);
 	writeSector(0,(Sector*)(&vhd));
 	//create RootDir data
 	rootDir.SetClus(vhd.addrRootDir);
