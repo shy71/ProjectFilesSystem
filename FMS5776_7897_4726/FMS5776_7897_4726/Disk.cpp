@@ -67,8 +67,9 @@ void Disk::createDisk(string & name, string & owner)//FIX
 	struct tm timeinfo;
 	localtime_s(&timeinfo, &t);
 	vhd.sectorNr = 0;
-	strcat_s(vhd.diskName, name.c_str());
-	strcat_s(vhd.diskOwner, owner.c_str());
+	
+	strcpy_s(vhd.diskName, name.c_str());
+	strcpy_s(vhd.diskOwner, owner.c_str());
 	string temp;
 	temp = timeinfo.tm_mday + "/" + (timeinfo.tm_mon + 1) + '/' + (timeinfo.tm_year + 1900);
 	strcat_s(vhd.prodDate, temp.c_str());
