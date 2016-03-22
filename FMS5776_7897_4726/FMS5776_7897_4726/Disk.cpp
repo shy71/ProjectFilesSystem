@@ -62,6 +62,7 @@ void Disk::createDisk(string & name, string & owner)//FIX
 	ifstream file(name,ios::binary | ios::in);
 	if (file.good())
 		throw "You can't create a disk with a name that is already taken!";
+	file.close();
 	dskfl.open(name, ios::binary | ios::out);//error
 	//create VHD Data
 	time_t t = time(0);   // get time now
@@ -73,13 +74,13 @@ void Disk::createDisk(string & name, string & owner)//FIX
 	stringstream temp;
 	temp << timeinfo.tm_mday << "/" << timeinfo.tm_mon + 1 << "/" << timeinfo.tm_year + 1900;
 	strcpy_s(vhd.prodDate, temp.str().c_str());
-	cout << vhd.prodDate;
+	//cout << vhd.prodDate;
 	vhd.ClusQty = 1600;
 	vhd.dataClusQty = 1596;
 	vhd.addrDAT = 1;
 	vhd.addrRootDir = 1;
 	vhd.addrDATcpy = 4;
-	vhd.addrRootDir = 3;
+	vhd.addrRootDirCpy = 3;
 	vhd.addrDataStart = 8;
 	vhd.isFormated = false;
 	writeSector(0,(Sector*)(&vhd));
@@ -109,6 +110,8 @@ void Disk::createDisk(string & name, string & owner)//FIX
 			writeSector(sec.sectorNr, &sec);
 		}
 	}
+	dskfl.close();
+	dskfl.open(name, ios::binary | ios::out | ios::in);
 	unmountDisk();
 }
 void Disk::recreateDisk(string &owner)
