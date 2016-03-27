@@ -17,6 +17,8 @@ struct Disk
 
 	char buffer[sizeof(Sector)];
 
+	void writePlusCpy(unsigned int, unsigned int, Sector*);
+
 public:
 	Disk();
 	Disk(string &, string &, char);

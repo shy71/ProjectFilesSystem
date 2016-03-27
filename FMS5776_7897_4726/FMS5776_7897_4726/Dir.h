@@ -11,5 +11,6 @@ struct RootDir
 	SectorDir msbSector;
 	SectorDir lsbSector;
 	RootDir();
+	void clear();
 	void SetClus(unsigned int);
 };
