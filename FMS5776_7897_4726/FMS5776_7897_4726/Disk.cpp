@@ -1,7 +1,22 @@
 #include "Disk.h"
+#include"Dir.h"
 #include<iostream>
+#include<ctime>
+#include<Windows.h>
+#include<string>
+#include<string.h>
 #include<sstream>
+using namespace std;
 
+string GetTime()
+{
+	time_t t = time(0);   // get time now
+	struct tm timeinfo;
+	localtime_s(&timeinfo, &t);
+	stringstream temp;
+	temp << timeinfo.tm_mday << "/" << timeinfo.tm_mon + 1 << "/" << timeinfo.tm_year + 1900;
+	return temp.str();
+}
 Disk::Disk(string &fname, string &diskOwner, char action)
 {
     ifstream infile(fname);
@@ -20,7 +35,6 @@ Disk::Disk(string &fname, string &diskOwner, char action)
 			throw "There is no disk with that name...";
 	}
 }
-
 void Disk::mountDisk(string &fname)
 {
 	dskfl.open(fname, ios::binary | ios::in);
@@ -34,7 +48,6 @@ void Disk::mountDisk(string &fname)
 	else
 		throw "The disk couldn't be mounted since it doesn't exist";
 }
-
 void Disk::unmountDisk()
 {
 	writeSector(0, (Sector*)(&vhd));
@@ -142,17 +155,8 @@ void Disk::format(string & name)
 	writePlusCpy(vhd.addrRootDir * 2, vhd.addrRootDirCpy * 2,(Sector*) &rootDir.lsbSector);
 	writePlusCpy(vhd.addrRootDir * 2+1, vhd.addrRootDirCpy * 2+1,(Sector*) &rootDir.msbSector);
 	vhd.isFormated = true;//when set off?
-	strcpy(vhd.formatDate, GetTime().c_str());
+	strcpy_s(vhd.formatDate, GetTime().c_str());
 	writeSector(0, (Sector *)&vhd);
-}
-string GetTime()
-{
-	time_t t = time(0);   // get time now
-	struct tm timeinfo;
-	localtime_s(&timeinfo, &t);
-	stringstream temp;
-	temp << timeinfo.tm_mday << "/" << timeinfo.tm_mon + 1 << "/" << timeinfo.tm_year + 1900;
-	return temp.str();
 }
 void Disk::writePlusCpy(unsigned int sor, unsigned int cpy, Sector * sec)
 {
