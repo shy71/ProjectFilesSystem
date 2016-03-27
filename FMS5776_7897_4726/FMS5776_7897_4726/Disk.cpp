@@ -66,15 +66,10 @@ void Disk::createDisk(string & name, string & owner)//FIX
 	file.close();
 	dskfl.open(name, ios::binary | ios::out);//error
 	//create VHD Data
-	time_t t = time(0);   // get time now
-	struct tm timeinfo;
-	localtime_s(&timeinfo, &t);
 	vhd.sectorNr = 0;
 	strcpy_s(vhd.diskName, name.c_str());
 	strcpy_s(vhd.diskOwner, owner.c_str());
-	stringstream temp;
-	temp << timeinfo.tm_mday << "/" << timeinfo.tm_mon + 1 << "/" << timeinfo.tm_year + 1900;
-	strcpy_s(vhd.prodDate, temp.str().c_str());
+	strcpy_s(vhd.prodDate, GetTime().c_str());
 	vhd.ClusQty = 1600;
 	vhd.dataClusQty = 1596;
 	vhd.addrDAT = 1;
@@ -146,6 +141,18 @@ void Disk::format(string & name)
 	rootDir.clear();
 	writePlusCpy(vhd.addrRootDir * 2, vhd.addrRootDirCpy * 2,(Sector*) &rootDir.lsbSector);
 	writePlusCpy(vhd.addrRootDir * 2+1, vhd.addrRootDirCpy * 2+1,(Sector*) &rootDir.msbSector);
+	vhd.isFormated = true;//when set off?
+	strcpy(vhd.formatDate, GetTime().c_str());
+	writeSector(0, (Sector *)&vhd);
+}
+string GetTime()
+{
+	time_t t = time(0);   // get time now
+	struct tm timeinfo;
+	localtime_s(&timeinfo, &t);
+	stringstream temp;
+	temp << timeinfo.tm_mday << "/" << timeinfo.tm_mon + 1 << "/" << timeinfo.tm_year + 1900;
+	return temp.str();
 }
 void Disk::writePlusCpy(unsigned int sor, unsigned int cpy, Sector * sec)
 {
