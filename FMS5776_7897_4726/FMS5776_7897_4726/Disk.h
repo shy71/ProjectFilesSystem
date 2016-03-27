@@ -34,7 +34,8 @@ public:
 	void writeSector(Sector*);
 	void readSector(unsigned int, Sector*);
 	void readSector(Sector*);
-
+	int howmuchempty();
+	void dealloc(DATtype& FAT);
 
 	//level 1
 	void format(string &);

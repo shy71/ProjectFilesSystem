@@ -193,3 +193,12 @@ void Disk::alloc(DATtype & fat, unsigned int num, unsigned int type)
 		alloc(fat, num / 2, type);//need to handle when the first one works but the second one isnt!!!
 	}
 }
+int Disk::howmuchempty()
+{
+	return dat.Dat.count();
+}
+void Disk::dealloc(DATtype &FAT)
+{
+	dat.Dat |= FAT;
+	FAT.reset();
+}
