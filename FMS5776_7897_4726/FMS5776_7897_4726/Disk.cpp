@@ -159,3 +159,37 @@ void Disk::writePlusCpy(unsigned int sor, unsigned int cpy, Sector * sec)
 	writeSector(sor, sec);
 	writeSector(cpy, sec);
 }
+void Disk::alloc(DATtype & fat, unsigned int num, unsigned int type)
+{
+	bool done;
+	int j = 0;
+	if (type == 0)
+	{
+		for (int i = 0; i < 3200; i++)
+		{
+			if (dat.Dat[i])
+			{
+				for ( j = 1; j < num-1&&i+j<3200; j++)
+				{
+					if (!dat.Dat[i + j])
+						break;
+					if (j + 1 == num - 1)
+					{
+						for (int k = i; k < i + j; k++)
+						{
+							dat.Dat[k].flip();//to change into boolen opertor
+							fat[k].flip();
+							return;
+						}
+					}
+				}
+				i += j;
+			}
+		}
+		if (num == 1)
+			throw "doesnt have enough space!";
+
+		alloc(fat,num / 2 + (num%2), type);
+		alloc(fat, num / 2, type);//need to handle when the first one works but the second one isnt!!!
+	}
+}
