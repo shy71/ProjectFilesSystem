@@ -139,5 +139,16 @@ void Disk::readSector(Sector* sec)
 }
 void Disk::format(string & name)
 {
-	if (vhd.diskName == name.c_str());
+	if (vhd.diskName != name.c_str())
+		throw "You cant format a disk which not belongs to you!";
+	dat.Dat.set();
+	writePlusCpy(vhd.addrDAT, vhd.addrDATcpy, (Sector*)&dat);
+	rootDir.clear();
+	writePlusCpy(vhd.addrRootDir * 2, vhd.addrRootDirCpy * 2,(Sector*) &rootDir.lsbSector);
+	writePlusCpy(vhd.addrRootDir * 2+1, vhd.addrRootDirCpy * 2+1,(Sector*) &rootDir.msbSector);
+}
+void Disk::writePlusCpy(unsigned int sor, unsigned int cpy, Sector * sec)
+{
+	writeSector(sor, sec);
+	writeSector(cpy, sec);
 }
