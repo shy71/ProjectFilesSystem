@@ -32,4 +32,8 @@ public:
 	void writeSector(Sector*);
 	void readSector(unsigned int, Sector*);
 	void readSector(Sector*);
+
+
+	//level 1
+	void format(string &);
 };

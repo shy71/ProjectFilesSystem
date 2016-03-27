@@ -137,3 +137,7 @@ void Disk::readSector(Sector* sec)
 {
 	dskfl.read((char *)sec, sizeof(Sector));
 }
+void Disk::format(string & name)
+{
+	if (vhd.diskName == name.c_str());
+}
