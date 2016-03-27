@@ -230,3 +230,7 @@ void Disk::dealloc(DATtype &FAT)
 	dat.Dat |= FAT;
 	FAT.reset();
 }
+int Disk::howmuchused()
+{
+	return vhd.ClusQty - howmuchempty();
+}

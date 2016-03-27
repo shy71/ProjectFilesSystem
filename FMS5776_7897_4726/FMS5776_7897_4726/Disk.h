@@ -41,4 +41,5 @@ public:
 	void dealloc(DATtype& FAT);
 	void alloc(DATtype &, unsigned int, unsigned int);
 	void allocextend(DATtype &, unsigned int, unsigned int);
+	int howmuchused();
 };
