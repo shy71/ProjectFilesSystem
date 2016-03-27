@@ -39,4 +39,6 @@ public:
 
 	//level 1
 	void format(string &);
+	void howmuchempty();
+	void alloc(DATtype &, unsigned int, unsigned int);
 };
