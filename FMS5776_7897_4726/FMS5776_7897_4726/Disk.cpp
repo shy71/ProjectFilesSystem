@@ -19,7 +19,7 @@ string GetTime()
 }
 Disk::Disk(string &fname, string &diskOwner, char action)
 {
-    ifstream infile(fname);
+	ifstream infile(fname);
 	if (action == 'c')//create new disk
 	{
 		if (infile.is_open())
@@ -73,7 +73,7 @@ Disk::~Disk()
 }
 void Disk::createDisk(string & name, string & owner)//FIX
 {
-	ifstream file(name,ios::binary | ios::in);
+	ifstream file(name, ios::binary | ios::in);
 	if (file.is_open())
 		throw "You can't create a disk with a name that is already taken!";
 	file.close();
@@ -91,7 +91,7 @@ void Disk::createDisk(string & name, string & owner)//FIX
 	vhd.addrRootDirCpy = 3;
 	vhd.addrDataStart = 8;
 	vhd.isFormated = false;
-	writeSector(0,(Sector*)(&vhd));
+	writeSector(0, (Sector*)(&vhd));
 	//create RootDir data
 	rootDir.SetClus(vhd.addrRootDir);
 	writeSector(vhd.addrRootDir * 2, (Sector*)&rootDir.lsbSector);
@@ -152,8 +152,8 @@ void Disk::format(string & name)
 	dat.Dat.set();
 	writePlusCpy(vhd.addrDAT, vhd.addrDATcpy, (Sector*)&dat);
 	rootDir.clear();
-	writePlusCpy(vhd.addrRootDir * 2, vhd.addrRootDirCpy * 2,(Sector*) &rootDir.lsbSector);
-	writePlusCpy(vhd.addrRootDir * 2+1, vhd.addrRootDirCpy * 2+1,(Sector*) &rootDir.msbSector);
+	writePlusCpy(vhd.addrRootDir * 2, vhd.addrRootDirCpy * 2, (Sector*)&rootDir.lsbSector);
+	writePlusCpy(vhd.addrRootDir * 2 + 1, vhd.addrRootDirCpy * 2 + 1, (Sector*)&rootDir.msbSector);
 	vhd.isFormated = true;//when set off?
 	strcpy_s(vhd.formatDate, GetTime().c_str());
 	writeSector(0, (Sector *)&vhd);
@@ -165,36 +165,54 @@ void Disk::writePlusCpy(unsigned int sor, unsigned int cpy, Sector * sec)
 }
 void Disk::alloc(DATtype & fat, unsigned int num, unsigned int type)
 {
-	bool done;
-	int j = 0;
-	if (type == 0)
+	DATtype UsedData;
+	try
+	{
+		bool done;
+		UsedData.reset();
+		int j = 0;
+		if (type == 0)
+		{
+			for (int i = 0; i < 3200; i++)
+			{
+				if (dat.Dat[i])
+				{
+					for (j = 1; j < num - 1 && i + j < 3200; j++)
+					{
+						if (!dat.Dat[i + j])
+							break;
+						if (j + 1 == num - 1)
+						{
+							for (int k = i; k < i + j; k++)
+							{
+								dat.Dat[k].flip();//to change into boolen opertor
+								fat[k].flip();
+								UsedData[k].flip();
+								return;
+							}
+						}
+					}
+					i += j;
+				}
+			}
+			if (num == 1)
+				throw "doesn't have enough space!";
+
+			alloc(fat, num / 2 + (num % 2), type);
+			alloc(fat, num / 2, type);//need to handle when the first one works but the second one doesn't!!!
+		}
+	}
+	catch (char *error)
 	{
 		for (int i = 0; i < 3200; i++)
 		{
-			if (dat.Dat[i])
+			if (UsedData[i])
 			{
-				for ( j = 1; j < num-1&&i+j<3200; j++)
-				{
-					if (!dat.Dat[i + j])
-						break;
-					if (j + 1 == num - 1)
-					{
-						for (int k = i; k < i + j; k++)
-						{
-							dat.Dat[k].flip();//to change into boolen opertor
-							fat[k].flip();
-							return;
-						}
-					}
-				}
-				i += j;
+				fat[i].flip();
+				dat.Dat[i].flip();
 			}
 		}
-		if (num == 1)
-			throw "doesnt have enough space!";
-
-		alloc(fat,num / 2 + (num%2), type);
-		alloc(fat, num / 2, type);//need to handle when the first one works but the second one isnt!!!
+		throw error;
 	}
 }
 int Disk::howmuchempty()
