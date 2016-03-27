@@ -145,10 +145,10 @@ void Disk::readSector(Sector* sec)
 {
 	dskfl.read((char *)sec, sizeof(Sector));
 }
-void Disk::format(string & name)
+void Disk::format(string & owner)
 {
-	if (vhd.diskName != name.c_str())
-		throw "You cant format a disk which not belongs to you!";
+	if (vhd.diskOwner != owner.c_str())
+		throw "You can't format a disk which not belongs to you!";
 	dat.Dat.set();
 	writePlusCpy(vhd.addrDAT, vhd.addrDATcpy, (Sector*)&dat);
 	rootDir.clear();
