@@ -204,16 +204,22 @@ void Disk::alloc(DATtype & fat, unsigned int num, unsigned int type)
 	}
 	catch (char *error)
 	{
-		for (int i = 0; i < 3200; i++)
+		dat.Dat |= UsedData;
+		fat &= ~UsedData;
+		/*for (int i = 0; i < 3200; i++)
 		{
 			if (UsedData[i])
 			{
 				fat[i].flip();
 				dat.Dat[i].flip();
 			}
-		}
+		}*/
 		throw error;
 	}
+}
+void Disk::allocextend(DATtype &fat, unsigned int num, unsigned int type)
+{
+	alloc(fat, num, type);
 }
 int Disk::howmuchempty()
 {
