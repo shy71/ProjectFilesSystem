@@ -141,3 +141,12 @@ void Disk::format(string & name)
 {
 	if (vhd.diskName == name.c_str());
 }
+int Disk::howmuchempty()
+{
+	return dat.Dat.count();
+}
+void Disk::dealloc(DATtype &FAT)
+{
+	dat.Dat |= FAT;
+	FAT.reset();
+}
