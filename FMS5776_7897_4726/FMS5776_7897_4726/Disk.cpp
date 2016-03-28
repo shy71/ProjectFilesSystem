@@ -163,7 +163,7 @@ void Disk::writePlusCpy(unsigned int sor, unsigned int cpy, Sector * sec)
 	writeSector(sor, sec);
 	writeSector(cpy, sec);
 }
-void Disk::alloc(DATtype & fat, unsigned int num, unsigned int type)
+void Disk::alloc(DATtype & fat, unsigned int num, unsigned int type, unsigned int index)
 {
 	DATtype UsedData;
 	try
@@ -173,7 +173,7 @@ void Disk::alloc(DATtype & fat, unsigned int num, unsigned int type)
 		int j = 0;
 		if (type == 0)
 		{
-			for (int i = 0; i < 3200; i++)
+			for (int i = index; i < 3200; i++)
 			{
 				if (dat.Dat[i])
 				{
@@ -198,8 +198,8 @@ void Disk::alloc(DATtype & fat, unsigned int num, unsigned int type)
 			if (num == 1)
 				throw "doesn't have enough space!";
 
-			alloc(fat, num / 2 + (num % 2), type);
-			alloc(fat, num / 2, type);//need to handle when the first one works but the second one doesn't!!!
+			alloc(fat, num / 2 + (num % 2), type,index);
+			alloc(fat, num / 2, type,index);//need to handle when the first one works but the second one doesn't!!!
 		}
 	}
 	catch (char *error)
@@ -219,7 +219,13 @@ void Disk::alloc(DATtype & fat, unsigned int num, unsigned int type)
 }
 void Disk::allocextend(DATtype &fat, unsigned int num, unsigned int type)
 {
-	alloc(fat, num, type);
+	int index = 0;
+	for (int i = 0; i < 3200; i++)
+	{
+		if (fat[i])
+			index = i;
+	}
+	alloc(fat, num, type,index);
 }
 int Disk::howmuchempty()
 {

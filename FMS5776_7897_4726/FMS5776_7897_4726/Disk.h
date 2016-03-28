@@ -39,7 +39,7 @@ public:
 	void format(string &);
 	int howmuchempty();
 	void dealloc(DATtype& FAT);
-	void alloc(DATtype &, unsigned int, unsigned int);
+	void Disk::alloc(DATtype & fat, unsigned int num, unsigned int type, unsigned int index = 0);
 	void allocextend(DATtype &, unsigned int, unsigned int);
 	int howmuchused();
 };
