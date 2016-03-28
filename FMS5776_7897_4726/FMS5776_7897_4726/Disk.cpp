@@ -1,5 +1,6 @@
 #include "Disk.h"
 #include"Dir.h"
+#include"FileHeader.h"
 #include<iostream>
 #include<ctime>
 #include<Windows.h>
@@ -253,4 +254,8 @@ void Disk::dealloc(DATtype &FAT)
 int Disk::howmuchused()
 {
 	return vhd.ClusQty - howmuchempty();
+}
+void Disk::createfile(string &fileName, string &fileOwner, string &filetype, unsigned int recordSize, unsigned int sectorCount, string &keyType, unsigned int keyOffset, unsigned int length)
+{
+	FileHeader fheader;
 }

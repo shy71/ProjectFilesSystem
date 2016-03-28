@@ -43,4 +43,7 @@ public:
 	void allocextend(DATtype &, unsigned int, unsigned int);
 	int howmuchused();
 	void Disk::writeDir(unsigned int add, unsigned int addcpy, RootDir root);
+
+	//level 2
+	void createfile(string &, string &, string &, unsigned int, unsigned int, string &, unsigned int, unsigned int length=-1);
 };
