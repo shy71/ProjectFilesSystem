@@ -42,4 +42,7 @@ public:
 	void Disk::alloc(DATtype & fat, unsigned int num, unsigned int type, unsigned int index = 0);
 	void allocextend(DATtype &, unsigned int, unsigned int);
 	int howmuchused();
+
+	//level 2
+	void createfile(string &, string &, string &, unsigned int, unsigned int, string &, unsigned int, unsigned int length=-1);
 };

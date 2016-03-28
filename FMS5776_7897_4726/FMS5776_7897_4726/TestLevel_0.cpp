@@ -104,7 +104,7 @@ class Test_Level_1
 public:
 	static void printDAT(Disk &d)
 	{
-		cout << "DAT:" << d.dat.Dat << endl << endl;
+		cout << "DAT:" <<endl << d.dat.Dat << endl << endl;
 	}
 	static void printFAT(DATtype &f)
 	{
@@ -121,10 +121,10 @@ public:
 		printDAT(d);
 		DATtype FAT1,FAT2,FAT3,FAT4;
 		printFAT(FAT1);
-		d.alloc(FAT1, 30, 0);
-		d.alloc(FAT2, 20, 0);
-		d.alloc(FAT3, 60, 0);
-		d.alloc(FAT4, 10, 0);
+		d.alloc(FAT1, 3000, 0);
+		d.alloc(FAT2, 2000, 0);
+		d.alloc(FAT3, 6000, 0);
+		d.alloc(FAT4, 1000, 0);
 		cout << "FAT1:" << endl;
 		printFAT(FAT1);
 		cout << "FAT2:" << endl;
@@ -136,7 +136,7 @@ public:
 		d.dealloc(FAT2);
 		cout << "FAT2" << endl;
 		printFAT(FAT2);
-		d.allocextend(FAT4, 25, 0);
+		d.allocextend(FAT4, 2500, 0);
 		printDAT(d);
 		cout << d.howmuchempty();
 		cout << d.howmuchused();

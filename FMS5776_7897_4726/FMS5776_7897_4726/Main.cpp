@@ -3,8 +3,8 @@
 using namespace std;
 void main()
 {
-	TestLevel_0 l;
-	l.test_0();
+	Test_Level_1 l;
+	l.CheckFunctions("disk1","oshri");
 	//system("del disk1");
 	system("pause");
 }
