@@ -17,7 +17,7 @@ struct Disk
 
 	char buffer[sizeof(Sector)];
 
-	void writePlusCpy(unsigned int, unsigned int, Sector*);
+	void Disk::writePlusCpy(unsigned int sor, unsigned int cpy, DAT sec);
 
 public:
 	Disk();
@@ -42,4 +42,5 @@ public:
 	void Disk::alloc(DATtype & fat, unsigned int num, unsigned int type, unsigned int index = 0);
 	void allocextend(DATtype &, unsigned int, unsigned int);
 	int howmuchused();
+	void Disk::writeDir(unsigned int add, unsigned int addcpy, RootDir root);
 };

@@ -51,10 +51,8 @@ void Disk::mountDisk(string &fname)
 void Disk::unmountDisk()
 {
 	writeSector(0, (Sector*)(&vhd));
-	writeSector(vhd.addrDAT, (Sector*)(&dat));
-	writeSector(vhd.addrDATcpy, (Sector*)(&dat));
-	writeSector(vhd.addrRootDir, (Sector*)(&rootDir));
-	writeSector(vhd.addrRootDirCpy, (Sector*)(&rootDir));
+	writePlusCpy(vhd.addrDAT, vhd.addrDATcpy, dat);
+	writeDir(vhd.addrRootDir, vhd.addrRootDirCpy, rootDir);
 	if (currDiskSectorNr > 0 && currDiskSectorNr < 3200)
 		writeSector(currDiskSectorNr, (Sector*)buffer);//&buffer?
 	dskfl.close();
@@ -94,20 +92,34 @@ void Disk::createDisk(string & name, string & owner)//FIX
 	writeSector(0, (Sector*)(&vhd));
 	//create RootDir data
 	rootDir.SetClus(vhd.addrRootDir);
-	writeSector(vhd.addrRootDir * 2, (Sector*)&rootDir.lsbSector);
-	writeSector(vhd.addrRootDirCpy * 2, (Sector*)&rootDir.lsbSector);
-	writeSector(vhd.addrRootDir * 2 + 1, (Sector*)&rootDir.msbSector);
-	writeSector(vhd.addrRootDirCpy * 2 + 1, (Sector*)&rootDir.msbSector);
+	writeDir(vhd.addrRootDir, vhd.addrRootDirCpy, rootDir);
 	dat.Dat[vhd.addrRootDir].flip();
 	dat.Dat[vhd.addrRootDirCpy].flip();
 	dat.Dat[0].flip();
 	//Create Dat Data
-	writeSector(vhd.addrDAT, (Sector*)&dat);
-	writeSector(vhd.addrDATcpy, (Sector*)&dat);
 	dat.Dat[(int)vhd.addrDATcpy / 2].flip();
+	writePlusCpy(vhd.addrDAT, vhd.addrDATcpy, dat);
+	Sector sec;
+	for (int i = 0; i < 1600; i++)
+		if (dat.Dat[i])
+		{
+			sec.sectorNr = i * 2;
+			writeSector(i*2, &sec);
+			sec.sectorNr = i * 2 + 1;
+			writeSector(i * 2 + 1, &sec);
+		}
 	dskfl.close();
 	dskfl.open(name, ios::binary | ios::out | ios::in);
 	unmountDisk();
+}
+void Disk::writeDir(unsigned int add, unsigned int addcpy, RootDir root)
+{
+	writeSector(add * 2, (Sector*)&root.lsbSector);
+	root.lsbSector.sectorNr = addcpy * 2;
+	writeSector(addcpy * 2, (Sector*)&root.lsbSector);
+	writeSector(add * 2 + 1, (Sector*)&root.msbSector);
+	root.msbSector.sectorNr = addcpy * 2 + 1;
+	writeSector(addcpy * 2 + 1, (Sector*)&root.msbSector);
 }
 void Disk::recreateDisk(string &owner)
 {
@@ -150,25 +162,27 @@ void Disk::format(string & owner)
 	if (vhd.diskOwner != owner.c_str())
 		throw "You can't format a disk which not belongs to you!";
 	dat.Dat.set();
-	writePlusCpy(vhd.addrDAT, vhd.addrDATcpy, (Sector*)&dat);
+	writePlusCpy(vhd.addrDAT, vhd.addrDATcpy,dat);
 	rootDir.clear();
-	writePlusCpy(vhd.addrRootDir * 2, vhd.addrRootDirCpy * 2, (Sector*)&rootDir.lsbSector);
-	writePlusCpy(vhd.addrRootDir * 2 + 1, vhd.addrRootDirCpy * 2 + 1, (Sector*)&rootDir.msbSector);
+	writeDir(vhd.addrRootDir, vhd.addrRootDirCpy, rootDir);
 	vhd.isFormated = true;//when set off?
 	strcpy_s(vhd.formatDate, GetTime().c_str());
 	writeSector(0, (Sector *)&vhd);
 }
-void Disk::writePlusCpy(unsigned int sor, unsigned int cpy, Sector * sec)
+void Disk::writePlusCpy(unsigned int sor, unsigned int cpy, DAT sec)
 {
-	writeSector(sor, sec);
-	writeSector(cpy, sec);
+	writeSector(sor,(Sector*)&sec);
+	sec.sectorNr = cpy;
+	writeSector(cpy, (Sector*)&sec);
+	Sector sec2;
+	sec2.sectorNr = cpy + 1;
+	writeSector(cpy + 1, &sec2);
 }
 void Disk::alloc(DATtype & fat, unsigned int num, unsigned int type, unsigned int index)
 {
 	DATtype UsedData;
 	try
 	{
-		bool done;
 		UsedData.reset();
 		int j = 0;
 		if (type == 0)
