@@ -75,7 +75,7 @@ class TestLevel_0
 		d.unmountDisk();
 
 	}
-	//friend class Test_Level_1;
+	friend class Test_Level_1;
 public:
 	static void test_0()
 	{
@@ -101,13 +101,14 @@ public:
 class Test_Level_1
 {
 public:
-	static void printDAT(Disk &d)
+	static void printDATtype(DATtype &d)
 	{
-		cout << "DAT:" <<endl << d.dat.Dat << endl << endl;
-	}
-	static void printFAT(DATtype &f)
-	{
-		cout << f << endl << endl;
+		for (int i = 0; i < 1600; i++)
+		{
+			cout << d[i];
+		}
+		cout << endl;
+
 	}
 	static void CheckFunctions(string diskName,string ownerName)
 	{
@@ -115,33 +116,40 @@ public:
 		cout << "\npre createdisk: " << endl;
 		TestLevel_0::printDiskInfo(d);
 		cout << "post createdisk: " << endl;
-		d.createDisk(diskName, ownerName);
+		d.mountDisk(diskName);
 		TestLevel_0::printDiskInfo(d);
-		printDAT(d);
+		printDATtype(d.dat.Dat);
 		DATtype FAT1,FAT2,FAT3,FAT4;
-		printFAT(FAT1);
-		d.alloc(FAT1, 3000, 0);
-		d.alloc(FAT2, 2000, 0);
-		d.alloc(FAT3, 6000, 0);
+		printDATtype(FAT1);
+		d.alloc(FAT1, 60, 0);
+		d.alloc(FAT2, 33, 0);
+		d.alloc(FAT3, 76, 0);
 		d.alloc(FAT4, 1000, 0);
 		cout << "FAT1:" << endl;
-		printFAT(FAT1);
+		printDATtype(FAT1);
 		cout << "FAT2:" << endl;
-		printFAT(FAT2);
+		printDATtype(FAT2);
 		cout << "FAT3:" << endl;
-		printFAT(FAT3);
+		printDATtype(FAT3);
 		cout << "FAT4:" << endl;
-		printFAT(FAT4);
+		printDATtype(FAT4);
 		d.dealloc(FAT2);
 		cout << "FAT2" << endl;
-		printFAT(FAT2);
-		d.allocextend(FAT4, 2500, 0);
-		printDAT(d);
+		printDATtype(FAT2);
+		cout << "Dat:" << endl;
+		printDATtype(d.dat.Dat);
+		cout << "FAT4:" << endl;
+		printDATtype(FAT4);
+		d.allocextend(FAT3, 100, 0);
+		cout << "FAT4:" << endl;
+		printDATtype(FAT4);
+		cout << "Dat:" << endl;
+		printDATtype(d.dat.Dat);
 		cout << d.howmuchempty();
 		cout << d.howmuchused();
 		string name = d.vhd.diskOwner;
 		d.format(name);
-		printDAT(d);
+		printDATtype(d.dat.Dat);
 		d.unmountDisk();
 	}
 };

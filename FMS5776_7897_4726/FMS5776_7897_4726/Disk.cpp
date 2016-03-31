@@ -179,8 +179,9 @@ void Disk::writePlusCpy(unsigned int sor, unsigned int cpy, DAT sec)
 	sec2.sectorNr = cpy + 1;
 	writeSector(cpy + 1, &sec2);
 }
-void Disk::alloc(DATtype & fat, unsigned int num, unsigned int type, unsigned int index)
+void Disk::alloc(DATtype & fat, unsigned int numofsector, unsigned int type, unsigned int index)
 {
+	int num = (numofsector / 2) + (numofsector % 2);
 	DATtype UsedData;
 	try
 	{
@@ -188,23 +189,24 @@ void Disk::alloc(DATtype & fat, unsigned int num, unsigned int type, unsigned in
 		int j = 0;
 		if (type == 0)
 		{
-			for (int i = index; i < 3200; i++)
+			for (int i = index; i < 1600; i++)
 			{
 				if (dat.Dat[i])
 				{
-					for (j = 1; j < num - 1 && i + j < 3200; j++)
+					for (j = 0; j < num && i + j < 1600; j++)
 					{
 						if (!dat.Dat[i + j])
 							break;
-						if (j + 1 == num - 1)
+						if (j == num - 1)
 						{
-							for (int k = i; k < i + j; k++)
+							for (int k = i; k <= i + j; k++)
 							{
 								dat.Dat[k].flip();//to change into boolen opertor
 								fat[k].flip();
 								UsedData[k].flip();
-								return;
-							}
+
+							}	
+							return;
 						}
 					}
 					i += j;
