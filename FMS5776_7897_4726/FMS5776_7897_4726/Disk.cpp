@@ -257,7 +257,24 @@ int Disk::howmuchused()
 {
 	return vhd.ClusQty - howmuchempty();
 }
-void Disk::createfile(string &fileName, string &fileOwner, string &filetype, unsigned int recordSize, unsigned int sectorCount, string &keyType, unsigned int keyOffset, unsigned int length)
+void Disk::createfile(string &fileName, string &fileOwner, string &filetype, unsigned int recordSize, unsigned int sectorCount, string &keyType, unsigned int keyOffset, unsigned int keySize)
 {
 	FileHeader fheader;
+	strcpy_s(fheader.fileDesc.Filename,fileName.c_str());
+	strcpy_s(fheader.fileDesc.fileOwner, fileOwner.c_str());
+	fheader.fileDesc.maxRecSize = recordSize;
+	fheader.FAT.reset();
+	strcpy_s(fheader.fileDesc.crDate, GetTime().c_str());
+	fheader.fileDesc.entryStatus = 1;
+	fheader.fileDesc.keyOffset = keyOffset;
+	fheader.fileDesc.keySize = keySize;
+	strcpy_s(fheader.fileDesc.keyType, keyType.c_str());
+	if (filetype == "F")
+	{
+		strcpy_s(fheader.fileDesc.recFormat, "F");
+		fheader.fileDesc.actualRecSize = recordSize;
+	}
+	else
+		strcpy_s(fheader.fileDesc.recFormat, "V");
+	alloc(fheader.FAT, sectorCount, 0);
 }
