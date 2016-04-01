@@ -237,7 +237,7 @@ void Disk::alloc(DATtype & fat, unsigned int numofsector, unsigned int type, uns
 void Disk::allocextend(DATtype &fat, unsigned int num, unsigned int type)
 {
 	int index = 0;
-	for (int i = 0; i < 3200; i++)
+	for (int i = 0; i < 1600; i++)
 	{
 		if (fat[i])
 			index = i;
@@ -277,7 +277,7 @@ void Disk::createfile(string &fileName, string &fileOwner, string &filetype, uns
 	else
 		strcpy_s(fheader.fileDesc.recFormat, "V");
 	alloc(fheader.FAT, sectorCount, 0);
-	for(int i=0;i<3200;i++)
+	for(int i=0;i<1600;i++)
 		if (fheader.FAT[i])
 		{
 			fheader.fileDesc.fileAddr = i;
