@@ -277,4 +277,14 @@ void Disk::createfile(string &fileName, string &fileOwner, string &filetype, uns
 	else
 		strcpy_s(fheader.fileDesc.recFormat, "V");
 	alloc(fheader.FAT, sectorCount, 0);
+	for(int i=0;i<3200;i++)
+		if (fheader.FAT[i])
+		{
+			fheader.fileDesc.fileAddr = i;
+			break;
+		}
+	fheader.fileDesc.fileSize = sectorCount;
+	fheader.fileDesc.eofRecNr = 0;//the last record for now is the first but this must change when records are added!!!
+	//save direntry in the file!!!
+	//save the file
 }
