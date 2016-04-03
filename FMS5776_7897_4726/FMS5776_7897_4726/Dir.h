@@ -4,6 +4,7 @@ struct SectorDir
 {
 	int sectorNr;
 	dirEntry DirEntry[15];
+	dirEntry& operator[](int index);
 	
 };
 struct RootDir
@@ -13,4 +14,8 @@ struct RootDir
 	RootDir();
 	void clear();
 	void SetClus(unsigned int);
+	bool searchFile(const char name[12]);
+	dirEntry* getEntry(const char name[12]);
+	bool IsFull();
+	void WriteEntry(dirEntry & dir);
 };

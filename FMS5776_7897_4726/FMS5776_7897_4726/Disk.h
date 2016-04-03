@@ -18,6 +18,7 @@ struct Disk
 	char buffer[sizeof(Sector)];
 
 	void Disk::writePlusCpy(unsigned int sor, unsigned int cpy, DAT sec);
+	void Update();
 
 public:
 	Disk();
@@ -46,4 +47,5 @@ public:
 
 	//level 2
 	void createfile(string &, string &, string &, unsigned int, unsigned int, string &, unsigned int, unsigned int length=-1);
+	void delfile(string &, string &);	void extendfile(string &, string &, unsigned int);
 };

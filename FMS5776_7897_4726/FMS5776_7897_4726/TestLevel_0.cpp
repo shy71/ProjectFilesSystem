@@ -141,8 +141,8 @@ public:
 		cout << "FAT4:" << endl;
 		printDATtype(FAT4);
 		d.allocextend(FAT3, 100, 0);
-		cout << "FAT4:" << endl;
-		printDATtype(FAT4);
+		cout << "FAT3:" << endl;
+		printDATtype(FAT3);
 		cout << "Dat:" << endl;
 		printDATtype(d.dat.Dat);
 		cout << d.howmuchempty();
@@ -150,6 +150,7 @@ public:
 		string name = d.vhd.diskOwner;
 		d.format(name);
 		printDATtype(d.dat.Dat);
+		TestLevel_0::printDiskInfo(d);
 		d.unmountDisk();
 	}
 };

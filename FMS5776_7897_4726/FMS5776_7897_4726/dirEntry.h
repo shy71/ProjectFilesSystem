@@ -16,4 +16,5 @@ struct dirEntry
 	char keyType[2];
 	unsigned char entryStatus;
 	dirEntry();
+	void copy(dirEntry & dir);
 };

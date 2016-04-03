@@ -45,6 +45,8 @@ void Disk::mountDisk(string &fname)
 		readSector(vhd.addrDAT, (Sector*)(&dat));
 		readSector(vhd.addrRootDir, (Sector*)(&rootDir));
 		mounted = true;
+		dskfl.close();
+		dskfl.open(fname, ios::binary | ios::out | ios::in);
 	}
 	else
 		throw "The disk couldn't be mounted since it doesn't exist";
@@ -58,6 +60,14 @@ void Disk::unmountDisk()
 		writeSector(currDiskSectorNr, (Sector*)buffer);//&buffer?
 	dskfl.close();
 	mounted = false;
+}
+void Disk::Update()
+{
+	writeSector(0, (Sector*)(&vhd));
+	writePlusCpy(vhd.addrDAT, vhd.addrDATcpy, dat);
+	writeDir(vhd.addrRootDir, vhd.addrRootDirCpy, rootDir);
+	if (currDiskSectorNr > 0 && currDiskSectorNr < 3200)
+		writeSector(currDiskSectorNr, (Sector*)buffer);//&buffer?
 }
 Disk::Disk()
 {
@@ -160,7 +170,7 @@ void Disk::readSector(Sector* sec)
 }
 void Disk::format(string & owner)
 {
-	if (vhd.diskOwner != owner.c_str())
+	if (strcmp(vhd.diskOwner,owner.c_str())!=0)
 		throw "You can't format a disk which not belongs to you!";
 	dat.Dat.set();
 	writePlusCpy(vhd.addrDAT, vhd.addrDATcpy,dat);
@@ -198,7 +208,12 @@ void Disk::alloc(DATtype & fat, unsigned int numofsector, unsigned int type, uns
 						if (!dat.Dat[i + j])
 							break;
 						if (j == num - 1)
-						{
+						{	
+							if (vhd.isFormated == true)
+							{
+								vhd.isFormated = false;
+								Update();
+							}
 							for (int k = i; k <= i + j; k++)
 							{
 								dat.Dat[k].flip();//to change into boolen opertor
@@ -206,6 +221,7 @@ void Disk::alloc(DATtype & fat, unsigned int numofsector, unsigned int type, uns
 								UsedData[k].flip();
 
 							}	
+
 							return;
 						}
 					}
@@ -257,12 +273,19 @@ int Disk::howmuchused()
 {
 	return vhd.ClusQty - howmuchempty();
 }
+
+//Level 2
 void Disk::createfile(string &fileName, string &fileOwner, string &filetype, unsigned int recordSize, unsigned int sectorCount, string &keyType, unsigned int keyOffset, unsigned int keySize)
 {
+	if (rootDir.IsFull())
+		throw "The disk is full!";
+	if (rootDir.getEntry(fileName.c_str()) != NULL)
+		throw "A file with that name is already exits";
 	FileHeader fheader;
 	strcpy_s(fheader.fileDesc.Filename,fileName.c_str());
 	strcpy_s(fheader.fileDesc.fileOwner, fileOwner.c_str());
 	fheader.fileDesc.maxRecSize = recordSize;
+
 	fheader.FAT.reset();
 	strcpy_s(fheader.fileDesc.crDate, GetTime().c_str());
 	fheader.fileDesc.entryStatus = 1;
@@ -277,14 +300,47 @@ void Disk::createfile(string &fileName, string &fileOwner, string &filetype, uns
 	else
 		strcpy_s(fheader.fileDesc.recFormat, "V");
 	alloc(fheader.FAT, sectorCount, 0);
-	for(int i=0;i<1600;i++)
+	for (int i = 0; i<1600; i++)
 		if (fheader.FAT[i])
 		{
-			fheader.fileDesc.fileAddr = i;
+			fheader.fileDesc.fileAddr = i*2;
 			break;
 		}
 	fheader.fileDesc.fileSize = sectorCount;
+	writeSector(fheader.fileDesc.fileAddr, (Sector*)&fheader);
 	fheader.fileDesc.eofRecNr = 0;//the last record for now is the first but this must change when records are added!!!
+	rootDir.WriteEntry(fheader.fileDesc);
+
+	Update();
 	//save direntry in the file!!!
 	//save the file
+}
+
+void Disk::delfile(string & fname, string & username)
+{
+	dirEntry *dir = rootDir.getEntry(fname.c_str());
+	if (dir==NULL)
+		throw "The file you asked to delete doesnt exist";
+	if (strcmp(dir->fileOwner, username.c_str()) != 0)
+		throw "only the file owner can delete his files";
+	FileHeader fheader;
+	readSector(dir->fileAddr, (Sector *)&fheader);
+	dealloc(fheader.FAT);
+	dir->entryStatus = 2;
+
+	Update();
+}
+void Disk::extendfile(string & fname, string & username ,unsigned int numToAdd)
+{
+	dirEntry *dir = rootDir.getEntry(fname.c_str());
+	if (dir == NULL)
+		throw "The file you asked to extend doesnt exist";
+	if (strcmp(dir->fileOwner, username.c_str()) != 0)
+		throw "only the file owner can extend his files";
+	FileHeader fheader;
+	readSector(dir->fileAddr, (Sector *)&fheader);
+	allocextend(fheader.FAT,numToAdd,0);
+	dir->fileSize += numToAdd;
+
+	Update();
 }
