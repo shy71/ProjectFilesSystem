@@ -120,6 +120,21 @@ public:
 		TestLevel_0::printDiskInfo(d);
 		printDATtype(d.dat.Dat);
 		DATtype FAT1,FAT2,FAT3,FAT4;
+
+		string name = d.vhd.diskOwner;
+		d.alloc(FAT1, 96*2,0);
+		printDATtype(d.dat.Dat);
+		d.alloc(FAT2, 800*2,0);
+		printDATtype(d.dat.Dat);
+		d.alloc(FAT1, 100*2,0);
+		printDATtype(d.dat.Dat);
+		d.alloc(FAT2, 600*2,0);
+		printDATtype(d.dat.Dat);
+		d.dealloc(FAT1);
+		printDATtype(d.dat.Dat);
+		d.alloc(FAT1,196*2,0);
+		printDATtype(d.dat.Dat);
+		d.format(name);
 		printDATtype(FAT1);
 		d.alloc(FAT1, 60, 0);
 		d.alloc(FAT2, 33, 0);
@@ -147,7 +162,7 @@ public:
 		printDATtype(d.dat.Dat);
 		cout << d.howmuchempty();
 		cout << d.howmuchused();
-		string name = d.vhd.diskOwner;
+
 		d.format(name);
 		printDATtype(d.dat.Dat);
 		TestLevel_0::printDiskInfo(d);

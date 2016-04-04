@@ -36,12 +36,14 @@ void RootDir::WriteEntry(dirEntry & dir)
 		{
 			if (lsbSector[i].entryStatus != 1)
 			{
-				lsbSector[i].copy(dir);
+				//lsbSector[i].copy(dir); need to check
+				lsbSector[i] = dir;
 				return;
 			}
 			if (msbSector[i].entryStatus != 1)
 			{
-				msbSector[i].copy(dir);
+				//msbSector[i].copy(dir);
+				msbSector[i] = dir;
 				return;
 			}
 		}

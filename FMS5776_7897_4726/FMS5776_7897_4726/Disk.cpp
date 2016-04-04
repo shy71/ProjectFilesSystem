@@ -230,9 +230,9 @@ void Disk::alloc(DATtype & fat, unsigned int numofsector, unsigned int type, uns
 			}
 			if (num == 1)
 				throw "doesn't have enough space!";
-
-			alloc(fat, num / 2 + (num % 2), type,index);
-			alloc(fat, num / 2, type,index);//need to handle when the first one works but the second one doesn't!!!
+			//try saving the min
+			alloc(fat, numofsector-2+(numofsector%2), type, index);
+			alloc(fat, 1+(numofsector%2==0)?1:0, type, index);//need to handle when the first one works but the second one doesn't!!!
 		}
 	}
 	catch (char *error)
@@ -307,10 +307,10 @@ void Disk::createfile(string &fileName, string &fileOwner, string &filetype, uns
 			break;
 		}
 	fheader.fileDesc.fileSize = sectorCount;
+	fheader.fileDesc.eofRecNr = 0;
 	writeSector(fheader.fileDesc.fileAddr, (Sector*)&fheader);
-	fheader.fileDesc.eofRecNr = 0;//the last record for now is the first but this must change when records are added!!!
+	//the last record for now is the first but this must change when records are added!!!
 	rootDir.WriteEntry(fheader.fileDesc);
-
 	Update();
 	//save direntry in the file!!!
 	//save the file
@@ -341,6 +341,8 @@ void Disk::extendfile(string & fname, string & username ,unsigned int numToAdd)
 	readSector(dir->fileAddr, (Sector *)&fheader);
 	allocextend(fheader.FAT,numToAdd,0);
 	dir->fileSize += numToAdd;
+	fheader.fileDesc.fileSize = dir->fileSize;
+	writeSector(dir->fileAddr, (Sector *)&fheader);
 
 	Update();
 }
