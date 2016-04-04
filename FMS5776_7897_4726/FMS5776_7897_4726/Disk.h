@@ -3,6 +3,7 @@ using namespace std;
 #include "VolumeHeader.h"
 #include "DAT.h"
 #include "Sector.h"
+#include "FCB.h"
 #include "Dir.h"
 #include <fstream>
 
@@ -15,7 +16,6 @@ struct Disk
 	fstream dskfl;
 	unsigned int currDiskSectorNr;
 
-	char buffer[sizeof(Sector)];
 
 	void Disk::writePlusCpy(unsigned int sor, unsigned int cpy, DAT sec);
 	void Update();
@@ -51,5 +51,5 @@ public:
 	void extendfile(string &, string &, unsigned int);
 
 	//level 3
-
+	FCB *openfile(string &, string &, string &);
 };
