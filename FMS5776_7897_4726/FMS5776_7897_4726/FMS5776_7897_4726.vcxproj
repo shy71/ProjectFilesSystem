@@ -119,6 +119,7 @@
     <ClCompile Include="Disk.cpp" />
     <ClCompile Include="DAT.cpp" />
     <ClCompile Include="Extensions.cpp" />
+    <ClCompile Include="FCB.cpp" />
     <ClCompile Include="FileHeader.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="dirEntry.cpp" />
@@ -129,6 +130,7 @@
   <ItemGroup>
     <ClInclude Include="DAT.h" />
     <ClInclude Include="Dir.h" />
+    <ClInclude Include="FCB.h" />
     <ClInclude Include="FileHeader.h" />
     <ClInclude Include="Sector.h" />
     <ClInclude Include="VolumeHeader.h" />
