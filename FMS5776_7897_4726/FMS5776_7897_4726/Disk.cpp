@@ -190,7 +190,7 @@ void Disk::writePlusCpy(unsigned int sor, unsigned int cpy, DAT sec)
 void Disk::alloc(DATtype & fat, unsigned int numofsector, unsigned int type, unsigned int index)
 {
 	int num = (numofsector / 2) + (numofsector % 2);
-	DATtype UsedData;
+	DATtype UsedData=dat.Dat;
 	try
 	{
 		UsedData.reset();
@@ -235,16 +235,8 @@ void Disk::alloc(DATtype & fat, unsigned int numofsector, unsigned int type, uns
 	}
 	catch (char *error)
 	{
-		dat.Dat |= UsedData;
+		dat.Dat = UsedData;
 		fat &= ~UsedData;
-		/*for (int i = 0; i < 3200; i++)
-		{
-			if (UsedData[i])
-			{
-				fat[i].flip();
-				dat.Dat[i].flip();
-			}
-		}*/
 		throw error;
 	}
 }
