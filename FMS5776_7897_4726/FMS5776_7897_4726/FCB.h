@@ -5,6 +5,7 @@
 #include"Disk.h"
 class FCB
 {
+
 public:
 	Disk* d;
 	dirEntry fileDesc;

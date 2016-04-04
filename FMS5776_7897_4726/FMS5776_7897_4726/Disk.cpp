@@ -226,7 +226,7 @@ void Disk::alloc(DATtype & fat, unsigned int numofsector, unsigned int type, uns
 					i += j;
 				}
 			}
-			if (num == 1)
+			if (num <=2)
 				throw "doesn't have enough space!";
 			//try saving the min
 			alloc(fat, numofsector-2+(numofsector%2), type, index);
