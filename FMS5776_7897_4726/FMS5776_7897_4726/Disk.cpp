@@ -56,8 +56,7 @@ void Disk::unmountDisk()
 	writeSector(0, (Sector*)(&vhd));
 	writePlusCpy(vhd.addrDAT, vhd.addrDATcpy, dat);
 	writeDir(vhd.addrRootDir, vhd.addrRootDirCpy, rootDir);
-	if (currDiskSectorNr > 0 && currDiskSectorNr < 3200)
-		writeSector(currDiskSectorNr, (Sector*)buffer);//&buffer?
+	//&buffer?
 	dskfl.close();
 	mounted = false;
 }
@@ -66,8 +65,7 @@ void Disk::Update()
 	writeSector(0, (Sector*)(&vhd));
 	writePlusCpy(vhd.addrDAT, vhd.addrDATcpy, dat);
 	writeDir(vhd.addrRootDir, vhd.addrRootDirCpy, rootDir);
-	if (currDiskSectorNr > 0 && currDiskSectorNr < 3200)
-		writeSector(currDiskSectorNr, (Sector*)buffer);//&buffer?
+	//&buffer?
 }
 Disk::Disk()
 {
