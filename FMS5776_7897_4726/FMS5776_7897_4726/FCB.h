@@ -19,4 +19,5 @@ public:
 	~FCB();
 	void flushFile();
 	void closeFile();
+	void read(char *dest, unsigned int status = 0);
 };
