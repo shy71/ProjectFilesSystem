@@ -11,6 +11,7 @@ public:
 	dirEntry fileDesc;
 	DATtype FAT;
 	Sector Buffer;
+	bool editLock;
 	unsigned int currRecNr;
 	unsigned int currSecNr;
 	unsigned int currRecNrInBuff;
