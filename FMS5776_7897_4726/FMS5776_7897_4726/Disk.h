@@ -46,10 +46,10 @@ public:
 	void writeDir(unsigned int add, unsigned int addcpy, RootDir root);
 
 	//level 2
-	void createfile(string &, string &, string &, unsigned int, unsigned int, string &, unsigned int, unsigned int length=-1);
+	void createfile(string , string , string , unsigned int, unsigned int, string , unsigned int, unsigned int length=-1);
 	void delfile(string &, string &);
 	void extendfile(string &, string &, unsigned int);
 
 	//level 3
-	FCB *openfile(string &, string &, string &);
+	//FCB *openfile(string &, string &, string &);
 };
