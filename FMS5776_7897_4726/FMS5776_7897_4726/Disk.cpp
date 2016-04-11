@@ -43,7 +43,8 @@ void Disk::mountDisk(string &fname)
 	{
 		readSector(0, (Sector*)(&vhd));
 		readSector(vhd.addrDAT, (Sector*)(&dat));
-		readSector(vhd.addrRootDir, (Sector*)(&rootDir));
+		readSector(vhd.addrRootDir*2, (Sector*)(&rootDir.lsbSector));
+		readSector(vhd.addrRootDir*2+1, (Sector*)(&rootDir.msbSector));
 		mounted = true;
 		dskfl.close();
 		dskfl.open(fname, ios::binary | ios::out | ios::in);
@@ -265,7 +266,7 @@ int Disk::howmuchused()
 }
 
 //Level 2
-void Disk::createfile(string &fileName, string &fileOwner, string &filetype, unsigned int recordSize, unsigned int sectorCount, string &keyType, unsigned int keyOffset, unsigned int keySize)
+void Disk::createfile(string fileName, string fileOwner, string filetype, unsigned int recordSize, unsigned int sectorCount, string keyType, unsigned int keyOffset, unsigned int keySize)
 {
 	if (rootDir.IsFull())
 		throw "The disk is full!";
@@ -275,7 +276,6 @@ void Disk::createfile(string &fileName, string &fileOwner, string &filetype, uns
 	strcpy_s(fheader.fileDesc.Filename,fileName.c_str());
 	strcpy_s(fheader.fileDesc.fileOwner, fileOwner.c_str());
 	fheader.fileDesc.maxRecSize = recordSize;
-
 	fheader.FAT.reset();
 	strcpy_s(fheader.fileDesc.crDate, GetTime().c_str());
 	fheader.fileDesc.entryStatus = 1;
@@ -289,7 +289,7 @@ void Disk::createfile(string &fileName, string &fileOwner, string &filetype, uns
 	}
 	else
 		strcpy_s(fheader.fileDesc.recFormat, "V");
-	alloc(fheader.FAT, sectorCount, 0);
+	alloc(fheader.FAT, sectorCount+1, 0);
 	for (int i = 0; i<1600; i++)
 		if (fheader.FAT[i])
 		{
@@ -298,6 +298,7 @@ void Disk::createfile(string &fileName, string &fileOwner, string &filetype, uns
 		}
 	fheader.fileDesc.fileSize = sectorCount;
 	fheader.fileDesc.eofRecNr = 0;
+	fheader.sectorNr = fheader.fileDesc.fileAddr;
 	writeSector(fheader.fileDesc.fileAddr, (Sector*)&fheader);
 	//the last record for now is the first but this must change when records are added!!!
 	rootDir.WriteEntry(fheader.fileDesc);
@@ -336,22 +337,22 @@ void Disk::extendfile(string & fname, string & username ,unsigned int numToAdd)
 
 	Update();
 }
-FCB* Disk::openfile(string &fileName, string &UserName, string &IOstatus)
-{
-	dirEntry *dir=rootDir.getEntry(fileName.c_str());
-	if (dir == NULL)
-		throw "The file you are looking for doesn't exist.";
-	if ((strcmp(dir->fileOwner, UserName.c_str()) == 0 && IOstatus == "IO") || IOstatus == "I")
-	{
-		FileHeader fheader;
-		readSector(dir->fileAddr, (Sector *)&fheader);
-		FCB* fcb = new FCB(this);
-		fcb->currRecNr =fcb->currRecNrInBuff = 0;
-		fcb->FAT = fheader.FAT;
-		fcb->fileDesc = *dir;
-		fcb->currSecNr=dir->fileAddr + 1;
-		return fcb;
-	}
-	else
-		throw "You don't have access to this file.";
-}
+//FCB* Disk::openfile(string &fileName, string &UserName, string &IOstatus)
+//{
+//	dirEntry *dir=rootDir.getEntry(fileName.c_str());
+//	if (dir == NULL)
+//		throw "The file you are looking for doesn't exist.";
+//	if ((strcmp(dir->fileOwner, UserName.c_str()) == 0 && IOstatus == "IO") || IOstatus == "I")
+//	{
+//		FileHeader fheader;
+//		readSector(dir->fileAddr, (Sector *)&fheader);
+//		FCB* fcb = new FCB(this);
+//		fcb->currRecNr =fcb->currRecNrInBuff = 0;
+//		fcb->FAT = fheader.FAT;
+//		fcb->fileDesc = *dir;
+//		fcb->currSecNr=dir->fileAddr + 1;
+//		return fcb;
+//	}
+//	else
+//		throw "You don't have access to this file.";
+//}
