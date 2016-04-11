@@ -48,6 +48,34 @@ void FCB::read(char *dest, unsigned int status)//finish function
 		for (int i = fileDesc.actualRecSize*currRecNrInBuff; i < fileDesc.actualRecSize; i++)
 			dest[i] = Buffer[i];
 		dest[fileDesc.actualRecSize] = NULL;
+		if (status == 0)
+		{
+			if (currRecNr < fileDesc.eofRecNr - 1)
+			{
+				if (currRecNrInBuff < 1020 / fileDesc.maxRecSize)//check if it's before the end or at the end of the sector
+				{
+					currRecNr++;
+					currRecNrInBuff++;
+				}
+				else
+				{
+					for (int i = currSecNr + 1; i < 1600; i++)
+						if (FAT[i])
+							currSecNr = i * 2 + 1;
+					currRecNr++;
+					currRecNrInBuff = 0;
+				}
+			}
+			else
+			{
+				currRecNr = currRecNrInBuff = 0;
+				for (int i = 0; i < 1600; i++)
+					if (FAT[i])
+						currSecNr = i * 2 + 1;
+			}
+		}
+		else
+			editLock = true;
 	}
 	else//גודל משתנה
 	{
@@ -66,7 +94,7 @@ void FCB::read(char *dest, unsigned int status)//finish function
 		//deal with a situation where bhe put in ~ in the data
 		if (status == 0)//read only
 		{
-			if (currRecNr < fileDesc.eofRecNr)
+			if (currRecNr < fileDesc.eofRecNr - 1)
 			{
 				if (index + size < 1020)//check if it's before the end or at the end of the sector
 				{
