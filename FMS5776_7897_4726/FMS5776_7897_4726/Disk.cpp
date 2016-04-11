@@ -281,6 +281,7 @@ void Disk::createfile(string fileName, string fileOwner, string filetype, unsign
 	fheader.fileDesc.entryStatus = 1;
 	fheader.fileDesc.keyOffset = keyOffset;
 	fheader.fileDesc.keySize = keySize;
+	fheader.fileDesc.eofRecNr = 0;
 	strcpy_s(fheader.fileDesc.keyType, keyType.c_str());
 	if (filetype == "F")
 	{

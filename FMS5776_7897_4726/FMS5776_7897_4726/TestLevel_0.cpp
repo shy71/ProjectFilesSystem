@@ -120,7 +120,7 @@ public:
 		TestLevel_0::printDiskInfo(d);
 
 
-		d.createfile("shy file", "shy71", "F", 15, 30, "1", 10, 5);
+		d.createfile("ezra's file", "ezra1", "F", 15, 30, "1", 10, 5);
 		//printDATtype(d.dat.Dat);
 		//DATtype FAT1,FAT2,FAT3,FAT4;
 
