@@ -1,22 +1,24 @@
 #include "FCB.h"
-
-
+#pragma region Constructors_Destructor
 FCB::FCB()
 {
 	d = NULL;
 	editLock = false;
+	IOstatus = "I";
 	currRecNr = currRecNrInBuff = currSecNr = -1;
 }
 FCB::FCB(Disk *disk)
 {
 	d = disk;
 	editLock = false;
+	IOstatus = "I";
 	currRecNr = currRecNrInBuff = currSecNr = -1;
 }
 FCB::~FCB()
 {
 	delete d;
 }
+#pragma endregion
 void FCB::flushFile()
 {
 	if (editLock)
@@ -40,6 +42,7 @@ void FCB::read(char *dest, unsigned int status)//finish function
 {
 	if (editLock)
 		throw "You can't read while locked in edit mode!";
+	flushFile();
 	if (fileDesc.recFormat == "F")
 	{
 		d->readSector(currSecNr, &Buffer);
@@ -75,7 +78,11 @@ void FCB::read(char *dest, unsigned int status)//finish function
 			}
 		}
 		else
+		{
+			if (IOstatus == "I")
+				throw "You can't open it for editing since it's read only.";
 			editLock = true;
+		}
 	}
 	else//גודל משתנה
 	{
@@ -119,6 +126,72 @@ void FCB::read(char *dest, unsigned int status)//finish function
 			}
 		}
 		else // read & write
+		{
+			if (IOstatus == "I")
+				throw "You can't open it for editing since it's read only.";
 			editLock = true;
+		}
+	}
+}
+void FCB::write(char *record)
+{
+	if (editLock)
+		throw "You can't write while locked in edit mode!";
+	if (IOstatus == "I")
+		throw "You can't edit these files because the file is read only.";
+	if (fileDesc.recFormat == "F")
+	{
+		if (strlen(record) != fileDesc.maxRecSize)
+			throw "The record length isn't the right size.";
+		for (int i = 0; i < fileDesc.maxRecSize; i++)
+			Buffer[currRecNrInBuff*fileDesc.maxRecSize + i] = record[i];
+	}
+	else //the file has varrying sized records
+	{
+		int startOfRecord = 0;
+		for (int i = 0; startOfRecord < 1020 && i < currRecNrInBuff; i++ , startOfRecord++)
+			if (Buffer[startOfRecord] == '~')
+				i++;
+		if (startOfRecord < 1020)
+			for (int i = 0; i + startOfRecord < 1020 && Buffer[i+startOfRecord]!='~' && i < strlen(record); i++)
+				Buffer[i + startOfRecord] = record[i];
+	}
+}
+void FCB::sync(unsigned int from, int recordCount)//check for situation where he gave too big recordcount
+{
+	switch (from)
+	{
+	case 0://from beginning
+		currRecNr = recordCount;
+		currRecNrInBuff = 0;
+		currSecNr = -1;
+		for (int i = 0; i < 1600; i++)
+			if (FAT[i])
+				currSecNr = i;
+		if (fileDesc.recFormat == "F")
+		{
+			while (recordCount > 1020 / fileDesc.maxRecSize)
+			{
+				recordCount -= 1020 / fileDesc.maxRecSize;
+				for (int i = currSecNr+1; i < 1600; i++)
+					if (FAT[i])
+						currSecNr = i;
+			}
+			currRecNrInBuff = recordCount;
+		}
+		else
+		{
+			for (int i = 0; i < 1020; i++)
+			{
+				//read sector and go through the records till recordCount is done 
+			}
+		}
+		break;
+	case 1:
+		break;
+	case 2:
+		break;
+	default:
+		throw "The starting point you entered is invalid";
 	}
 }

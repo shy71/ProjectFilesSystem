@@ -6,7 +6,7 @@ using namespace std;
 #include "FCB.h"
 #include "Dir.h"
 #include <fstream>
-
+class FCB;
 struct Disk
 {
 	VolumeHeader vhd;
@@ -51,5 +51,5 @@ public:
 	void extendfile(string &, string &, unsigned int);
 
 	//level 3
-	//FCB *openfile(string &, string &, string &);
+	FCB *openfile(string &, string &, string &);
 };

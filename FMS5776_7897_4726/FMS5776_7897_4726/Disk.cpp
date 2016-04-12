@@ -338,22 +338,23 @@ void Disk::extendfile(string & fname, string & username ,unsigned int numToAdd)
 
 	Update();
 }
-//FCB* Disk::openfile(string &fileName, string &UserName, string &IOstatus)
-//{
-//	dirEntry *dir=rootDir.getEntry(fileName.c_str());
-//	if (dir == NULL)
-//		throw "The file you are looking for doesn't exist.";
-//	if ((strcmp(dir->fileOwner, UserName.c_str()) == 0 && IOstatus == "IO") || IOstatus == "I")
-//	{
-//		FileHeader fheader;
-//		readSector(dir->fileAddr, (Sector *)&fheader);
-//		FCB* fcb = new FCB(this);
-//		fcb->currRecNr =fcb->currRecNrInBuff = 0;
-//		fcb->FAT = fheader.FAT;
-//		fcb->fileDesc = *dir;
-//		fcb->currSecNr=dir->fileAddr + 1;
-//		return fcb;
-//	}
-//	else
-//		throw "You don't have access to this file.";
-//}
+FCB* Disk::openfile(string &fileName, string &UserName, string &IOstatus)
+{
+	dirEntry *dir=rootDir.getEntry(fileName.c_str());
+	if (dir == NULL)
+		throw "The file you are looking for doesn't exist.";
+	if ((strcmp(dir->fileOwner, UserName.c_str()) == 0 && IOstatus == "IO") || IOstatus == "I")
+	{
+		FileHeader fheader;
+		readSector(dir->fileAddr, (Sector *)&fheader);
+		FCB* fcb = new FCB(this);
+		fcb->currRecNr =fcb->currRecNrInBuff = 0;
+		fcb->IOstatus = IOstatus;
+		fcb->FAT = fheader.FAT;
+		fcb->fileDesc = *dir;
+		fcb->currSecNr=dir->fileAddr + 1;
+		return fcb;
+	}
+	else
+		throw "You don't have access to this file.";
+}
