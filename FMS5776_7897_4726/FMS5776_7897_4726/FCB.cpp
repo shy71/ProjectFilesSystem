@@ -139,6 +139,7 @@ void FCB::write(char *record)
 		throw "You can't write while locked in edit mode!";
 	if (IOstatus == "I")
 		throw "You can't edit these files because the file is read only.";
+	flushFile();
 	if (fileDesc.recFormat == "F")
 	{
 		if (strlen(record) != fileDesc.maxRecSize)
@@ -149,49 +150,151 @@ void FCB::write(char *record)
 	else //the file has varrying sized records
 	{
 		int startOfRecord = 0;
-		for (int i = 0; startOfRecord < 1020 && i < currRecNrInBuff; i++ , startOfRecord++)
+		for (int i = 0; startOfRecord < 1020 && i < currRecNrInBuff;startOfRecord++)
 			if (Buffer[startOfRecord] == '~')
+			{
 				i++;
+				startOfRecord++;
+			}
 		if (startOfRecord < 1020)
-			for (int i = 0; i + startOfRecord < 1020 && Buffer[i+startOfRecord]!='~' && i < strlen(record); i++)
-				Buffer[i + startOfRecord] = record[i];
+		{
+			int size;
+			for (size = 0; Buffer[size + startOfRecord] != '~' && size + startOfRecord < 1020; size++);
+			if (size < strlen(record) || startOfRecord + size >= 1020)
+			{
+				throw "The record is too large";
+			}
+			else if (strlen(record) < size)
+			{
+				for (int i = 0; i < strlen(record); i++)
+					Buffer[startOfRecord + i] = record[i];
+				//pull everything back
+				for (int i = startOfRecord + size, j = startOfRecord + strlen(record); j < 1020; i++, j++)
+				{
+					if (i < 1020)
+						Buffer[j] = Buffer[i];
+					else
+						Buffer[j] = NULL;
+				}
+			}
+			else //it's the right size
+			{
+				for (int i = startOfRecord; i < size; i++)
+					Buffer[i] = record[i];
+			}
+		}
 	}
+	fileDesc.eofRecNr++;
 }
 void FCB::sync(unsigned int from, int recordCount)//check for situation where he gave too big recordcount
 {
+	//deal with deleted files problem
 	switch (from)
 	{
 	case 0://from beginning
-		currRecNr = recordCount;
-		currRecNrInBuff = 0;
-		currSecNr = -1;
-		for (int i = 0; i < 1600; i++)
-			if (FAT[i])
-				currSecNr = i;
 		if (fileDesc.recFormat == "F")
 		{
+			if (recordCount < 0)
+				throw "You are trying to access area before the begining of the file";
+			currRecNr = recordCount;
+			currRecNrInBuff = 0;
+			currSecNr = -1;
+			for (int i = 0; i < 1600; i++)//get first sector
+				if (FAT[i])
+				{
+					currSecNr = i * 2 + 1;
+					break;
+				}
 			while (recordCount > 1020 / fileDesc.maxRecSize)
 			{
 				recordCount -= 1020 / fileDesc.maxRecSize;
-				for (int i = currSecNr+1; i < 1600; i++)
-					if (FAT[i])
+				for (int i = currSecNr + 1; i < 1600; i++)
+					if (FAT[i/2])
 						currSecNr = i;
 			}
 			currRecNrInBuff = recordCount;
 		}
 		else
 		{
-			for (int i = 0; i < 1020; i++)
+			if (recordCount == 0)
 			{
-				//read sector and go through the records till recordCount is done 
+				currRecNr = currRecNrInBuff = 0;
+				for (int i = 0; i < 1600; i++)
+				{
+					if (FAT[i])
+					{
+						currSecNr = i * 2 + 1;//the second sector in the cluster since the first is being used for the header
+						break;
+					}
+				}
 			}
+			else
+				throw "You can't jump there since it's the sizes of records vary";
 		}
 		break;
 	case 1:
+		currRecNr += recordCount;
+		if (fileDesc.recFormat == "F")
+		{
+			if (currRecNrInBuff + recordCount < 1020 / fileDesc.maxRecSize)
+				currRecNrInBuff += recordCount;
+			else
+			{
+				recordCount -= (1020 / fileDesc.maxRecSize - currRecNrInBuff);
+				while (recordCount > 1020 / fileDesc.maxRecSize)
+				{
+					recordCount -= 1020 / fileDesc.maxRecSize;
+					for (int i = currSecNr + 1; i < 1600; i++)
+						if (FAT[i / 2])
+							currSecNr = i;
+				}
+				currRecNrInBuff = recordCount;
+			}
+		}
+		else
+			throw "You can't jump there since it's the sizes of records vary";
 		break;
 	case 2:
+		if (fileDesc.recFormat == "F")
+		{
+			if (recordCount > 0)
+				throw "You are trying to access area before the begining of the file";
+			currRecNr = fileDesc.eofRecNr + recordCount;
+			currSecNr = -1;
+			for (int i = 0; i < 1600; i++)//get last sector
+				if (FAT[i])
+					currSecNr = i * 2 + 1;
+			while (-recordCount > 1020 / fileDesc.maxRecSize)
+			{
+				recordCount += 1020 / fileDesc.maxRecSize;
+				for (int i = currSecNr - 1; i >= 0; i++)
+					if (FAT[i / 2])
+						currSecNr = i;
+			}
+			currRecNrInBuff = currRecNr % (1020 / fileDesc.maxRecSize);
+		}
+		else
+		{
+			if (recordCount == 0)
+			{
+				currRecNr = fileDesc.eofRecNr;
+				for (int i = 0; i < 1600; i++)
+					if (FAT[i])
+						currSecNr = i * 2 + 1;//the last sector
+				flushFile();
+				currRecNrInBuff = -1;
+				for (int i = 0; i < 1020; i++)
+				{
+					if (Buffer[i] == '~')
+						currRecNrInBuff++;
+				}
+			}
+			else
+				throw "You can't jump there since it's the sizes of records vary";
+		}
 		break;
 	default:
 		throw "The starting point you entered is invalid";
 	}
+	flushFile();
 }
