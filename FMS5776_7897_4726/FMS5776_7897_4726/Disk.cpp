@@ -348,11 +348,11 @@ FCB* Disk::openfile(string &fileName, string &UserName, string &IOstatus)
 		FileHeader fheader;
 		readSector(dir->fileAddr, (Sector *)&fheader);
 		FCB* fcb = new FCB(this);
-		fcb->currRecNr =fcb->currRecNrInBuff = 0;
+		fcb->currRecNr = fcb->currRecNrInBuff = 0;
 		fcb->IOstatus = IOstatus;
 		fcb->FAT = fheader.FAT;
 		fcb->fileDesc = *dir;
-		fcb->currSecNr=dir->fileAddr + 1;
+		fcb->currSecNr = dir->fileAddr + 1;
 		return fcb;
 	}
 	else

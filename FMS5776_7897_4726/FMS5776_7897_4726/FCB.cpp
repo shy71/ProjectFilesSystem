@@ -1,5 +1,5 @@
 #include "FCB.h"
-#pragma region Constructors_Destructor
+#pragma region Constructors Destructor
 FCB::FCB()
 {
 	d = NULL;
@@ -21,6 +21,8 @@ FCB::~FCB()
 #pragma endregion
 void FCB::flushFile()
 {
+	if (IOstatus == "I")
+		return;
 	if (editLock)
 		throw "You can't flush the buffer while locked in edit mode!";
 	*d->rootDir.getEntry(fileDesc.Filename) = fileDesc;
@@ -43,40 +45,15 @@ void FCB::read(char *dest, unsigned int status)//finish function
 	if (editLock)
 		throw "You can't read while locked in edit mode!";
 	flushFile();
+	d->readSector(currSecNr, &Buffer);
 	if (fileDesc.recFormat == "F")
 	{
-		d->readSector(currSecNr, &Buffer);
 		//read from buffer the current record
-		dest = new char[fileDesc.actualRecSize + 1];
-		for (int i = fileDesc.actualRecSize*currRecNrInBuff; i < fileDesc.actualRecSize; i++)
+		dest = new char[fileDesc.actualRecSize];
+		for (int i = fileDesc.actualRecSize*currRecNrInBuff; i < fileDesc.actualRecSize*(currRecNrInBuff + 1); i++)
 			dest[i] = Buffer[i];
-		dest[fileDesc.actualRecSize] = NULL;
 		if (status == 0)
-		{
-			if (currRecNr < fileDesc.eofRecNr - 1)
-			{
-				if (currRecNrInBuff < 1020 / fileDesc.maxRecSize)//check if it's before the end or at the end of the sector
-				{
-					currRecNr++;
-					currRecNrInBuff++;
-				}
-				else
-				{
-					for (int i = currSecNr + 1; i < 1600; i++)
-						if (FAT[i])
-							currSecNr = i * 2 + 1;
-					currRecNr++;
-					currRecNrInBuff = 0;
-				}
-			}
-			else
-			{
-				currRecNr = currRecNrInBuff = 0;
-				for (int i = 0; i < 1600; i++)
-					if (FAT[i])
-						currSecNr = i * 2 + 1;
-			}
-		}
+			seek(1, 1);
 		else
 		{
 			if (IOstatus == "I")
@@ -84,7 +61,7 @@ void FCB::read(char *dest, unsigned int status)//finish function
 			editLock = true;
 		}
 	}
-	else//גודל משתנה
+	else//varying size of records
 	{
 		int index = 0;
 		for (int i = 0; i < currRecNrInBuff; i++)
@@ -94,37 +71,13 @@ void FCB::read(char *dest, unsigned int status)//finish function
 		index++;//to pass the ~
 		int size = 0;
 		for (int i = index; Buffer[i] != '~'; i++, size++);
-		dest = new char[size + 1];
+		dest = new char[size];
 		for (int i = index; i < size; i++)
 			dest[i] = Buffer[i];
-		dest[size] = NULL;
-		//deal with a situation where bhe put in ~ in the data
+		//deal with a situation where he put in ~ in the data or eliminate that option from the user
+		//or leave that for the higher levels to deal with
 		if (status == 0)//read only
-		{
-			if (currRecNr < fileDesc.eofRecNr - 1)
-			{
-				if (index + size < 1020)//check if it's before the end or at the end of the sector
-				{
-					currRecNr++;
-					currRecNrInBuff++;
-				}
-				else
-				{
-					for (int i = currSecNr + 1; i < 1600; i++)
-						if (FAT[i])
-							currSecNr = i * 2 + 1;
-					currRecNr++;
-					currRecNrInBuff = 0;
-				}
-			}
-			else
-			{
-				currRecNr = currRecNrInBuff = 0;
-				for (int i = 0; i < 1600; i++)
-					if (FAT[i])
-						currSecNr = i * 2 + 1;
-			}
-		}
+			GoToNextRecord();
 		else // read & write
 		{
 			if (IOstatus == "I")
@@ -142,10 +95,12 @@ void FCB::write(char *record)
 	flushFile();
 	if (fileDesc.recFormat == "F")
 	{
-		if (strlen(record) != fileDesc.maxRecSize)
+		if (strlen(record) > fileDesc.maxRecSize)
 			throw "The record length isn't the right size.";
-		for (int i = 0; i < fileDesc.maxRecSize; i++)
+		for (int i = 0; i < strlen(record); i++)
 			Buffer[currRecNrInBuff*fileDesc.maxRecSize + i] = record[i];
+		for (int i = strlen(record); i < fileDesc.maxRecSize; i++)
+			Buffer[currRecNrInBuff*fileDesc.maxRecSize + i] = NULL;
 	}
 	else //the file has varrying sized records
 	{
@@ -160,10 +115,12 @@ void FCB::write(char *record)
 		{
 			int size;
 			for (size = 0; Buffer[size + startOfRecord] != '~' && size + startOfRecord < 1020; size++);
-			if (size < strlen(record) || startOfRecord + size >= 1020)
-			{
+			if (startOfRecord + size >= 1020)
 				throw "The record is too large";
-			}
+			if (size + startOfRecord + 1 < 1020 && Buffer[size + startOfRecord + 1] == NULL)//it's the last record
+				if (strlen(record) < 1020 - startOfRecord)
+					for (int i = 0; i < strlen(record); i++)
+						Buffer[startOfRecord + i] = record[i];
 			else if (strlen(record) < size)
 			{
 				for (int i = 0; i < strlen(record); i++)
@@ -184,11 +141,14 @@ void FCB::write(char *record)
 			}
 		}
 	}
-	fileDesc.eofRecNr++;
 }
-void FCB::sync(unsigned int from, int recordCount)//check for situation where he gave too big recordcount
+
+
+//NOT EDITED 
+void FCB::seek(unsigned int from, int recordCount)//check for situation where he gave too big recordcount
 {
 	//deal with deleted files problem
+	flushFile();
 	switch (from)
 	{
 	case 0://from beginning
@@ -196,21 +156,24 @@ void FCB::sync(unsigned int from, int recordCount)//check for situation where he
 		{
 			if (recordCount < 0)
 				throw "You are trying to access area before the begining of the file";
-			currRecNr = recordCount;
+			currRecNr = recordCount % (fileDesc.eofRecNr + 1);
 			currRecNrInBuff = 0;
 			currSecNr = -1;
-			for (int i = 0; i < 1600; i++)//get first sector
-				if (FAT[i])
+			for (int i = 0; i < 3200; i++)//get first sector
+				if (FAT[i/2])
 				{
-					currSecNr = i * 2 + 1;
+					currSecNr = i;
 					break;
 				}
 			while (recordCount > 1020 / fileDesc.maxRecSize)
 			{
 				recordCount -= 1020 / fileDesc.maxRecSize;
 				for (int i = currSecNr + 1; i < 1600; i++)
-					if (FAT[i/2])
+					if (FAT[i / 2])
+					{
 						currSecNr = i;
+						break;
+					}
 			}
 			currRecNrInBuff = recordCount;
 		}
@@ -219,11 +182,11 @@ void FCB::sync(unsigned int from, int recordCount)//check for situation where he
 			if (recordCount == 0)
 			{
 				currRecNr = currRecNrInBuff = 0;
-				for (int i = 0; i < 1600; i++)
+				for (int i = 0; i < 3200; i++)
 				{
 					if (FAT[i])
 					{
-						currSecNr = i * 2 + 1;//the second sector in the cluster since the first is being used for the header
+						currSecNr = i+1;//the second sector in the cluster since the first is being used for the header
 						break;
 					}
 				}
@@ -234,6 +197,7 @@ void FCB::sync(unsigned int from, int recordCount)//check for situation where he
 		break;
 	case 1:
 		currRecNr += recordCount;
+		currRecNr %= (fileDesc.eofRecNr + 1);
 		if (fileDesc.recFormat == "F")
 		{
 			if (currRecNrInBuff + recordCount < 1020 / fileDesc.maxRecSize)
@@ -246,7 +210,10 @@ void FCB::sync(unsigned int from, int recordCount)//check for situation where he
 					recordCount -= 1020 / fileDesc.maxRecSize;
 					for (int i = currSecNr + 1; i < 1600; i++)
 						if (FAT[i / 2])
+						{
 							currSecNr = i;
+							break;
+						}
 				}
 				currRecNrInBuff = recordCount;
 			}
@@ -259,11 +226,11 @@ void FCB::sync(unsigned int from, int recordCount)//check for situation where he
 		{
 			if (recordCount > 0)
 				throw "You are trying to access area before the begining of the file";
-			currRecNr = fileDesc.eofRecNr + recordCount;
+			currRecNr = (fileDesc.eofRecNr + recordCount ) % (fileDesc.eofRecNr + 1);;
 			currSecNr = -1;
 			for (int i = 0; i < 1600; i++)//get last sector
 				if (FAT[i])
-					currSecNr = i * 2 + 1;
+					currSecNr = 2 * i + 1;
 			while (-recordCount > 1020 / fileDesc.maxRecSize)
 			{
 				recordCount += 1020 / fileDesc.maxRecSize;
@@ -297,4 +264,79 @@ void FCB::sync(unsigned int from, int recordCount)//check for situation where he
 		throw "The starting point you entered is invalid";
 	}
 	flushFile();
+}
+#pragma region Edit Mode Functions
+void FCB::updateCancel()
+{
+	if (IOstatus == "I")
+		throw "This file has been opened in read only status";
+	if (!editLock)
+		throw "You can't cancel an update, cause it isn't in update state";
+	editLock = false; 
+}
+void FCB::deleteRecord()
+{
+	if (IOstatus == "I")
+		throw "This file has been opened in read only status";
+	if (!editLock)
+		throw "You can't delete the current record since it's not in update state";
+	editLock = false;
+	for (int i = fileDesc.keyOffset; i < fileDesc.keyOffset + fileDesc.keySize; i++)
+		Buffer[i] = 0;
+	GoToNextRecord();
+}
+void FCB::updateRecord(char *update)
+{
+	if (IOstatus == "I")
+		throw "This file has been opened in read only status";
+	if (!editLock)
+		throw "You are not in edit mode so you can't update the current record";
+	editLock = false;
+	write(update);
+	GoToNextRecord();
+}
+#pragma endregion
+void FCB::GoToNextRecord()
+{
+	if (fileDesc.recFormat == "F")
+	{
+		seek(1, 1);
+	}
+	else
+	{
+		int index = 0;//index of begining of the next sector
+		for (int i = 0; i < currRecNrInBuff + 1; i++)
+		{
+			for (; Buffer[index] != '~'; index++);
+		}
+		index++;//to pass the ~
+		int size = 0;
+		for (int i = index; Buffer[i] != '~' && size + index <1020; i++, size++);
+		if (size + index < 1020)
+		{
+			currRecNr++;
+			currRecNrInBuff++;
+			for (int i = 0; i < fileDesc.keySize; i++)
+				if (Buffer[i + index + fileDesc.keyOffset])
+					return;
+			//go to next cause this one is erased
+			GoToNextRecord();
+		}
+		else // the record is in the next sector
+		{
+			while (!FAT[currSecNr])
+			{
+				currSecNr++;
+				currSecNr %= 3200;
+			}
+			currRecNr = 0;
+			currRecNrInBuff = 0;
+			//check if it's an erased record
+			for (int i = 0; i < fileDesc.keySize; i++)
+				if (Buffer[i +fileDesc.keyOffset])
+					return;
+			//go to next cause this one is erased
+			GoToNextRecord();
+		}
+	}
 }

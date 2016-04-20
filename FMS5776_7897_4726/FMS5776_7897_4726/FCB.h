@@ -23,5 +23,10 @@ public:
 	void closeFile();
 	void read(char *dest, unsigned int status = 0);
 	void write(char *data);
-	void sync(unsigned int from, int recordCount);
+	void seek(unsigned int from, int recordCount);
+	void updateCancel();
+	void deleteRecord();
+	void updateRecord(char* update);
+	//support functions
+	void GoToNextRecord();
 };
