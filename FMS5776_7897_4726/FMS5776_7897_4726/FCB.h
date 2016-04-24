@@ -27,7 +27,7 @@ public:
 	void updateCancel();
 	void deleteRecord();
 	void updateRecord(char* update);
-	void addRecord(char *data);
+	void addRecord(char *record);
 	//support functions
 	void GoToNextRecord();
 };
