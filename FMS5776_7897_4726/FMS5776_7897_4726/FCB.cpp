@@ -53,7 +53,7 @@ void FCB::read(char *dest, unsigned int status)//finish function
 		for (int i = fileDesc.actualRecSize*currRecNrInBuff; i < fileDesc.actualRecSize*(currRecNrInBuff + 1); i++)
 			dest[i] = Buffer[i];
 		if (status == 0)
-			seek(1, 1);
+			GoToNextRecord();
 		else
 		{
 			if (IOstatus == "I")
@@ -114,17 +114,23 @@ void FCB::write(char *record)
 		if (startOfRecord < 1020)
 		{
 			int size;
-			for (size = 0; Buffer[size + startOfRecord] != '~' && size + startOfRecord < 1020; size++);
-			if (startOfRecord + size >= 1020)
+			for (size = 0; Buffer[size + startOfRecord] != '~' && size + startOfRecord < 1019; size++);
+			if (size < strlen(record))
 				throw "The record is too large";
-			if (size + startOfRecord + 1 < 1020 && Buffer[size + startOfRecord + 1] == NULL)//it's the last record
-				if (strlen(record) < 1020 - startOfRecord)
+			if (size + startOfRecord < 1018 && Buffer[size + startOfRecord + 2] == NULL || size + startOfRecord >= 1019)//it's the last record
+			{
+				if (strlen(record) < 1019 - startOfRecord)
 					for (int i = 0; i < strlen(record); i++)
 						Buffer[startOfRecord + i] = record[i];
+				Buffer[startOfRecord + strlen(record)] = '~';
+				for (int i = startOfRecord + strlen(record) + 1; i < 1020; i++)
+					Buffer[i] = NULL;
+			}
 			else if (strlen(record) < size)
 			{
 				for (int i = 0; i < strlen(record); i++)
 					Buffer[startOfRecord + i] = record[i];
+				Buffer[startOfRecord + strlen(record)] = '~';
 				//pull everything back
 				for (int i = startOfRecord + size, j = startOfRecord + strlen(record); j < 1020; i++, j++)
 				{
@@ -142,9 +148,6 @@ void FCB::write(char *record)
 		}
 	}
 }
-
-
-//NOT EDITED 
 void FCB::seek(unsigned int from, int recordCount)//check for situation where he gave too big recordcount
 {
 	//deal with deleted files problem
@@ -152,7 +155,13 @@ void FCB::seek(unsigned int from, int recordCount)//check for situation where he
 	switch (from)
 	{
 	case 0://from beginning
-		if (fileDesc.recFormat == "F")
+		currRecNr = currRecNrInBuff = 0;
+		for (int i = 0; i < 3200 && !FAT[i / 2]; i++)
+			currSecNr = i;
+		currSecNr++;
+		for (int i = 0; i < recordCount; i++)
+			GoToNextRecord();
+		/*if (fileDesc.recFormat == "F")
 		{
 			if (recordCount < 0)
 				throw "You are trying to access area before the begining of the file";
@@ -194,9 +203,10 @@ void FCB::seek(unsigned int from, int recordCount)//check for situation where he
 			else
 				throw "You can't jump there since it's the sizes of records vary";
 		}
+		break;*/
 		break;
 	case 1:
-		currRecNr += recordCount;
+		/*currRecNr += recordCount;
 		currRecNr %= (fileDesc.eofRecNr + 1);
 		if (fileDesc.recFormat == "F")
 		{
@@ -220,17 +230,30 @@ void FCB::seek(unsigned int from, int recordCount)//check for situation where he
 		}
 		else
 			throw "You can't jump there since it's the sizes of records vary";
+		break;*/
+		for (int i = 0; i < recordCount; i++)
+			GoToNextRecord();
 		break;
 	case 2:
+
+		if (recordCount > 0)
+			throw "You are trying to access area not yet in use";
+		for (int i = 0; i < fileDesc.eofRecNr - recordCount; i++)
+			GoToNextRecord();
+		/*
 		if (fileDesc.recFormat == "F")
 		{
-			if (recordCount > 0)
-				throw "You are trying to access area before the begining of the file";
-			currRecNr = (fileDesc.eofRecNr + recordCount ) % (fileDesc.eofRecNr + 1);;
-			currSecNr = -1;
-			for (int i = 0; i < 1600; i++)//get last sector
-				if (FAT[i])
-					currSecNr = 2 * i + 1;
+			currRecNr = (fileDesc.eofRecNr + recordCount ) % (fileDesc.eofRecNr + 1);
+			int Secindex = 0;
+			for (; Secindex < 3200 && !FAT[Secindex / 2]; Secindex++)
+				Secindex++;
+			if (Secindex >= 3200)
+				throw "There isn't any space";
+			for (int i = 0; i < ((fileDesc.eofRecNr - 1) / (1020 / fileDesc.maxRecSize)) + 1 && Secindex < 3200;Secindex++)
+				if (FAT[Secindex / 2])
+					i++;
+			currSecNr = Secindex;
+			
 			while (-recordCount > 1020 / fileDesc.maxRecSize)
 			{
 				recordCount += 1020 / fileDesc.maxRecSize;
@@ -259,6 +282,8 @@ void FCB::seek(unsigned int from, int recordCount)//check for situation where he
 			else
 				throw "You can't jump there since it's the sizes of records vary";
 		}
+		break;
+		*/
 		break;
 	default:
 		throw "The starting point you entered is invalid";
@@ -298,45 +323,118 @@ void FCB::updateRecord(char *update)
 #pragma endregion
 void FCB::GoToNextRecord()
 {
+	bool hasSpace = false;
+	for (int i = 0; i < 1600; i++)
+		if (FAT[i])
+			hasSpace = true;
+	if (!hasSpace)
+		throw "You have no space so yoou can't move to the next record...";
 	if (fileDesc.recFormat == "F")
 	{
-		seek(1, 1);
-	}
-	else
-	{
-		int index = 0;//index of begining of the next sector
-		for (int i = 0; i < currRecNrInBuff + 1; i++)
+		if (currRecNr != fileDesc.eofRecNr)
 		{
-			for (; Buffer[index] != '~'; index++);
-		}
-		index++;//to pass the ~
-		int size = 0;
-		for (int i = index; Buffer[i] != '~' && size + index <1020; i++, size++);
-		if (size + index < 1020)
-		{
-			currRecNr++;
-			currRecNrInBuff++;
-			for (int i = 0; i < fileDesc.keySize; i++)
-				if (Buffer[i + index + fileDesc.keyOffset])
-					return;
-			//go to next cause this one is erased
-			GoToNextRecord();
-		}
-		else // the record is in the next sector
-		{
-			while (!FAT[currSecNr])
+			if (currRecNrInBuff < 1020 / fileDesc.maxRecSize - 1)//In next sector
 			{
-				currSecNr++;
-				currSecNr %= 3200;
+				currRecNr++;
+				currRecNrInBuff++;
 			}
-			currRecNr = 0;
-			currRecNrInBuff = 0;
-			//check if it's an erased record
-			for (int i = 0; i < fileDesc.keySize; i++)
-				if (Buffer[i +fileDesc.keyOffset])
-					return;
-			//go to next cause this one is erased
-			GoToNextRecord();
+			else
+			{
+				currRecNr++;
+				for (int i = currSecNr + 1; i < 3200 && !FAT[i / 2]; i++)
+					currSecNr = i;
+				currSecNr++;
+				currRecNrInBuff = 0;
+			}
 		}
+		else//it's the last record
+		{
+			//go back to begining
+			for (int i = 0; i < 3200 && !FAT[i / 2]; i++)
+				currSecNr;
+			currSecNr++;
+			currRecNr = currRecNrInBuff = 0;
+		}
+	}
+	else // varying sizes
+	{
+		if (currRecNr != fileDesc.eofRecNr)
+		{
+			int index = 0;
+			for (int i = 0; index < 1020 && i < currRecNrInBuff; index++)
+			{
+				if (Buffer[i] == '~')
+					i++;
+			}
+			if (index + 1 == 1020 || Buffer[index + 1] == NULL)//in next sector
+			{
+				for (int i = currSecNr + 1; i < 3200 && !FAT[i / 2]; i++)
+					currSecNr = i;
+				currSecNr++;
+				currRecNr++;
+				currRecNrInBuff = 0;
+			}
+			else
+			{
+				currRecNr++; 
+				currRecNrInBuff++;
+			}
+		}
+		else//it's the last record
+		{
+			//go back to begining
+			for (int i = 0; i < 3200 && !FAT[i / 2]; i++)
+				currSecNr;
+			currSecNr++;
+			currRecNr = currRecNrInBuff = 0;
+		}
+	}
+}
+void FCB::addRecord(char *record)
+{
+	flushFile();
+	seek(2, 0);//go to the last record
+	//check if this is the last record in the sector
+	bool isLast = true;
+	if (fileDesc.recFormat == "F" && currRecNrInBuff < 1020 / fileDesc.maxRecSize - 1)
+		isLast = false;
+	else if (fileDesc.recFormat != "F")
+	{
+		int index = 0;
+		for (int i = 0; i < currRecNrInBuff && index < 1020; index++)
+			if (Buffer[index] == '~')
+				i++;
+		if(currRecNrInBuff > 0)
+			index++;
+		if (1019 - index < strlen(record))
+		{
+			isLast = false;
+			Buffer[1019] = '~';
+		}
+	}
+	if (!isLast)//isn't last
+	{	
+		fileDesc.eofRecNr++;
+		seek(2, 0);//go to end
+		write(record);
+	}
+	else // is the last
+	{
+		//check if there is another sector afterwards
+		bool nextSector = false;
+		for (int i = currSecNr + 1; i < 3200; i++)
+			if (FAT[i / 2])
+			{
+				nextSector = true;
+				break;
+			}
+		if (nextSector)
+		{				
+			fileDesc.eofRecNr++;
+			GoToNextRecord();
+			write(record);
+		}
+		else
+			throw "No more space to add another record";
 	}
 }
