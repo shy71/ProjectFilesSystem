@@ -81,8 +81,15 @@ public:
 	{
 		try
 		{
+			
+
 			string diskName = "aas";
 			string ownerName = "oshri";
+			Disk d;
+			d.createDisk(diskName, ownerName);
+			d.createfile("shy", "shy", "F", 10, 5, "I", 0, 4);
+			FCB*D = d.openfile((string)"shy", (string)"shy", (string)"IO");
+			D->closeFile();
 
 			printStructSize();
 			test_create(diskName, ownerName);

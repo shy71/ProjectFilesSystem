@@ -16,16 +16,16 @@ FCB::FCB(Disk *disk)
 }
 FCB::~FCB()
 {
-	delete d;
 }
 #pragma endregion
+
 void FCB::flushFile()
 {
 	if (IOstatus == "I")
 		return;
 	if (editLock)
 		throw "You can't flush the buffer while locked in edit mode!";
-	*d->rootDir.getEntry(fileDesc.Filename) = fileDesc;
+	*((d->rootDir).getEntry(fileDesc.Filename)) = fileDesc;
 	d->currDiskSectorNr = currSecNr;
 	if (d->currDiskSectorNr > 0 && d->currDiskSectorNr < 3200)
 		d->writeSector(d->currDiskSectorNr, &Buffer);
@@ -38,53 +38,52 @@ void FCB::closeFile()//eof record is changed every edit of a record so it's deal
 	flushFile();
 	d = NULL;
 	currRecNr = currRecNrInBuff = currSecNr = -1;
+	IOstatus = "I";
 	FAT.reset();
 }
 void FCB::read(char *dest, unsigned int status)//finish function
 {
 	if (editLock)
 		throw "You can't read while locked in edit mode!";
-	flushFile();
+	if (IOstatus == "I" && status == 1)
+		throw "You can't open it for editing since it's read only.";
+	//flushFile();
 	d->readSector(currSecNr, &Buffer);
 	if (fileDesc.recFormat == "F")
 	{
 		//read from buffer the current record
 		dest = new char[fileDesc.actualRecSize];
-		for (int i = fileDesc.actualRecSize*currRecNrInBuff; i < fileDesc.actualRecSize*(currRecNrInBuff + 1); i++)
+		for (int i = fileDesc.actualRecSize*currRecNrInBuff; i < fileDesc.actualRecSize*(currRecNrInBuff + 1); i++)//think of changing
 			dest[i] = Buffer[i];
 		if (status == 0)
 			GoToNextRecord();
 		else
-		{
-			if (IOstatus == "I")
-				throw "You can't open it for editing since it's read only.";
 			editLock = true;
-		}
 	}
-	else//varying size of records
-	{
-		int index = 0;
-		for (int i = 0; i < currRecNrInBuff; i++)
-		{
-			for (; Buffer[index] != '~'; index++);
-		}
-		index++;//to pass the ~
-		int size = 0;
-		for (int i = index; Buffer[i] != '~'; i++, size++);
-		dest = new char[size];
-		for (int i = index; i < size; i++)
-			dest[i] = Buffer[i];
-		//deal with a situation where he put in ~ in the data or eliminate that option from the user
-		//or leave that for the higher levels to deal with
-		if (status == 0)//read only
-			GoToNextRecord();
-		else // read & write
-		{
-			if (IOstatus == "I")
-				throw "You can't open it for editing since it's read only.";
-			editLock = true;
-		}
-	}
+	//else//varying size of records
+	//{
+	//	int index = 0;
+	//	for (int i = 0; i < currRecNrInBuff; i++)
+	//	{
+	//		for (; Buffer[index] != '~'; index++);
+	//	}
+	//	index++;//to pass the ~
+	//	int size = 0;
+	//	for (int i = index; Buffer[i] != '~'; i++, size++);
+	//	dest = new char[size];
+	//	for (int i = index; i < size; i++)
+	//		dest[i] = Buffer[i];
+	//	//deal with a situation where he put in ~ in the data or eliminate that option from the user
+	//	//or leave that for the higher levels to deal with
+	//	if (status == 0)//read only
+	//		GoToNextRecord();
+	//	else // read & write
+	//	{
+	//		if (IOstatus == "I")
+	//			throw "You can't open it for editing since it's read only.";
+	//		editLock = true;
+	//	}
+	//}
 }
 void FCB::write(char *record)
 {
@@ -92,61 +91,61 @@ void FCB::write(char *record)
 		throw "You can't write while locked in edit mode!";
 	if (IOstatus == "I")
 		throw "You can't edit these files because the file is read only.";
-	flushFile();
+	//flushFile();
 	if (fileDesc.recFormat == "F")
 	{
-		if (strlen(record) > fileDesc.maxRecSize)
-			throw "The record length isn't the right size.";
-		for (int i = 0; i < strlen(record); i++)
+		for (int i = 0; i < fileDesc.maxRecSize; i++)
 			Buffer[currRecNrInBuff*fileDesc.maxRecSize + i] = record[i];
-		for (int i = strlen(record); i < fileDesc.maxRecSize; i++)
-			Buffer[currRecNrInBuff*fileDesc.maxRecSize + i] = NULL;
+		if (currRecNr > fileDesc.eofRecNr)
+			fileDesc.eofRecNr=currRecNr;
 	}
-	else //the file has varrying sized records
-	{
-		int startOfRecord = 0;
-		for (int i = 0; startOfRecord < 1020 && i < currRecNrInBuff;startOfRecord++)
-			if (Buffer[startOfRecord] == '~')
-			{
-				i++;
-				startOfRecord++;
-			}
-		if (startOfRecord < 1020)
-		{
-			int size;
-			for (size = 0; Buffer[size + startOfRecord] != '~' && size + startOfRecord < 1019; size++);
-			if (size < strlen(record))
-				throw "The record is too large";
-			if (size + startOfRecord < 1018 && Buffer[size + startOfRecord + 2] == NULL || size + startOfRecord >= 1019)//it's the last record
-			{
-				if (strlen(record) < 1019 - startOfRecord)
-					for (int i = 0; i < strlen(record); i++)
-						Buffer[startOfRecord + i] = record[i];
-				Buffer[startOfRecord + strlen(record)] = '~';
-				for (int i = startOfRecord + strlen(record) + 1; i < 1020; i++)
-					Buffer[i] = NULL;
-			}
-			else if (strlen(record) < size)
-			{
-				for (int i = 0; i < strlen(record); i++)
-					Buffer[startOfRecord + i] = record[i];
-				Buffer[startOfRecord + strlen(record)] = '~';
-				//pull everything back
-				for (int i = startOfRecord + size, j = startOfRecord + strlen(record); j < 1020; i++, j++)
-				{
-					if (i < 1020)
-						Buffer[j] = Buffer[i];
-					else
-						Buffer[j] = NULL;
-				}
-			}
-			else //it's the right size
-			{
-				for (int i = startOfRecord; i < size; i++)
-					Buffer[i] = record[i];
-			}
-		}
-	}
+	flushFile();
+	GoToNextRecord();
+	//else //the file has varrying sized records
+	//{
+	//	int startOfRecord = 0;
+	//	for (int i = 0; startOfRecord < 1020 && i < currRecNrInBuff;startOfRecord++)
+	//		if (Buffer[startOfRecord] == '~')
+	//		{
+	//			i++;
+	//			startOfRecord++;
+	//		}
+	//	if (startOfRecord < 1020)
+	//	{
+	//		int size;
+	//		for (size = 0; Buffer[size + startOfRecord] != '~' && size + startOfRecord < 1019; size++);
+	//		if (size < strlen(record))
+	//			throw "The record is too large";
+	//		if (size + startOfRecord < 1018 && Buffer[size + startOfRecord + 2] == NULL || size + startOfRecord >= 1019)//it's the last record
+	//		{
+	//			if (strlen(record) < 1019 - startOfRecord)
+	//				for (int i = 0; i < strlen(record); i++)
+	//					Buffer[startOfRecord + i] = record[i];
+	//			Buffer[startOfRecord + strlen(record)] = '~';
+	//			for (int i = startOfRecord + strlen(record) + 1; i < 1020; i++)
+	//				Buffer[i] = NULL;
+	//		}
+	//		else if (strlen(record) < size)
+	//		{
+	//			for (int i = 0; i < strlen(record); i++)
+	//				Buffer[startOfRecord + i] = record[i];
+	//			Buffer[startOfRecord + strlen(record)] = '~';
+	//			//pull everything back
+	//			for (int i = startOfRecord + size, j = startOfRecord + strlen(record); j < 1020; i++, j++)
+	//			{
+	//				if (i < 1020)
+	//					Buffer[j] = Buffer[i];
+	//				else
+	//					Buffer[j] = NULL;
+	//			}
+	//		}
+	//		else //it's the right size
+	//		{
+	//			for (int i = startOfRecord; i < size; i++)
+	//				Buffer[i] = record[i];
+	//		}
+	//	}
+	//}
 }
 void FCB::seek(unsigned int from, int recordCount)//check for situation where he gave too big recordcount
 {
@@ -323,72 +322,71 @@ void FCB::updateRecord(char *update)
 #pragma endregion
 void FCB::GoToNextRecord()
 {
-	bool hasSpace = false;
-	for (int i = 0; i < 1600; i++)
-		if (FAT[i])
-			hasSpace = true;
-	if (!hasSpace)
-		throw "You have no space so yoou can't move to the next record...";
+	if (FAT.count() == 0)
+		throw "You have no space so you can't move to the next record...";
 	if (fileDesc.recFormat == "F")
 	{
-		if (currRecNr != fileDesc.eofRecNr)
+		if (currRecNrInBuff < 1020 / fileDesc.maxRecSize - 1)//In next sector
 		{
-			if (currRecNrInBuff < 1020 / fileDesc.maxRecSize - 1)//In next sector
+			currRecNr++;
+			currRecNrInBuff++;
+		}
+		else
+		{
+			bool lastSector = true;
+			for (int i = currSecNr + 1; i < 3200; i++)
+				if (FAT[i / 2])
+					lastSector = false;
+			if (lastSector)
 			{
-				currRecNr++;
-				currRecNrInBuff++;
+				//go back to begining
+				for (int i = 0; i < 3200 && !FAT[i / 2]; i++)
+					currSecNr;
+				currSecNr++;
+				currRecNr = currRecNrInBuff = 0;
 			}
 			else
 			{
 				currRecNr++;
 				for (int i = currSecNr + 1; i < 3200 && !FAT[i / 2]; i++)
 					currSecNr = i;
-				currSecNr++;
 				currRecNrInBuff = 0;
 			}
 		}
-		else//it's the last record
-		{
-			//go back to begining
-			for (int i = 0; i < 3200 && !FAT[i / 2]; i++)
-				currSecNr;
-			currSecNr++;
-			currRecNr = currRecNrInBuff = 0;
-		}
 	}
-	else // varying sizes
-	{
-		if (currRecNr != fileDesc.eofRecNr)
-		{
-			int index = 0;
-			for (int i = 0; index < 1020 && i < currRecNrInBuff; index++)
-			{
-				if (Buffer[i] == '~')
-					i++;
-			}
-			if (index + 1 == 1020 || Buffer[index + 1] == NULL)//in next sector
-			{
-				for (int i = currSecNr + 1; i < 3200 && !FAT[i / 2]; i++)
-					currSecNr = i;
-				currSecNr++;
-				currRecNr++;
-				currRecNrInBuff = 0;
-			}
-			else
-			{
-				currRecNr++; 
-				currRecNrInBuff++;
-			}
-		}
-		else//it's the last record
-		{
-			//go back to begining
-			for (int i = 0; i < 3200 && !FAT[i / 2]; i++)
-				currSecNr;
-			currSecNr++;
-			currRecNr = currRecNrInBuff = 0;
-		}
-	}
+	//else // varying sizes
+	//{
+	//	if (currRecNr != fileDesc.eofRecNr)
+	//	{
+	//		int index = 0;
+	//		for (int i = 0; index < 1020 && i < currRecNrInBuff; index++)
+	//		{
+	//			if (Buffer[i] == '~')
+	//				i++;
+	//		}
+	//		if (index + 1 == 1020 || Buffer[index + 1] == NULL)//in next sector
+	//		{
+	//			for (int i = currSecNr + 1; i < 3200 && !FAT[i / 2]; i++)
+	//				currSecNr = i;
+	//			currSecNr++;
+	//			currRecNr++;
+	//			currRecNrInBuff = 0;
+	//		}
+	//		else
+	//		{
+	//			currRecNr++; 
+	//			currRecNrInBuff++;
+	//		}
+	//	}
+	//	else//it's the last record
+	//	{
+	//		//go back to begining
+	//		for (int i = 0; i < 3200 && !FAT[i / 2]; i++)
+	//			currSecNr;
+	//		currSecNr++;
+	//		currRecNr = currRecNrInBuff = 0;
+	//	}
+	//}
 }
 void FCB::addRecord(char *record)
 {

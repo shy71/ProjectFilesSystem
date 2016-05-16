@@ -343,7 +343,9 @@ FCB* Disk::openfile(string &fileName, string &UserName, string &IOstatus)
 	dirEntry *dir=rootDir.getEntry(fileName.c_str());
 	if (dir == NULL)
 		throw "The file you are looking for doesn't exist.";
-	if ((strcmp(dir->fileOwner, UserName.c_str()) == 0 && IOstatus == "IO") || IOstatus == "I")
+	if (IOstatus != "IO"&&IOstatus != "I")
+		throw "The Status is invalid";
+	if (strcmp(dir->fileOwner, UserName.c_str()) == 0 || IOstatus == "I")
 	{
 		FileHeader fheader;
 		readSector(dir->fileAddr, (Sector *)&fheader);
