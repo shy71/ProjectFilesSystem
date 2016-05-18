@@ -310,7 +310,7 @@ void FCB::updateCancel()
 		throw "You can't cancel an update, cause it isn't in update state";
 	editLock = false; 
 }
-void FCB::deleteRecord()
+void FCB::deleteRecord()//איך בשאר הדברים ידאו לדלג על הרשמוה?
 {
 	if (IOstatus == "I")
 		throw "This file has been opened in read only status";
