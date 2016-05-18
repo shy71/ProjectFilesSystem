@@ -30,4 +30,5 @@ public:
 	void addRecord(char *record);
 	//support functions
 	void GoToNextRecord();
+	void MoveRecord(int num);
 };

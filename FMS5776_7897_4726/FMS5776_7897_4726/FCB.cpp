@@ -154,12 +154,13 @@ void FCB::seek(unsigned int from, int recordCount)//check for situation where he
 	switch (from)
 	{
 	case 0://from beginning
+		if (recordCount < 0)
+			throw "You cant move backward from the start of the file";
 		currRecNr = currRecNrInBuff = 0;
 		for (int i = 0; i < 3200 && !FAT[i / 2]; i++)
 			currSecNr = i;
 		currSecNr++;
-		for (int i = 0; i < recordCount; i++)
-			GoToNextRecord();
+		MoveRecord(recordCount);
 		/*if (fileDesc.recFormat == "F")
 		{
 			if (recordCount < 0)
@@ -204,7 +205,7 @@ void FCB::seek(unsigned int from, int recordCount)//check for situation where he
 		}
 		break;*/
 		break;
-	case 1:
+	case 1://from current place
 		/*currRecNr += recordCount;
 		currRecNr %= (fileDesc.eofRecNr + 1);
 		if (fileDesc.recFormat == "F")
@@ -230,15 +231,12 @@ void FCB::seek(unsigned int from, int recordCount)//check for situation where he
 		else
 			throw "You can't jump there since it's the sizes of records vary";
 		break;*/
-		for (int i = 0; i < recordCount; i++)
-			GoToNextRecord();
+		MoveRecord(recordCount);
 		break;
 	case 2:
-
 		if (recordCount > 0)
-			throw "You are trying to access area not yet in use";
-		for (int i = 0; i < fileDesc.eofRecNr - recordCount; i++)
-			GoToNextRecord();
+			throw "You cant move foreword from the start of the file";
+		MoveRecord(recordCount);
 		/*
 		if (fileDesc.recFormat == "F")
 		{
@@ -287,7 +285,21 @@ void FCB::seek(unsigned int from, int recordCount)//check for situation where he
 	default:
 		throw "The starting point you entered is invalid";
 	}
-	flushFile();
+	//flushFile();
+}
+void FCB::MoveRecord(int num)
+{
+	if (num > 0)
+		if (fileDesc.eofRecNr < num + currRecNr)
+			throw "You have asked for a record out of the range of the file!";
+		else
+			for (int i = 0; i < num; i++)
+				GoToNextRecord();
+	else
+		if (num + currRecNr < 0)
+			throw "You have asked for a record out of the range of the file!";
+		else
+			seek(0, num + currRecNr);
 }
 #pragma region Edit Mode Functions
 void FCB::updateCancel()
@@ -317,7 +329,6 @@ void FCB::updateRecord(char *update)
 		throw "You are not in edit mode so you can't update the current record";
 	editLock = false;
 	write(update);
-	GoToNextRecord();
 }
 #pragma endregion
 void FCB::GoToNextRecord()
@@ -339,11 +350,12 @@ void FCB::GoToNextRecord()
 					lastSector = false;
 			if (lastSector)
 			{
-				//go back to begining
-				for (int i = 0; i < 3200 && !FAT[i / 2]; i++)
-					currSecNr;
-				currSecNr++;
-				currRecNr = currRecNrInBuff = 0;
+				throw "The file has reached his end!";
+				////go back to begining
+				//for (int i = 0; i < 3200 && !FAT[i / 2]; i++)
+				//	currSecNr;
+				//currSecNr++;
+				//currRecNr = currRecNrInBuff = 0;
 			}
 			else
 			{
@@ -388,7 +400,7 @@ void FCB::GoToNextRecord()
 	//	}
 	//}
 }
-void FCB::addRecord(char *record)
+void FCB::addRecord(char *record)//need to be d
 {
 	flushFile();
 	seek(2, 0);//go to the last record
