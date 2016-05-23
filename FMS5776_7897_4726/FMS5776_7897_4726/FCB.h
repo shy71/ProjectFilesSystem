@@ -16,6 +16,7 @@ public:
 	unsigned int currRecNr;
 	unsigned int currSecNr;
 	unsigned int currRecNrInBuff;
+	string lastErrorMessage;
 	FCB();
 	FCB(Disk *disk);
 	~FCB();
@@ -31,4 +32,8 @@ public:
 	//support functions
 	void GoToNextRecord();
 	void MoveRecord(int num);
+
+	//level 4
+	string& GetLastErrorMessage();
+	void SetLastErrorMessage(string lastErrorMessage);
 };

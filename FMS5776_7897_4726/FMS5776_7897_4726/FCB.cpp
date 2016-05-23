@@ -310,7 +310,7 @@ void FCB::updateCancel()
 		throw "You can't cancel an update, cause it isn't in update state";
 	editLock = false; 
 }
-void FCB::deleteRecord()//איך בשאר הדברים ידאו לדלג על הרשמוה?
+void FCB::deleteRecord()//איך בשאר הדברים ידעו לדלג על הרשמוה?
 {
 	if (IOstatus == "I")
 		throw "This file has been opened in read only status";
@@ -447,4 +447,14 @@ void FCB::addRecord(char *record)//need to be d
 		else
 			throw "No more space to add another record";
 	}
+}
+
+string& FCB::GetLastErrorMessage()
+{
+	return this->lastErrorMessage;
+}
+
+void FCB::SetLastErrorMessage(string lastErrorMessage)
+{
+	this->lastErrorMessage = lastErrorMessage;
 }

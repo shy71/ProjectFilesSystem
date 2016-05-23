@@ -15,6 +15,7 @@ struct Disk
 	bool mounted;
 	fstream dskfl;
 	unsigned int currDiskSectorNr;
+	string lastErrorMessage;
 
 
 	void Disk::writePlusCpy(unsigned int sor, unsigned int cpy, DAT sec);
@@ -22,13 +23,13 @@ struct Disk
 
 public:
 	Disk();
-	Disk(string &, string &, char);
+	Disk(string, string, char);
 	~Disk();
 
-	void createDisk(string &, string &);
-	void mountDisk(string &);
+	void createDisk(string, string);
+	void mountDisk(string);
 	void unmountDisk();
-	void recreateDisk(string &);
+	void recreateDisk(string);
 	fstream* getdskfl();
 	void seekToSector(unsigned int);
 	void writeSector(unsigned int, Sector*);
@@ -37,7 +38,7 @@ public:
 	void readSector(Sector*);
 
 	//level 1
-	void format(string &);
+	void format(string);
 	int howmuchempty();
 	void dealloc(DATtype& FAT);
 	void alloc(DATtype & fat, unsigned int num, unsigned int type, unsigned int index = 0);
@@ -47,9 +48,13 @@ public:
 
 	//level 2
 	void createfile(string , string , string , unsigned int, unsigned int, string , unsigned int, unsigned int length=-1);
-	void delfile(string &, string &);
-	void extendfile(string &, string &, unsigned int);
+	void delfile(string, string);
+	void extendfile(string, string, unsigned int);
 
 	//level 3
-	FCB *openfile(string &, string &, string &);
+	FCB *openfile(string, string, string);
+
+	//level 4
+	string& Disk::GetLastErrorMessage();
+	void Disk::SetLastErrorMessage(string lastErrorMessage);
 };

@@ -18,7 +18,7 @@ string GetTime()
 	temp << timeinfo.tm_mday << "/" << timeinfo.tm_mon + 1 << "/" << timeinfo.tm_year + 1900;
 	return temp.str();
 }
-Disk::Disk(string &fname, string &diskOwner, char action)
+Disk::Disk(string fname, string diskOwner, char action)
 {
 	ifstream infile(fname);
 	if (action == 'c')//create new disk
@@ -36,7 +36,7 @@ Disk::Disk(string &fname, string &diskOwner, char action)
 			throw "There is no disk with that name...";
 	}
 }
-void Disk::mountDisk(string &fname)
+void Disk::mountDisk(string fname)
 {
 	dskfl.open(fname, ios::binary | ios::in);
 	if (dskfl.is_open())
@@ -79,13 +79,13 @@ Disk::~Disk()
 	if (dskfl.is_open())
 		dskfl.close();
 }
-void Disk::createDisk(string & name, string & owner)//FIX
+void Disk::createDisk(string name, string owner)
 {
 	ifstream file(name, ios::binary | ios::in);
 	if (file.is_open())
 		throw "You can't create a disk with a name that is already taken!";
 	file.close();
-	dskfl.open(name, ios::binary | ios::out);//error
+	dskfl.open(name, ios::binary | ios::out);
 	//create VHD Data
 	vhd.sectorNr = 0;
 	strcpy_s(vhd.diskName, name.c_str());
@@ -131,7 +131,7 @@ void Disk::writeDir(unsigned int add, unsigned int addcpy, RootDir root)
 	root.msbSector.sectorNr = addcpy * 2 + 1;
 	writeSector(addcpy * 2 + 1, (Sector*)&root.msbSector);
 }
-void Disk::recreateDisk(string &owner)
+void Disk::recreateDisk(string owner)
 {
 	if (mounted == false)
 	{
@@ -167,7 +167,7 @@ void Disk::readSector(Sector* sec)
 {
 	dskfl.read((char *)sec, sizeof(Sector));
 }
-void Disk::format(string & owner)
+void Disk::format(string owner)
 {
 	if (strcmp(vhd.diskOwner,owner.c_str())!=0)
 		throw "You can't format a disk which not belongs to you!";
@@ -308,7 +308,7 @@ void Disk::createfile(string fileName, string fileOwner, string filetype, unsign
 	//save the file
 }
 
-void Disk::delfile(string & fname, string & username)
+void Disk::delfile(string fname, string username)
 {
 	dirEntry *dir = rootDir.getEntry(fname.c_str());
 	if (dir==NULL)
@@ -322,7 +322,7 @@ void Disk::delfile(string & fname, string & username)
 
 	Update();
 }
-void Disk::extendfile(string & fname, string & username ,unsigned int numToAdd)
+void Disk::extendfile(string fname, string username ,unsigned int numToAdd)
 {
 	dirEntry *dir = rootDir.getEntry(fname.c_str());
 	if (dir == NULL)
@@ -338,7 +338,7 @@ void Disk::extendfile(string & fname, string & username ,unsigned int numToAdd)
 
 	Update();
 }
-FCB* Disk::openfile(string &fileName, string &UserName, string &IOstatus)
+FCB* Disk::openfile(string fileName, string UserName, string IOstatus)
 {
 	dirEntry *dir=rootDir.getEntry(fileName.c_str());
 	if (dir == NULL)
@@ -359,4 +359,13 @@ FCB* Disk::openfile(string &fileName, string &UserName, string &IOstatus)
 	}
 	else
 		throw "You don't have access to this file.";
+}
+
+string& Disk::GetLastErrorMessage()
+{
+	return this->lastErrorMessage;
+}
+void Disk::SetLastErrorMessage(string lastErrorMessage)
+{
+	this->lastErrorMessage = lastErrorMessage;
 }
