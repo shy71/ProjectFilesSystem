@@ -309,11 +309,14 @@ namespace FMS_adapter
                 throw;
             }
         }
-        public void ReadRecord(IntPtr dest, uint readForUpdate = 0)
+        public void ReadRecord(object dest, uint readForUpdate = 0)
         {
             try
             {
-                cppToCsharpAdapter.ReadRecord(this.myFCBPointer,dest,readForUpdate);
+                IntPtr buffer = Marshal.AllocHGlobal(Marshal.SizeOf(dest.GetType()));
+                
+                cppToCsharpAdapter.ReadRecord(this.myFCBPointer, dest, readForUpdate);
+                Marshal.FreeHGlobal(buffer);  
             }
             catch (SEHException)
             {
@@ -326,11 +329,14 @@ namespace FMS_adapter
                 throw;
             }
         }
-        public void WriteRecord(IntPtr source)
+        public void WriteRecord(object source)
         {
             try
             {
-                cppToCsharpAdapter.WriteRecord(this.myFCBPointer, source);
+                IntPtr buffer = Marshal.AllocHGlobal(Marshal.SizeOf(source.GetType()));
+                Marshal.StructureToPtr(source, buffer, true);
+                cppToCsharpAdapter.WriteRecord(this.myFCBPointer, buffer);
+                Marshal.FreeHGlobal(buffer);  
             }
             catch (SEHException)
             {
@@ -396,11 +402,14 @@ namespace FMS_adapter
                 throw;
             }
         }
-        public void UpdateRecord(IntPtr source)
+        public void UpdateRecord(object source)
         {
             try
             {
-                cppToCsharpAdapter.UpdateRecord(this.myFCBPointer,source);
+                IntPtr buffer = Marshal.AllocHGlobal(Marshal.SizeOf(source.GetType()));
+                Marshal.StructureToPtr(source, buffer, true);
+                cppToCsharpAdapter.UpdateRecord(this.myFCBPointer, buffer);
+                Marshal.FreeHGlobal(buffer);  
             }
             catch (SEHException)
             {
