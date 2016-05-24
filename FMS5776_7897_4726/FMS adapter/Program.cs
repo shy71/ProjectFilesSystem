@@ -315,7 +315,8 @@ namespace FMS_adapter
             {
                 IntPtr buffer = Marshal.AllocHGlobal(Marshal.SizeOf(dest.GetType()));
                 
-                cppToCsharpAdapter.ReadRecord(this.myFCBPointer, dest, readForUpdate);
+                cppToCsharpAdapter.ReadRecord(this.myFCBPointer, buffer, readForUpdate);
+                //copy to dest
                 Marshal.FreeHGlobal(buffer);  
             }
             catch (SEHException)
