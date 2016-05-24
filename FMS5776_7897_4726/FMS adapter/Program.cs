@@ -88,7 +88,7 @@ namespace FMS_adapter
     class Disk
     {
         IntPtr myDiskPointer;
-
+        #region CONSTRUCTORS & DESTRUCTORS
         public Disk()
         {
             this.myDiskPointer = cppToCsharpAdapter.MakeDiskObject();
@@ -98,7 +98,8 @@ namespace FMS_adapter
             if(myDiskPointer!=null)
                 cppToCsharpAdapter.DeleteDiskObject(ref myDiskPointer);
         }
-
+        #endregion
+        #region LEVEL 0 FUNCTIONS
         public void Createdisk(string diskName, string diskOwner)
         {
             try
@@ -166,11 +167,253 @@ namespace FMS_adapter
             {
                 throw;
             }
-        } 
-
-
-
-
+        }
+        #endregion
+        #region LEVEL 1 FUNCTIONS
+        public void Format(string owner)
+        {
+            try
+            {
+                cppToCsharpAdapter.Format(this.myDiskPointer, owner);
+            }
+            catch (SEHException)
+            {
+                IntPtr cString = cppToCsharpAdapter.GetLastDiskErrorMessage(this.myDiskPointer);
+                string message = Marshal.PtrToStringAnsi(cString);
+                throw new Exception(message);
+            }
+            catch
+            {
+                throw;
+            }
+        }
+        public void HowMuchEmpty()
+        {
+            try
+            {
+                cppToCsharpAdapter.HowMuchEmpty(this.myDiskPointer);
+            }
+            catch (SEHException)
+            {
+                IntPtr cString = cppToCsharpAdapter.GetLastDiskErrorMessage(this.myDiskPointer);
+                string message = Marshal.PtrToStringAnsi(cString);
+                throw new Exception(message);
+            }
+            catch
+            {
+                throw;
+            }
+        }
+        #endregion
+        #region LEVEL 2 FUNCTIONS
+        public void CreateFile(string fileName, string fileOwner, string FinalOrVar,
+                                uint recSize, uint fileSize,
+                                string keyType, uint keyOffset, uint keySize = 4)
+        {
+            try
+            {
+                cppToCsharpAdapter.CreateFile(this.myDiskPointer,fileName,fileOwner,FinalOrVar,recSize,fileSize,keyType,keyOffset,keySize);
+            }
+            catch (SEHException)
+            {
+                IntPtr cString = cppToCsharpAdapter.GetLastDiskErrorMessage(this.myDiskPointer);
+                string message = Marshal.PtrToStringAnsi(cString);
+                throw new Exception(message);
+            }
+            catch
+            {
+                throw;
+            }
+        }
+        public void DelFile(string fileName,string fileOwner)
+        {
+            try
+            {
+                cppToCsharpAdapter.DelFile(this.myDiskPointer,fileName,fileOwner);
+            }
+            catch (SEHException)
+            {
+                IntPtr cString = cppToCsharpAdapter.GetLastDiskErrorMessage(this.myDiskPointer);
+                string message = Marshal.PtrToStringAnsi(cString);
+                throw new Exception(message);
+            }
+            catch
+            {
+                throw;
+            }
+        }
+        public void ExtendFile(string fileName, string fileOwner,uint size)
+        {
+            try
+            {
+                cppToCsharpAdapter.ExtendFile(this.myDiskPointer, fileName, fileOwner,size);
+            }
+            catch (SEHException)
+            {
+                IntPtr cString = cppToCsharpAdapter.GetLastDiskErrorMessage(this.myDiskPointer);
+                string message = Marshal.PtrToStringAnsi(cString);
+                throw new Exception(message);
+            }
+            catch
+            {
+                throw;
+            }
+        }
+        #endregion
+        #region LEVEL 3 FUNCTIONS
+        public IntPtr OpenFile(string fileName, string fileOwner, string openMode)
+        {
+            try
+            {
+                return cppToCsharpAdapter.OpenFile(this.myDiskPointer,fileName,fileOwner,openMode);
+            }
+            catch (SEHException)
+            {
+                IntPtr cString = cppToCsharpAdapter.GetLastDiskErrorMessage(this.myDiskPointer);
+                string message = Marshal.PtrToStringAnsi(cString);
+                throw new Exception(message);
+            }
+            catch
+            {
+                throw;
+            }
+        }
+        #endregion
+    }
+    class FCB
+    {
+        private IntPtr myFCBPointer;
+        
+        #region DESTRUCTOR
+        public ~FCB()
+        {
+            if (myFCBPointer != null)
+                cppToCsharpAdapter.DeleteFcbObject(ref myFCBPointer);
+        }
+        #endregion
+        #region BASIC FUNCTIONS
+        public void CloseFile()
+        {
+            try
+            {
+                cppToCsharpAdapter.CloseFile(this.myFCBPointer);
+            }
+            catch (SEHException)
+            {
+                IntPtr cString = cppToCsharpAdapter.GetLastFcbErrorMessage(this.myFCBPointer);
+                string message = Marshal.PtrToStringAnsi(cString);
+                throw new Exception(message);
+            }
+            catch
+            {
+                throw;
+            }
+        }
+        public void ReadRecord(IntPtr dest, uint readForUpdate = 0)
+        {
+            try
+            {
+                cppToCsharpAdapter.ReadRecord(this.myFCBPointer,dest,readForUpdate);
+            }
+            catch (SEHException)
+            {
+                IntPtr cString = cppToCsharpAdapter.GetLastFcbErrorMessage(this.myFCBPointer);
+                string message = Marshal.PtrToStringAnsi(cString);
+                throw new Exception(message);
+            }
+            catch
+            {
+                throw;
+            }
+        }
+        public void WriteRecord(IntPtr source)
+        {
+            try
+            {
+                cppToCsharpAdapter.WriteRecord(this.myFCBPointer, source);
+            }
+            catch (SEHException)
+            {
+                IntPtr cString = cppToCsharpAdapter.GetLastFcbErrorMessage(this.myFCBPointer);
+                string message = Marshal.PtrToStringAnsi(cString);
+                throw new Exception(message);
+            }
+            catch
+            {
+                throw;
+            }
+        }
+        public void SeekRecord(uint from, int pos)
+        {
+            try
+            {
+                cppToCsharpAdapter.SeekRecord(this.myFCBPointer, from, pos);
+            }
+            catch (SEHException)
+            {
+                IntPtr cString = cppToCsharpAdapter.GetLastFcbErrorMessage(this.myFCBPointer);
+                string message = Marshal.PtrToStringAnsi(cString);
+                throw new Exception(message);
+            }
+            catch
+            {
+                throw;
+            }
+        }
+        #endregion
+        #region UPDATE FUNCTIONS
+        public void UpdateRecCancel()
+        {
+            try
+            {
+                cppToCsharpAdapter.UpdateRecCancel(this.myFCBPointer);
+            }
+            catch (SEHException)
+            {
+                IntPtr cString = cppToCsharpAdapter.GetLastFcbErrorMessage(this.myFCBPointer);
+                string message = Marshal.PtrToStringAnsi(cString);
+                throw new Exception(message);
+            }
+            catch
+            {
+                throw;
+            }
+        }
+        public void DeleteRecord()
+        {
+            try
+            {
+                cppToCsharpAdapter.DeleteRecord(this.myFCBPointer);
+            }
+            catch (SEHException)
+            {
+                IntPtr cString = cppToCsharpAdapter.GetLastFcbErrorMessage(this.myFCBPointer);
+                string message = Marshal.PtrToStringAnsi(cString);
+                throw new Exception(message);
+            }
+            catch
+            {
+                throw;
+            }
+        }
+        public void UpdateRecord(IntPtr source)
+        {
+            try
+            {
+                cppToCsharpAdapter.UpdateRecord(this.myFCBPointer,source);
+            }
+            catch (SEHException)
+            {
+                IntPtr cString = cppToCsharpAdapter.GetLastFcbErrorMessage(this.myFCBPointer);
+                string message = Marshal.PtrToStringAnsi(cString);
+                throw new Exception(message);
+            }
+            catch
+            {
+                throw;
+            }
+        }
+        #endregion
     }
     class Program
     {
