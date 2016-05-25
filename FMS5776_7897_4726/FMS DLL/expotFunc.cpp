@@ -121,7 +121,7 @@ extern "C"
 		}
 	#pragma endregion
 	#pragma region LEVEL 3 FUNCTIONS
-		__declspec(dllexport) FCB* OpenFile(Disk* THIS, char* fname, char* fowner, char* openMode)
+		__declspec(dllexport) FCB* OpenFile(Disk* THIS, char* fname, char* fowner, char* openMode) 
 		{
 			try
 			{
