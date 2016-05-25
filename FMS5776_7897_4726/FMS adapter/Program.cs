@@ -93,7 +93,7 @@ namespace FMS_adapter
         {
             this.myDiskPointer = cppToCsharpAdapter.MakeDiskObject();
         }
-        public ~Disk()
+        ~Disk()
         {
             if(myDiskPointer!=null)
                 cppToCsharpAdapter.DeleteDiskObject(ref myDiskPointer);
@@ -285,7 +285,7 @@ namespace FMS_adapter
         private IntPtr myFCBPointer;
         
         #region DESTRUCTOR
-        public ~FCB()
+        ~FCB()
         {
             if (myFCBPointer != null)
                 cppToCsharpAdapter.DeleteFcbObject(ref myFCBPointer);
