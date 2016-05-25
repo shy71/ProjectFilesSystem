@@ -369,3 +369,8 @@ void Disk::SetLastErrorMessage(string lastErrorMessage)
 {
 	this->lastErrorMessage = lastErrorMessage;
 }
+
+VolumeHeader Disk::GetVolumeHeader()
+{
+	return this->vhd;
+}

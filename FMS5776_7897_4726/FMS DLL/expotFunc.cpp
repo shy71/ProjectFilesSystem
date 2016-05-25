@@ -121,7 +121,7 @@ extern "C"
 		}
 	#pragma endregion
 	#pragma region LEVEL 3 FUNCTIONS
-		__declspec(dllexport) FCB* CreateFile(Disk* THIS, char* fname, char* fowner, char* openMode)
+		__declspec(dllexport) FCB* OpenFile(Disk* THIS, char* fname, char* fowner, char* openMode)
 		{
 			try
 			{
@@ -132,6 +132,12 @@ extern "C"
 				THIS->SetLastErrorMessage(ex.what());
 				throw ex;
 			}
+		}
+	#pragma endregion
+	#pragma region LEVEL 4 FUNCTIONS
+		__declspec(dllexport)  void  GetVolumeHeader(Disk* THIS, VolumeHeader* buffer)
+		{
+			memcpy_s(buffer, sizeof(VolumeHeader), &THIS->GetVolumeHeader(), sizeof(VolumeHeader));
 		}
 	#pragma endregion
 

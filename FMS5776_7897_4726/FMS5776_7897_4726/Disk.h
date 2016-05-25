@@ -57,4 +57,6 @@ public:
 	//level 4
 	string& Disk::GetLastErrorMessage();
 	void Disk::SetLastErrorMessage(string lastErrorMessage);
+	VolumeHeader GetVolumeHeader();
+
 };
