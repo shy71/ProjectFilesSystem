@@ -542,6 +542,12 @@ namespace FMS_adapter
                 d.Format("oshri");
                 Console.WriteLine("\nFormat Disk:");
                 Console.WriteLine(ToStringProperty(d.GetVolumeHeader()));
+
+
+                d.CreateFile("File1", "Ezra", "F", 20, 20, "I", 0);
+                FCB fcb = new FCB(d.OpenFile("File1", "Ezra", "IO"));
+                fcb.WriteRecord("hello");
+                
             }
             catch (Exception e)
             {
