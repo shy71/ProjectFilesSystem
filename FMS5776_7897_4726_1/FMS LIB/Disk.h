@@ -7,7 +7,7 @@ using namespace std;
 #include "Dir.h"
 #include <fstream>
 class FCB;
-struct Disk//r
+struct Disk//ra
 {
 	VolumeHeader vhd;
 	DAT dat;
