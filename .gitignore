@@ -56,9 +56,6 @@ dlldata.c
 *.pidb
 *.svclog
 *.scc
-*.vcxproj
-*.filters
-*.sln
 
 
 # Chutzpah Test files
