@@ -4,6 +4,7 @@
 #include"DAT.h"
 #include"Disk.h"
 class Disk;
+
 class FCB
 {
 public:

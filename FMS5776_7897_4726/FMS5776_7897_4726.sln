@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FMS adapter", "FMS adapter\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FMS GUI", "FMS GUI\FMS GUI.csproj", "{14DBC964-A678-4E6A-AF42-90B555080D9E}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FMS DLL", "FMS DLL\FMS DLL.vcxproj", "{B9C730BE-2754-4AC5-87CF-CAA6A3436852}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FMS DLL", "FMS DLL\FMS DLL.vcxproj", "{308A9DA1-0CDC-4055-A860-36D95E0692B2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -62,18 +62,18 @@ Global
 		{14DBC964-A678-4E6A-AF42-90B555080D9E}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{14DBC964-A678-4E6A-AF42-90B555080D9E}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{14DBC964-A678-4E6A-AF42-90B555080D9E}.Release|Win32.ActiveCfg = Release|Any CPU
-		{B9C730BE-2754-4AC5-87CF-CAA6A3436852}.Debug|Any CPU.ActiveCfg = Debug|Win32
-		{B9C730BE-2754-4AC5-87CF-CAA6A3436852}.Debug|ARM.ActiveCfg = Debug|Win32
-		{B9C730BE-2754-4AC5-87CF-CAA6A3436852}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
-		{B9C730BE-2754-4AC5-87CF-CAA6A3436852}.Debug|Mixed Platforms.Build.0 = Debug|Win32
-		{B9C730BE-2754-4AC5-87CF-CAA6A3436852}.Debug|Win32.ActiveCfg = Debug|Win32
-		{B9C730BE-2754-4AC5-87CF-CAA6A3436852}.Debug|Win32.Build.0 = Debug|Win32
-		{B9C730BE-2754-4AC5-87CF-CAA6A3436852}.Release|Any CPU.ActiveCfg = Release|Win32
-		{B9C730BE-2754-4AC5-87CF-CAA6A3436852}.Release|ARM.ActiveCfg = Release|Win32
-		{B9C730BE-2754-4AC5-87CF-CAA6A3436852}.Release|Mixed Platforms.ActiveCfg = Release|Win32
-		{B9C730BE-2754-4AC5-87CF-CAA6A3436852}.Release|Mixed Platforms.Build.0 = Release|Win32
-		{B9C730BE-2754-4AC5-87CF-CAA6A3436852}.Release|Win32.ActiveCfg = Release|Win32
-		{B9C730BE-2754-4AC5-87CF-CAA6A3436852}.Release|Win32.Build.0 = Release|Win32
+		{308A9DA1-0CDC-4055-A860-36D95E0692B2}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{308A9DA1-0CDC-4055-A860-36D95E0692B2}.Debug|ARM.ActiveCfg = Debug|Win32
+		{308A9DA1-0CDC-4055-A860-36D95E0692B2}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{308A9DA1-0CDC-4055-A860-36D95E0692B2}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{308A9DA1-0CDC-4055-A860-36D95E0692B2}.Debug|Win32.ActiveCfg = Debug|Win32
+		{308A9DA1-0CDC-4055-A860-36D95E0692B2}.Debug|Win32.Build.0 = Debug|Win32
+		{308A9DA1-0CDC-4055-A860-36D95E0692B2}.Release|Any CPU.ActiveCfg = Release|Win32
+		{308A9DA1-0CDC-4055-A860-36D95E0692B2}.Release|ARM.ActiveCfg = Release|Win32
+		{308A9DA1-0CDC-4055-A860-36D95E0692B2}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{308A9DA1-0CDC-4055-A860-36D95E0692B2}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{308A9DA1-0CDC-4055-A860-36D95E0692B2}.Release|Win32.ActiveCfg = Release|Win32
+		{308A9DA1-0CDC-4055-A860-36D95E0692B2}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
