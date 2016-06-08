@@ -3,7 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="ShowDisk" Height="300" Width="300">
     <Grid>
-        <StackPanel x:Name="FileStack" HorizontalAlignment="Left" Height="180" Margin="10,80,0,0" VerticalAlignment="Top" Width="272"/>
-
+        <ComboBox x:Name="FileBox" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="107,125,94,125" Width="91"/>
     </Grid>
 </Window>

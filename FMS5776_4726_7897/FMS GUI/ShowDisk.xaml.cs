@@ -28,6 +28,7 @@ namespace FMS_GUI
         {
             InitializeComponent();
             vh=d.GetVolumeHeader();
+            FileBox.ItemsSource = d.GetFilesNames();
         }
     }
 }

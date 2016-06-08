@@ -315,7 +315,7 @@ namespace FMS_adapter
                 throw;
             }
         }
-        public List<string> GetRootDir() { return null; }//לעשות
+        public List<string> GetFilesNames() { return null; }//לעשות
 
         #endregion
     }
