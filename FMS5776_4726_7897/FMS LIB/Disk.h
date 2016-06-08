@@ -7,7 +7,7 @@ using namespace std;
 #include "Dir.h"
 #include <fstream>
 class FCB;
-struct Disk//ra
+struct Disk
 {
 	VolumeHeader vhd;
 	DAT dat;
@@ -47,7 +47,7 @@ public:
 	void writeDir(unsigned int add, unsigned int addcpy, RootDir root);
 
 	//level 2
-	void createfile(string , string , string , unsigned int, unsigned int, string , unsigned int, unsigned int length=-1);
+	void createfile(string, string, string, unsigned int, unsigned int, string, unsigned int, unsigned int length = -1);
 	void delfile(string, string);
 	void extendfile(string, string, unsigned int);
 
@@ -58,6 +58,5 @@ public:
 	string& Disk::GetLastErrorMessage();
 	void Disk::SetLastErrorMessage(string lastErrorMessage);
 	VolumeHeader GetVolumeHeader();
-	RootDir GetRootDir();
 
 };

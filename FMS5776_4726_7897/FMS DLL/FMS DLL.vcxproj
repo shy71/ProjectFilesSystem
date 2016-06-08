@@ -11,12 +11,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{EA187313-883F-4C32-856D-F816649FFA93}</ProjectGuid>
-    <RootNamespace>FMSLIB</RootNamespace>
+    <ProjectGuid>{3923CF1A-0DBF-4FC5-9594-9D45720C64D6}</ProjectGuid>
+    <RootNamespace>FMSDLL</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v120</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
@@ -44,14 +44,14 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <BrowseInformation>true</BrowseInformation>
+      <AdditionalIncludeDirectories>..\FMS LIB</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
-    <Bscmake>
-      <PreserveSbr>true</PreserveSbr>
-    </Bscmake>
+    <PostBuildEvent>
+      <Command>copy "$(LocalDebuggerCommand)" "$(SolutionDir)FMS Adapter\bin\Debug"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -68,15 +68,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="DAT.h" />
-    <ClInclude Include="Dir.h" />
-    <ClInclude Include="dirEntry.h" />
-    <ClInclude Include="Disk.h" />
-    <ClInclude Include="FCB.h" />
-    <ClInclude Include="FileHeader.h" />
-    <ClInclude Include="resource.h" />
-    <ClInclude Include="Sector.h" />
-    <ClInclude Include="VolumeHeader.h" />
+    <ClCompile Include="expotFunc.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FMS LIB\FMS LIB.vcxproj">
+      <Project>{22a84090-ab87-4cd8-ba25-4e840587a13f}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

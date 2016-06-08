@@ -43,8 +43,8 @@ void Disk::mountDisk(string fname)
 	{
 		readSector(0, (Sector*)(&vhd));
 		readSector(vhd.addrDAT, (Sector*)(&dat));
-		readSector(vhd.addrRootDir*2, (Sector*)(&rootDir.lsbSector));
-		readSector(vhd.addrRootDir*2+1, (Sector*)(&rootDir.msbSector));
+		readSector(vhd.addrRootDir * 2, (Sector*)(&rootDir.lsbSector));
+		readSector(vhd.addrRootDir * 2 + 1, (Sector*)(&rootDir.msbSector));
 		mounted = true;
 		dskfl.close();
 		dskfl.open(fname, ios::binary | ios::out | ios::in);
@@ -114,7 +114,7 @@ void Disk::createDisk(string name, string owner)
 		if (dat.Dat[i])
 		{
 			sec.sectorNr = i * 2;
-			writeSector(i*2, &sec);
+			writeSector(i * 2, &sec);
 			sec.sectorNr = i * 2 + 1;
 			writeSector(i * 2 + 1, &sec);
 		}
@@ -169,10 +169,10 @@ void Disk::readSector(Sector* sec)
 }
 void Disk::format(string owner)
 {
-	if (strcmp(vhd.diskOwner,owner.c_str())!=0)
+	if (strcmp(vhd.diskOwner, owner.c_str()) != 0)
 		throw "You can't format a disk which not belongs to you!";
 	dat.Dat.set();
-	writePlusCpy(vhd.addrDAT, vhd.addrDATcpy,dat);
+	writePlusCpy(vhd.addrDAT, vhd.addrDATcpy, dat);
 	rootDir.clear();
 	writeDir(vhd.addrRootDir, vhd.addrRootDirCpy, rootDir);
 	vhd.isFormated = true;//when set off?
@@ -181,7 +181,7 @@ void Disk::format(string owner)
 }
 void Disk::writePlusCpy(unsigned int sor, unsigned int cpy, DAT sec)
 {
-	writeSector(sor,(Sector*)&sec);
+	writeSector(sor, (Sector*)&sec);
 	sec.sectorNr = cpy;
 	writeSector(cpy, (Sector*)&sec);
 	Sector sec2;
@@ -191,7 +191,7 @@ void Disk::writePlusCpy(unsigned int sor, unsigned int cpy, DAT sec)
 void Disk::alloc(DATtype & fat, unsigned int numofsector, unsigned int type, unsigned int index)
 {
 	int num = (numofsector / 2) + (numofsector % 2);
-	DATtype UsedData=dat.Dat;
+	DATtype UsedData = dat.Dat;
 	try
 	{
 		UsedData.reset();
@@ -207,7 +207,7 @@ void Disk::alloc(DATtype & fat, unsigned int numofsector, unsigned int type, uns
 						if (!dat.Dat[i + j])
 							break;
 						if (j == num - 1)
-						{	
+						{
 							if (vhd.isFormated == true)
 							{
 								vhd.isFormated = false;
@@ -219,7 +219,7 @@ void Disk::alloc(DATtype & fat, unsigned int numofsector, unsigned int type, uns
 								fat[k].flip();
 								UsedData[k].flip();
 
-							}	
+							}
 
 							return;
 						}
@@ -227,11 +227,11 @@ void Disk::alloc(DATtype & fat, unsigned int numofsector, unsigned int type, uns
 					i += j;
 				}
 			}
-			if (num <=2)
+			if (num <= 2)
 				throw "doesn't have enough space!";
 			//try saving the min
-			alloc(fat, numofsector-2+(numofsector%2), type, index);
-			alloc(fat, 1+(numofsector%2==0)?1:0, type, index);//need to handle when the first one works but the second one doesn't!!!
+			alloc(fat, numofsector - 2 + (numofsector % 2), type, index);
+			alloc(fat, 1 + (numofsector % 2 == 0) ? 1 : 0, type, index);//need to handle when the first one works but the second one doesn't!!!
 		}
 	}
 	catch (char *error)
@@ -249,7 +249,7 @@ void Disk::allocextend(DATtype &fat, unsigned int num, unsigned int type)
 		if (fat[i])
 			index = i;
 	}
-	alloc(fat, num, type,index);
+	alloc(fat, num, type, index);
 }
 int Disk::howmuchempty()
 {
@@ -273,7 +273,7 @@ void Disk::createfile(string fileName, string fileOwner, string filetype, unsign
 	if (rootDir.getEntry(fileName.c_str()) != NULL)
 		throw "A file with that name is already exits";
 	FileHeader fheader;
-	strcpy_s(fheader.fileDesc.Filename,fileName.c_str());
+	strcpy_s(fheader.fileDesc.Filename, fileName.c_str());
 	strcpy_s(fheader.fileDesc.fileOwner, fileOwner.c_str());
 	fheader.fileDesc.maxRecSize = recordSize;
 	fheader.FAT.reset();
@@ -290,11 +290,11 @@ void Disk::createfile(string fileName, string fileOwner, string filetype, unsign
 	}
 	else
 		strcpy_s(fheader.fileDesc.recFormat, "V");
-	alloc(fheader.FAT, sectorCount+1, 0);
+	alloc(fheader.FAT, sectorCount + 1, 0);
 	for (int i = 0; i<1600; i++)
 		if (fheader.FAT[i])
 		{
-			fheader.fileDesc.fileAddr = i*2;
+			fheader.fileDesc.fileAddr = i * 2;
 			break;
 		}
 	fheader.fileDesc.fileSize = sectorCount;
@@ -311,7 +311,7 @@ void Disk::createfile(string fileName, string fileOwner, string filetype, unsign
 void Disk::delfile(string fname, string username)
 {
 	dirEntry *dir = rootDir.getEntry(fname.c_str());
-	if (dir==NULL)
+	if (dir == NULL)
 		throw "The file you asked to delete doesnt exist";
 	if (strcmp(dir->fileOwner, username.c_str()) != 0)
 		throw "only the file owner can delete his files";
@@ -322,7 +322,7 @@ void Disk::delfile(string fname, string username)
 
 	Update();
 }
-void Disk::extendfile(string fname, string username ,unsigned int numToAdd)
+void Disk::extendfile(string fname, string username, unsigned int numToAdd)
 {
 	dirEntry *dir = rootDir.getEntry(fname.c_str());
 	if (dir == NULL)
@@ -331,7 +331,7 @@ void Disk::extendfile(string fname, string username ,unsigned int numToAdd)
 		throw "only the file owner can extend his files";
 	FileHeader fheader;
 	readSector(dir->fileAddr, (Sector *)&fheader);
-	allocextend(fheader.FAT,numToAdd,0);
+	allocextend(fheader.FAT, numToAdd, 0);
 	dir->fileSize += numToAdd;
 	fheader.fileDesc.fileSize = dir->fileSize;
 	writeSector(dir->fileAddr, (Sector *)&fheader);
@@ -340,7 +340,7 @@ void Disk::extendfile(string fname, string username ,unsigned int numToAdd)
 }
 FCB* Disk::openfile(string fileName, string UserName, string IOstatus)
 {
-	dirEntry *dir=rootDir.getEntry(fileName.c_str());
+	dirEntry *dir = rootDir.getEntry(fileName.c_str());
 	if (dir == NULL)
 		throw "The file you are looking for doesn't exist.";
 	if (IOstatus != "IO"&&IOstatus != "I")
@@ -373,8 +373,4 @@ void Disk::SetLastErrorMessage(string lastErrorMessage)
 VolumeHeader Disk::GetVolumeHeader()
 {
 	return this->vhd;
-}
-RootDir Disk::GetRootDir()
-{
-
 }

@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{E5122423-0E5E-48F1-86EF-6B5BC9FDC07D}</ProjectGuid>
+    <ProjectGuid>{3648FAA3-9B3D-4AE5-B4B2-A05EF28E8684}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>FMS_GUI</RootNamespace>
@@ -102,7 +102,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FMS Adapter\FMS Adapter.csproj">
-      <Project>{a3926a9e-1f65-4bb1-9993-2d30eff8e464}</Project>
+      <Project>{54ef4b4a-847a-4403-a792-c14192eddc8f}</Project>
       <Name>FMS Adapter</Name>
     </ProjectReference>
   </ItemGroup>

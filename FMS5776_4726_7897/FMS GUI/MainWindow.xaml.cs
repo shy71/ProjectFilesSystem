@@ -32,9 +32,9 @@ namespace FMS_GUI
         {
             try
             {
-            Disk d=new Disk();
-            d.MountDisk(diskBox.SelectedItem.ToString());
-            new ShowDisk(d).Show();
+                Disk d = new Disk();
+                d.MountDisk(diskBox.SelectedItem.ToString());
+                new ShowDisk(d).Show();
             }
             catch
             {
