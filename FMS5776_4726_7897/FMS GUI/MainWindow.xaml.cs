@@ -21,7 +21,7 @@ namespace FMS_GUI
     /// </summary>
     public partial class MainWindow : Window
     {
-        List<string> disks;
+        List<string> disks=new List<string>();
         public MainWindow()
         {
             InitializeComponent();
@@ -41,6 +41,20 @@ namespace FMS_GUI
                 MessageBox.Show("Error");
             }
 
+        }
+
+        private void CreateButton_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                Disk d = new Disk();
+                d.Createdisk(FileName.Text, UserName.Text);
+                disks.Add(FileName.Text);
+            }
+            catch
+            {
+                MessageBox.Show("Error");
+            }
         }
 
     }
