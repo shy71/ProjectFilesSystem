@@ -48,6 +48,7 @@ namespace FMS_GUI
         public DiskIcon(FMS_adapter.Disk d)
         {
             InitializeComponent();
+            d.GetVolumeHeader();
             name.Content=d.GetName();
             bar.Value=(1- (d.HowMuchEmpty()/1020));
             barLabel.Content = ((1 - bar.Value) * 1020) + "B free of 1020 B";

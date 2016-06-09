@@ -65,7 +65,7 @@ namespace FMS_adapter
         #endregion
         #region LEVEL 4 FUNCTIONS
         [DllImport(dllPath, CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr GetVolumeHeader(IntPtr THIS, IntPtr pvhd);
+        public static extern IntPtr GetVolumeHeader(IntPtr THIS,IntPtr pvhd);
         #endregion
         #region FCB FUNCTIONS
         [DllImport(dllPath, CallingConvention = CallingConvention.Cdecl)]
@@ -89,6 +89,12 @@ namespace FMS_adapter
         [DllImport(dllPath, CallingConvention = CallingConvention.Cdecl)]
         public static extern void UpdateRecord(IntPtr THIS, IntPtr source);
         #endregion
+        #region VHD FUNCTIONS
+        
+
+        [DllImport(dllPath, CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr GetName(IntPtr THIS);
+        #endregion
     }
     public class Disk
     {
@@ -98,7 +104,6 @@ namespace FMS_adapter
         public Disk()
         {
             this.myDiskPointer = cppToCsharpAdapter.MakeDiskObject();
-            vhd = GetVolumeHeader();
         }
         ~Disk()
         {
@@ -107,6 +112,7 @@ namespace FMS_adapter
         }
         #endregion
         #region LEVEL 0 FUNCTIONS
+
         public void Createdisk(string diskName, string diskOwner)
         {
             try
@@ -129,6 +135,7 @@ namespace FMS_adapter
             try
             {
                 cppToCsharpAdapter.MountDisk(this.myDiskPointer, diskName);
+                vhd = GetVolumeHeader();
             }
             catch (SEHException)
             {
@@ -287,7 +294,7 @@ namespace FMS_adapter
         }
         #endregion
         #region LEVEL 4 FUNCTIONS
-        VolumeHeader GetVolumeHeader()
+        public VolumeHeader GetVolumeHeader()
         {
             try
             {
@@ -317,6 +324,35 @@ namespace FMS_adapter
                 throw;
             }
         }
+        //VolumeHeader GetVolumeHeader()
+        //{
+        //    try
+        //    {
+
+        //        VolumeHeader v = new VolumeHeader();
+        //        //int structSize = Marshal.SizeOf(v.GetType()); //Marshal.SizeOf(typeof(Student));  
+        //        //IntPtr buffer = Marshal.AllocHGlobal(structSize);
+        //        //Marshal.StructureToPtr(v, buffer, true);
+
+        //        // ... send buffer to dll 
+        //        Marshal.PtrToStructure(cppToCsharpAdapter.GetVolumeHeader(this.myDiskPointer), v);
+
+        //        // free allocate 
+        //        //Marshal.FreeHGlobal(buffer);
+
+        //        return v;
+        //    }
+        //    catch (SEHException)
+        //    {
+        //        IntPtr cString = cppToCsharpAdapter.GetLastDiskErrorMessage(this.myDiskPointer);
+        //        string message = Marshal.PtrToStringAnsi(cString);
+        //        throw new Exception(message);
+        //    }
+        //    catch
+        //    {
+        //        throw;
+        //    }
+        //}
         public string GetName() { return vhd.DiskName; }
         public string GetOwner() { return vhd.DiskOwner; }
         public string GetFormatDate() { return vhd.FormatDate; }
@@ -475,8 +511,10 @@ namespace FMS_adapter
         #endregion
     }
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
-    internal class VolumeHeader
+    public class VolumeHeader
     {
+        uint sectorNr;
+
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 12)]
         string diskName;
         public string DiskName { get { return diskName; } }
@@ -489,14 +527,39 @@ namespace FMS_adapter
         string prodDate;
         public string ProdDate { get { return prodDate; } }
 
+        uint clusQty;
+        public uint ClusQty { get { return clusQty; } }
+
+        uint dataClusQty;
+        public uint DataClusQty { get { return dataClusQty; } }
+
+        uint addrDAT;
+        public uint AddrDAT { get { return addrDAT; } }
+
+        uint addrRootDir;
+        public uint AddrRootDir { get { return addrRootDir; } }
+
+        uint addrDATcpy;
+        public uint AddrDATcpy { get { return addrDATcpy; } }
+
+        uint addrRootDirCpy;
+        public uint AddrRootDirCpy { get { return addrRootDirCpy; } }
+
+        uint addrDataStart;
+        public uint aAddrDataStart { get { return addrDataStart; } }
+
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 10)]
         string formatDate;
         public string FormatDate { get { return formatDate; } }
-        
+
+        [MarshalAs(UnmanagedType.I1)]
+        bool isFormated;
+        public bool IsFormated { get { return isFormated; } }
+
+
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 944)]
         string emptyArea;
     }
-
 
 
     public class Program
