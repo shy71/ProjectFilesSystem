@@ -4,9 +4,8 @@
         Title="MainWindow" Height="350" Width="525">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="55*"/>
-            <RowDefinition Height="33*"/>
-            <RowDefinition Height="232*"/>
+            <RowDefinition Height="21*"/>
+            <RowDefinition Height="277*"/>
         </Grid.RowDefinitions>
 
         <Grid>
@@ -18,13 +17,13 @@
                 <Image Source="Pic\New Disk1.png" Stretch="Uniform"/>     
             </-->
 
-            <Menu Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="100" Margin="0,0,0,-45" VerticalAlignment="Top" Width="517">
+            <Menu Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="23" VerticalAlignment="Top" Width="517">
                 <MenuItem Header="_File" Width="37">
                     <MenuItem x:Name="CreteDskMenu" Header="_Create Disk" Click="CreteDskMenu_Click">
                         <MenuItem.Icon>
                             <Image Source="Pic\New Disk1.png" />
                         </MenuItem.Icon>
-                        
+
                     </MenuItem>
                 </MenuItem>
                 <MenuItem x:Name="SelectedItemProperties" Header="_Properties" HorizontalAlignment="Right" Width="70" Click="SelectedItemProperties_Click"/>
@@ -32,6 +31,6 @@
                 <MenuItem x:Name="SelectedItemClose" Header="_Close" HorizontalAlignment="Right" Width="45" Click="SelectedItemClose_Click"/>
             </Menu>
         </Grid>
-        <ListBox x:Name="myList" Grid.Row="2" />
+        <ListBox x:Name="myList" Grid.Row="1" Grid.RowSpan="2" />
     </Grid>
 </Window>

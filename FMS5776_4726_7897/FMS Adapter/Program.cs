@@ -516,14 +516,14 @@ namespace FMS_adapter
                 Console.WriteLine("Marshal.SizeOf(typeof(VolumeHeader) == " + structSize);
                 Disk d = new Disk();
                 Console.WriteLine("\nMake Disk:");
-                Console.WriteLine(ToStringProperty(d.GetVolumeHeader()));
+//                Console.WriteLine(ToStringProperty(d.GetVolumeHeader()));
                 d.Createdisk("disk1", "oshri");
                 Console.WriteLine("\nCreate Disk:");
-                Console.WriteLine(ToStringProperty(d.GetVolumeHeader()));
+               // Console.WriteLine(ToStringProperty(d.GetVolumeHeader()));
                 d.MountDisk("disk1");
                 d.Format("oshri");
                 Console.WriteLine("\nFormat Disk:");
-                Console.WriteLine(ToStringProperty(d.GetVolumeHeader()));
+               // Console.WriteLine(ToStringProperty(d.GetVolumeHeader()));
 
 
                 d.CreateFile("File1", "Ezra", "F", 20, 20, "I", 0);
