@@ -41,7 +41,7 @@ namespace FMS_GUI
 
         private void SelectedItemProperties_Click(object sender, RoutedEventArgs e)
         {
-            
+            string name = 
         }
 
         private void SelectedItemClose_Click(object sender, RoutedEventArgs e)
