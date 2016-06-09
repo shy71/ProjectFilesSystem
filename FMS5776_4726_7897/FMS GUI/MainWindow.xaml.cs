@@ -41,9 +41,19 @@ namespace FMS_GUI
 
         }
 
-        private void NewDisk_Click(object sender, RoutedEventArgs e)
+        private void CreteDskMenu_Click(object sender, RoutedEventArgs e)
         {
             new NewDisk().ShowDialog();
+        }
+
+        private void SelectedItemProperties_Click(object sender, RoutedEventArgs e)
+        {
+            
+        }
+
+        private void SelectedItemClose_Click(object sender, RoutedEventArgs e)
+        {
+
         }
 
     }

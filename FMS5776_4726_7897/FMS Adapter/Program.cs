@@ -93,10 +93,12 @@ namespace FMS_adapter
     public class Disk
     {
         IntPtr myDiskPointer;
+        VolumeHeader vhd;
         #region CONSTRUCTORS & DESTRUCTORS
         public Disk()
         {
             this.myDiskPointer = cppToCsharpAdapter.MakeDiskObject();
+            vhd = GetVolumeHeader();
         }
         ~Disk()
         {
@@ -285,7 +287,7 @@ namespace FMS_adapter
         }
         #endregion
         #region LEVEL 4 FUNCTIONS
-        public VolumeHeader GetVolumeHeader()
+        VolumeHeader GetVolumeHeader()
         {
             try
             {
@@ -315,6 +317,10 @@ namespace FMS_adapter
                 throw;
             }
         }
+        public string GetName() { return vhd.DiskName; }
+        public string GetOwner() { return vhd.DiskOwner; }
+        public string GetFormatDate() { return vhd.FormatDate; }
+        public string GetCreationDate() { return vhd.ProdDate; }
         public List<string> GetFilesNames() { return null; }//לעשות
 
         #endregion
@@ -469,10 +475,8 @@ namespace FMS_adapter
         #endregion
     }
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
-    public class VolumeHeader
+    internal class VolumeHeader
     {
-        uint sectorNr;
-
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 12)]
         string diskName;
         public string DiskName { get { return diskName; } }
@@ -485,36 +489,10 @@ namespace FMS_adapter
         string prodDate;
         public string ProdDate { get { return prodDate; } }
 
-        uint clusQty;
-        public uint ClusQty { get { return clusQty; } }
-
-        uint dataClusQty;
-        public uint DataClusQty { get { return dataClusQty; } }
-
-        uint addrDAT;
-        public uint AddrDAT { get { return addrDAT; } }
-
-        uint addrRootDir;
-        public uint AddrRootDir { get { return addrRootDir; } }
-
-        uint addrDATcpy;
-        public uint AddrDATcpy { get { return addrDATcpy; } }
-
-        uint addrRootDirCpy;
-        public uint AddrRootDirCpy { get { return addrRootDirCpy; } }
-
-        uint addrDataStart;
-        public uint aAddrDataStart { get { return addrDataStart; } }
-
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 10)]
         string formatDate;
         public string FormatDate { get { return formatDate; } }
-
-        [MarshalAs(UnmanagedType.I1)]
-        bool isFormated;
-        public bool IsFormated { get { return isFormated; } }
-
-
+        
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 944)]
         string emptyArea;
     }
