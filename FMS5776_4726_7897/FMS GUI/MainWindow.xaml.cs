@@ -26,17 +26,21 @@ namespace FMS_GUI
         public MainWindow()
         {
             InitializeComponent();
+            var wr = new ItemPanel();
+            wr.OpenDiskEvent += OpenDisk;
+            adr.SetText("C:/");
             myList.Items.Add(new ItemPanel());
             
         }
-        private void OpenDisk(object sender, RoutedEventArgs e)
+        private void OpenDisk(object sender, EventArgs e)
         {
-
+            //opening disk
         }
 
         private void CreteDskMenu_Click(object sender, RoutedEventArgs e)
         {
             new NewDisk().ShowDialog();
+            
         }
 
         private void SelectedItemProperties_Click(object sender, RoutedEventArgs e)
