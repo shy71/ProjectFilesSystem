@@ -25,15 +25,8 @@ namespace FMS_GUI
         List<string> disks=new List<string>();
         public MainWindow()
         {
-            Button bt;
             InitializeComponent();
-            foreach (string Item in Directory.GetFiles("../Debug/").Where(x => x.Substring(x.Length - 4) == ".dsk").Select(x => x.Substring(x.IndexOf('.') + 9)))
-            {
-                bt = new Button();
-                bt.Content = new DiskIcon(Item.Substring(0, Item.IndexOf(".dsk")));
-                bt.Click += OpenDisk;
-                win.Children.Add(bt);
-            } 
+            myList.Items.Add(new ItemPanel());
             
         }
         private void OpenDisk(object sender, RoutedEventArgs e)
