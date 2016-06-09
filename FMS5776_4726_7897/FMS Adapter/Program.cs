@@ -192,11 +192,11 @@ namespace FMS_adapter
                 throw;
             }
         }
-        public void HowMuchEmpty()
+        public int HowMuchEmpty()
         {
             try
             {
-                cppToCsharpAdapter.HowMuchEmpty(this.myDiskPointer);
+               return cppToCsharpAdapter.HowMuchEmpty(this.myDiskPointer);
             }
             catch (SEHException)
             {
@@ -518,6 +518,9 @@ namespace FMS_adapter
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 944)]
         string emptyArea;
     }
+
+
+
     public class Program
     {
         public static string ToStringProperty(object t)
