@@ -59,6 +59,9 @@
     <Compile Include="FileIcon.xaml.cs">
       <DependentUpon>FileIcon.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ItemPanel.xaml.cs">
+      <DependentUpon>ItemPanel.xaml</DependentUpon>
+    </Compile>
     <Compile Include="NewDisk.xaml.cs">
       <DependentUpon>NewDisk.xaml</DependentUpon>
     </Compile>
@@ -70,6 +73,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="FileIcon.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ItemPanel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -8,9 +8,7 @@
             <RowDefinition Height="33*"/>
             <RowDefinition Height="232*"/>
         </Grid.RowDefinitions>
-        <WrapPanel x:Name="win" Grid.Row="2">
 
-        </WrapPanel>
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*"/>
@@ -21,5 +19,6 @@
             </Button>
 
         </Grid>
+        <ListBox x:Name="myList" Grid.Row="2" />
     </Grid>
 </Window>
