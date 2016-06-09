@@ -16,7 +16,6 @@
                     <MenuItem.Icon>
                         <Image Source="Pic\New Disk1.png" />
                     </MenuItem.Icon>
-
                 </MenuItem>
             </MenuItem>
             <MenuItem x:Name="SelectedItemProperties" Header="_Properties" HorizontalAlignment="Right" Width="70" Click="SelectedItemProperties_Click"/>
