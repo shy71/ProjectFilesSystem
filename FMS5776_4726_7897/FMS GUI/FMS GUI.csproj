@@ -62,9 +62,6 @@
     <Compile Include="NewDisk.xaml.cs">
       <DependentUpon>NewDisk.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ShowDisk.xaml.cs">
-      <DependentUpon>ShowDisk.xaml</DependentUpon>
-    </Compile>
     <Compile Include="TextControl.xaml.cs">
       <DependentUpon>TextControl.xaml</DependentUpon>
     </Compile>
@@ -89,10 +86,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="NewDisk.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="ShowDisk.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

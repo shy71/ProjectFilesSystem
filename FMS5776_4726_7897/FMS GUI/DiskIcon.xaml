@@ -4,15 +4,24 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="40" d:DesignWidth="200">
+              BorderThickness="2" BorderBrush="Black" Width="200" Height="75" Background="Wheat">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="6*"/>
-            <ColumnDefinition Width="19*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="2*"/>
         </Grid.ColumnDefinitions>
-        <Image Source="Pic\Disk.png" Stretch="None" Grid.Column="0"/>
-        <ProgressBar x:Name="bar" Grid.Column="1" HorizontalAlignment="Left" Height="12" Margin="20,26,0,0" VerticalAlignment="Top" Width="119"/>
-        <Label x:Name="name" Grid.Column="1" HorizontalAlignment="Left" Margin="58,0,0,0" VerticalAlignment="Top" Height="26" FontFamily="Bold"/>
+        <Image Source="Pic\Disk.png" Stretch="Uniform" Grid.Column="0" ToolTip="Disk"/>
+
+        <Grid Grid.Column="1" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1.5*"/>
+                <RowDefinition Height="2*"/>
+                <RowDefinition Height="1.5*"/>
+            </Grid.RowDefinitions>
+            <Label x:Name="name" HorizontalAlignment="Left"  VerticalAlignment="Center"  FontFamily="Bold"/>
+            <ProgressBar x:Name="bar"  Grid.Row="1" Margin="10,5,20,5"/>
+            <Label x:Name="barLabel" HorizontalAlignment="Center" VerticalAlignment="Top" FontFamily="Bold" Grid.Row="2" />
+        </Grid>
 
     </Grid>
 </UserControl>

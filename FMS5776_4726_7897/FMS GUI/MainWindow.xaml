@@ -8,7 +8,7 @@
             <RowDefinition Height="33*"/>
             <RowDefinition Height="232*"/>
         </Grid.RowDefinitions>
-        <WrapPanel Grid.Row="2">
+        <WrapPanel x:Name="win" Grid.Row="2">
 
         </WrapPanel>
         <Grid>

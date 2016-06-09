@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.IO;
 using FMS_adapter;
 
 namespace FMS_GUI
@@ -24,7 +25,20 @@ namespace FMS_GUI
         List<string> disks=new List<string>();
         public MainWindow()
         {
+            Button bt;
             InitializeComponent();
+            foreach (string Item in Directory.GetFiles("../Debug/").Where(x => x.Substring(x.Length - 4) == ".dsk").Select(x => x.Substring(x.IndexOf('.') + 9)))
+            {
+                bt = new Button();
+                bt.Content = new DiskIcon(Item.Substring(0, Item.IndexOf(".dsk")));
+                bt.Click += OpenDisk;
+                win.Children.Add(bt);
+            } 
+            
+        }
+        private void OpenDisk(object sender, RoutedEventArgs e)
+        {
+
         }
 
         private void NewDisk_Click(object sender, RoutedEventArgs e)

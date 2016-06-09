@@ -17,6 +17,11 @@ extern "C"
 			THIS->SetLastErrorMessage(ex.what());
 			throw ex;
 		}
+		catch (char* ex)
+		{
+			THIS->SetLastErrorMessage(ex);
+			throw ex;
+		}
 	}
 	__declspec(dllexport) void CreateDisk(Disk* THIS, char* diskName, char* diskOwner)
 	{
@@ -46,6 +51,11 @@ extern "C"
 			THIS->SetLastErrorMessage(ex.what());
 			throw ex;
 		}
+		catch (char* ex)
+		{
+			THIS->SetLastErrorMessage(ex);
+			throw ex;
+		}
 	}
 	__declspec(dllexport) void RecreateDisk(Disk* THIS, char* owner)
 	{
@@ -56,6 +66,11 @@ extern "C"
 		catch (exception ex)
 		{
 			THIS->SetLastErrorMessage(ex.what());
+			throw ex;
+		}
+		catch (char* ex)
+		{
+			THIS->SetLastErrorMessage(ex);
 			throw ex;
 		}
 	}
@@ -72,6 +87,11 @@ extern "C"
 			THIS->SetLastErrorMessage(ex.what());
 			throw ex;
 		}
+		catch (char* ex)
+		{
+			THIS->SetLastErrorMessage(ex);
+			throw ex;
+		}
 	}
 	__declspec(dllexport) int HowMuchEmpty(Disk* THIS)
 	{
@@ -82,6 +102,11 @@ extern "C"
 		catch (exception ex)
 		{
 			THIS->SetLastErrorMessage(ex.what());
+			throw ex;
+		}
+		catch (char* ex)
+		{
+			THIS->SetLastErrorMessage(ex);
 			throw ex;
 		}
 	}
@@ -98,6 +123,11 @@ extern "C"
 			THIS->SetLastErrorMessage(ex.what());
 			throw ex;
 		}
+		catch (char* ex)
+		{
+			THIS->SetLastErrorMessage(ex);
+			throw ex;
+		}
 	}
 	__declspec(dllexport) void DelFile(Disk* THIS, char* fname, char* username)
 	{
@@ -110,6 +140,11 @@ extern "C"
 			THIS->SetLastErrorMessage(ex.what());
 			throw ex;
 		}
+		catch (char* ex)
+		{
+			THIS->SetLastErrorMessage(ex);
+			throw ex;
+		}
 	}
 	__declspec(dllexport) void ExtendFile(Disk* THIS, char* fname, char* username, unsigned int numToAdd)
 	{
@@ -120,6 +155,11 @@ extern "C"
 		catch (exception ex)
 		{
 			THIS->SetLastErrorMessage(ex.what());
+			throw ex;
+		}
+		catch (char* ex)
+		{
+			THIS->SetLastErrorMessage(ex);
 			throw ex;
 		}
 	}
@@ -136,12 +176,30 @@ extern "C"
 			THIS->SetLastErrorMessage(ex.what());
 			throw ex;
 		}
+		catch (char* ex)
+		{
+			THIS->SetLastErrorMessage(ex);
+			throw ex;
+		}
 	}
 #pragma endregion
 #pragma region LEVEL 4 FUNCTIONS
 	__declspec(dllexport)  void  GetVolumeHeader(Disk* THIS, VolumeHeader* buffer)
 	{
-		memcpy_s(buffer, sizeof(VolumeHeader), &THIS->GetVolumeHeader(), sizeof(VolumeHeader));
+		try
+		{
+			memcpy_s(buffer, sizeof(VolumeHeader), &THIS->GetVolumeHeader(), sizeof(VolumeHeader));
+		}
+		catch (exception ex)
+		{
+			THIS->SetLastErrorMessage(ex.what());
+			throw ex;
+		}
+		catch (char* ex)
+		{
+			THIS->SetLastErrorMessage(ex);
+			throw ex;
+		}
 	}
 #pragma endregion
 
@@ -159,6 +217,11 @@ extern "C"
 			THIS->SetLastErrorMessage(ex.what());
 			throw ex;
 		}
+		catch (char* ex)
+		{
+			THIS->SetLastErrorMessage(ex);
+			throw ex;
+		}
 	}
 	__declspec(dllexport) void ReadRecord(FCB* THIS, char *dest, unsigned int status = 0)
 	{
@@ -169,6 +232,11 @@ extern "C"
 		catch (exception ex)
 		{
 			THIS->SetLastErrorMessage(ex.what());
+			throw ex;
+		}
+		catch (char* ex)
+		{
+			THIS->SetLastErrorMessage(ex);
 			throw ex;
 		}
 	}
@@ -183,6 +251,11 @@ extern "C"
 			THIS->SetLastErrorMessage(ex.what());
 			throw ex;
 		}
+		catch (char* ex)
+		{
+			THIS->SetLastErrorMessage(ex);
+			throw ex;
+		}
 	}
 	__declspec(dllexport) void SeekRecord(FCB* THIS, unsigned int from, int recordCount)
 	{
@@ -193,6 +266,11 @@ extern "C"
 		catch (exception ex)
 		{
 			THIS->SetLastErrorMessage(ex.what());
+			throw ex;
+		}
+		catch (char* ex)
+		{
+			THIS->SetLastErrorMessage(ex);
 			throw ex;
 		}
 	}
@@ -209,6 +287,11 @@ extern "C"
 			THIS->SetLastErrorMessage(ex.what());
 			throw ex;
 		}
+		catch (char* ex)
+		{
+			THIS->SetLastErrorMessage(ex);
+			throw ex;
+		}
 	}
 	__declspec(dllexport) void DeleteRecord(FCB* THIS)
 	{
@@ -221,6 +304,11 @@ extern "C"
 			THIS->SetLastErrorMessage(ex.what());
 			throw ex;
 		}
+		catch (char* ex)
+		{
+			THIS->SetLastErrorMessage(ex);
+			throw ex;
+		}
 	}
 	__declspec(dllexport) void UpdateRecord(FCB* THIS, char *update)
 	{
@@ -231,6 +319,11 @@ extern "C"
 		catch (exception ex)
 		{
 			THIS->SetLastErrorMessage(ex.what());
+			throw ex;
+		}
+		catch (char* ex)
+		{
+			THIS->SetLastErrorMessage(ex);
 			throw ex;
 		}
 	}

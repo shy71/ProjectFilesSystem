@@ -26,6 +26,21 @@ namespace FMS_GUI
         {
             InitializeComponent();
         }
+        public DiskIcon(string str) : this(TryOpen(str)) { }
+        static FMS_adapter.Disk TryOpen(string str)
+        {
+            try
+            {
+                FMS_adapter.Disk d = new FMS_adapter.Disk();
+                d.MountDisk(str);
+                return d;
+            }
+            catch (Exception s)
+            {
+                MessageBox.Show(s.Message, "Errot: Mount Disk", MessageBoxButton.OK, MessageBoxImage.Error);
+                return null;
+            }
+        }
         /// <summary>
         /// Create a new Disk Icon
         /// </summary>
@@ -35,7 +50,7 @@ namespace FMS_GUI
             InitializeComponent();
             name.Content=d.GetVolumeHeader().DiskName;
             bar.Value=(1- (d.HowMuchEmpty()/1020));
-            bar.ToolTip = ((1 - bar.Value) * 1020) + "B free of 1020 B";
+            barLabel.Content = ((1 - bar.Value) * 1020) + "B free of 1020 B";
         }
     }
 }
