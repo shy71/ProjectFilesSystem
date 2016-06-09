@@ -309,7 +309,7 @@ namespace FMS_adapter
                 Marshal.PtrToStructure(buffer, v);
 
                 // free allocate 
-                Marshal.FreeHGlobal(buffer);
+               // Marshal.FreeHGlobal(buffer);
 
                 return v;
             }
