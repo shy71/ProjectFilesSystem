@@ -20,7 +20,7 @@ string GetTime()
 }
 Disk::Disk(string fname, string diskOwner, char action)
 {
-	ifstream infile(fname);
+	ifstream infile(fname+end);
 	if (action == 'c')//create new disk
 	{
 		if (infile.is_open())
@@ -38,7 +38,7 @@ Disk::Disk(string fname, string diskOwner, char action)
 }
 void Disk::mountDisk(string fname)
 {
-	dskfl.open(fname, ios::binary | ios::in);
+	dskfl.open(fname+end, ios::binary | ios::in);
 	if (dskfl.is_open())
 	{
 		readSector(0, (Sector*)(&vhd));
@@ -47,7 +47,7 @@ void Disk::mountDisk(string fname)
 		readSector(vhd.addrRootDir * 2 + 1, (Sector*)(&rootDir.msbSector));
 		mounted = true;
 		dskfl.close();
-		dskfl.open(fname, ios::binary | ios::out | ios::in);
+		dskfl.open(fname + end, ios::binary | ios::out | ios::in);
 	}
 	else
 		throw "The disk couldn't be mounted since it doesn't exist";
@@ -81,11 +81,11 @@ Disk::~Disk()
 }
 void Disk::createDisk(string name, string owner)
 {
-	ifstream file(name, ios::binary | ios::in);
+	ifstream file(name + end, ios::binary | ios::in);
 	if (file.is_open())
 		throw "You can't create a disk with a name that is already taken!";
 	file.close();
-	dskfl.open(name, ios::binary | ios::out);
+	dskfl.open(name + end, ios::binary | ios::out);
 	//create VHD Data
 	vhd.sectorNr = 0;
 	strcpy_s(vhd.diskName, name.c_str());
@@ -119,7 +119,7 @@ void Disk::createDisk(string name, string owner)
 			writeSector(i * 2 + 1, &sec);
 		}
 	dskfl.close();
-	dskfl.open(name, ios::binary | ios::out | ios::in);
+	dskfl.open(name + end, ios::binary | ios::out | ios::in);
 	unmountDisk();
 }
 void Disk::writeDir(unsigned int add, unsigned int addcpy, RootDir root)

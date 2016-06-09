@@ -11,5 +11,15 @@
         <WrapPanel Grid.Row="2">
 
         </WrapPanel>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="7*"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" ToolTip="Create new disk" Click="NewDisk_Click">
+                <Image Source="Pic\New Disk1.png" Stretch="Uniform"/>     
+            </Button>
+
+        </Grid>
     </Grid>
 </Window>

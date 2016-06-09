@@ -1,0 +1,32 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:FMS_GUI" x:Class="FMS_GUI.NewDisk"
+        Title="NewDisk" Height="200" Width="300">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1.5*"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="3*"/>
+        </Grid.RowDefinitions>
+        <Label Content="Create new disk!" HorizontalAlignment="Center" FontFamily="Bold"/>
+        <local:TextControl x:Name="name"  Grid.Row="1" Str="Disk Name"/>
+        <local:TextControl x:Name="owner" Grid.Row="2" Str="Owner Name"/>
+        <Button Content="Create" Grid.Row="3" Click="Create_Click">
+            <Button.Style>
+                <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ElementName=name, Path=ForeG}" Value="Gray">
+                            <Setter Property="Button.IsEnabled" Value="false"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding ElementName=owner, Path=ForeG}" Value="Gray">
+                            <Setter Property="Button.IsEnabled" Value="false"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
+
+    </Grid>
+</Window>

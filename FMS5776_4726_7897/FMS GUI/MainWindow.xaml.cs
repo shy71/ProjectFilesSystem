@@ -25,36 +25,11 @@ namespace FMS_GUI
         public MainWindow()
         {
             InitializeComponent();
-            diskBox.ItemsSource = disks;
         }
 
-        private void diskBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void NewDisk_Click(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                Disk d = new Disk();
-                d.MountDisk(diskBox.SelectedItem.ToString());
-                new ShowDisk(d).Show();
-            }
-            catch
-            {
-                MessageBox.Show("Error");
-            }
-
-        }
-
-        private void CreateButton_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                Disk d = new Disk();
-                d.Createdisk(FileName.Text, UserName.Text);
-                disks.Add(FileName.Text);
-            }
-            catch
-            {
-                MessageBox.Show("Error");
-            }
+            new NewDisk().ShowDialog();
         }
 
     }

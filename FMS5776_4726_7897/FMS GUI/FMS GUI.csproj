@@ -56,10 +56,23 @@
     <Compile Include="DiskIcon.xaml.cs">
       <DependentUpon>DiskIcon.xaml</DependentUpon>
     </Compile>
+    <Compile Include="FileIcon.xaml.cs">
+      <DependentUpon>FileIcon.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="NewDisk.xaml.cs">
+      <DependentUpon>NewDisk.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ShowDisk.xaml.cs">
       <DependentUpon>ShowDisk.xaml</DependentUpon>
     </Compile>
+    <Compile Include="TextControl.xaml.cs">
+      <DependentUpon>TextControl.xaml</DependentUpon>
+    </Compile>
     <Page Include="DiskIcon.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="FileIcon.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -75,7 +88,15 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="NewDisk.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ShowDisk.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TextControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -113,9 +134,14 @@
       <Name>FMS Adapter</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Pic\File.jpg" />
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="Pic\Disk.PNG" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Pic\New Disk1.PNG" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

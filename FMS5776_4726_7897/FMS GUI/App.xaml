@@ -3,6 +3,25 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="DarkGoldenrod" />
+            <Setter Property="Foreground" Value="Maroon" />
+            <Setter Property="FontFamily" Value="Comic Sans MS" />
+        </Style>
+        <Style TargetType="TextBox">
+            <Style.Setters>
+                <Setter Property="Background" Value="White" />
+                <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                <Setter Property="BorderBrush" Value="Black"/>
+                <Setter Property="Foreground" Value="Gray"/>
+                <Setter Property="Text" Value="{DynamicResource descriptionString}"/>
+            </Style.Setters>
+        </Style>
+        <Style TargetType="ComboBox">
+            <Setter Property="Background" Value="DarkGoldenrod"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
     </Application.Resources>
 </Application>

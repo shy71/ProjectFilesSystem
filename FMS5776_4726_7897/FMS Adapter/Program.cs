@@ -8,7 +8,7 @@ using System.Reflection;
 
 namespace FMS_adapter
 {
-    class cppToCsharpAdapter
+   public class cppToCsharpAdapter
     {
         const string dllPath = "FMS DLL.dll";
         #region CREATE / DESTROY / GET ERROR => OF FCB / DISK

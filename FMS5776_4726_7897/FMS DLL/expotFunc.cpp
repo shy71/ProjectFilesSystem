@@ -29,6 +29,11 @@ extern "C"
 			THIS->SetLastErrorMessage(ex.what());
 			throw ex;
 		}
+		catch (char* ex)
+		{
+			THIS->SetLastErrorMessage(ex);
+			throw ex;
+		}
 	}
 	__declspec(dllexport) void MountDisk(Disk* THIS, char* fName)
 	{

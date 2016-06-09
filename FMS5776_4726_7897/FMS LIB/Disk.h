@@ -17,6 +17,7 @@ struct Disk
 	unsigned int currDiskSectorNr;
 	string lastErrorMessage;
 
+	string end = ".dsk";
 
 	void Disk::writePlusCpy(unsigned int sor, unsigned int cpy, DAT sec);
 	void Update();
