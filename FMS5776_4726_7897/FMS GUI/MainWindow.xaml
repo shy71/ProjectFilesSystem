@@ -10,32 +10,22 @@
             <RowDefinition Height="100*"/>
         </Grid.RowDefinitions>
 
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="7*"/>
-            </Grid.ColumnDefinitions>
-            <!--Button Grid.Column="0" ToolTip="Create new disk" Click="NewDisk_Click">
-                <Image Source="Pic\New Disk1.png" Stretch="Uniform"/>     
-            </-->
+        <Menu HorizontalAlignment="Left" Height="23" VerticalAlignment="Top" Width="517">
+            <MenuItem Header="_File" Width="37">
+                <MenuItem x:Name="CreteDskMenu" Header="_Create Disk" Click="CreteDskMenu_Click">
+                    <MenuItem.Icon>
+                        <Image Source="Pic\New Disk1.png" />
+                    </MenuItem.Icon>
 
-            <Menu Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="23" VerticalAlignment="Top" Width="517">
-                <MenuItem Header="_File" Width="37">
-                    <MenuItem x:Name="CreteDskMenu" Header="_Create Disk" Click="CreteDskMenu_Click">
-                        <MenuItem.Icon>
-                            <Image Source="Pic\New Disk1.png" />
-                        </MenuItem.Icon>
-
-                    </MenuItem>
                 </MenuItem>
-                <MenuItem x:Name="SelectedItemProperties" Header="_Properties" HorizontalAlignment="Right" Width="70" Click="SelectedItemProperties_Click"/>
-                <MenuItem x:Name="SelectedItemOpen" Header="_Open" HorizontalAlignment="Right" Width="45" Click="OpenDisk"/>
-                <MenuItem x:Name="SelectedItemClose" Header="_Close" HorizontalAlignment="Right" Width="45" Click="SelectedItemClose_Click"/>
-            </Menu>
-        </Grid>
+            </MenuItem>
+            <MenuItem x:Name="SelectedItemProperties" Header="_Properties" HorizontalAlignment="Right" Width="70" Click="SelectedItemProperties_Click"/>
+            <MenuItem x:Name="SelectedItemOpen" Header="_Open" HorizontalAlignment="Right" Width="45" Click="OpenDisk"/>
+            <MenuItem x:Name="SelectedItemClose" Header="_Close" HorizontalAlignment="Right" Width="45" Click="SelectedItemClose_Click"/>
+        </Menu>
         <TextBlock TextWrapping="Wrap"/>
 
-        <ListBox x:Name="myList" Grid.Row="1" Grid.RowSpan="2" />
+        <ListBox x:Name="myList" Grid.Row="2" Grid.RowSpan="2" />
         <local:TextControl x:Name="adr" Grid.Row="1" IsEnabled="False"/>
     </Grid>
 </Window>
