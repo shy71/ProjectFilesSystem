@@ -28,7 +28,7 @@ namespace FMS_GUI
             InitializeComponent();
             var wr = new ItemPanel();
             wr.OpenDiskEvent += OpenDisk;
-            adr.SetText("C:/");
+            adr.SetText("C:\\");
             myList.Items.Add(new ItemPanel());
             
         }
@@ -45,7 +45,7 @@ namespace FMS_GUI
 
         private void SelectedItemProperties_Click(object sender, RoutedEventArgs e)
         {
-            string name = 
+          //  string name = 
         }
 
         private void SelectedItemClose_Click(object sender, RoutedEventArgs e)

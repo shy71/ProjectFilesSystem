@@ -10,7 +10,7 @@
             <RowDefinition Height="100*"/>
         </Grid.RowDefinitions>
 
-        <Menu HorizontalAlignment="Left" Height="23" VerticalAlignment="Top" Width="517">
+        <Menu HorizontalAlignment="Left" Height="23" VerticalAlignment="Top" Width="517" Panel.ZIndex="1">
             <MenuItem Header="_File" Width="37">
                 <MenuItem x:Name="CreteDskMenu" Header="_Create Disk" Click="CreteDskMenu_Click">
                     <MenuItem.Icon>
