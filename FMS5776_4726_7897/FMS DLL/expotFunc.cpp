@@ -184,10 +184,28 @@ extern "C"
 	}
 #pragma endregion
 #pragma region LEVEL 4 FUNCTIONS
-	__declspec(dllexport)  void  GetVolumeHeader(Disk* THIS, VolumeHeader* buffer)
+	__declspec(dllexport) char* GetName(Disk* THIS)
 	{
 		try
 		{
+			return THIS->vhd.diskName;
+		}
+		catch (exception ex)
+		{
+			THIS->SetLastErrorMessage(ex.what());
+			throw ex;
+		}
+		catch (char* ex)
+		{
+			THIS->SetLastErrorMessage(ex);
+			throw ex;
+		}
+	}
+	__declspec(dllexport)  void  GetVolumeHeader(Disk* THIS,VolumeHeader* buffer)
+	{
+		try
+		{
+			//return THIS->vhd;
 			memcpy_s(buffer, sizeof(VolumeHeader), &THIS->GetVolumeHeader(), sizeof(VolumeHeader));
 		}
 		catch (exception ex)
