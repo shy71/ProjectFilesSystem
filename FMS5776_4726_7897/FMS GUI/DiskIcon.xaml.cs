@@ -44,14 +44,14 @@ namespace FMS_GUI
         /// <summary>
         /// Create a new Disk Icon
         /// </summary>
-        /// <param name="d">disk needs to be already open!</param>
+        /// <param name="d">disk needs to be already open! and will be closed at the end</param>
         public DiskIcon(FMS_adapter.Disk d)
         {
             InitializeComponent();
             d.GetVolumeHeader();
             name.Content=d.GetName();
-            bar.Value=(1- (d.HowMuchEmpty()/1020));
-            barLabel.Content = ((1 - bar.Value) * 1020) + "B free of 1020 B";
+            bar.Value=(1- (d.HowMuchEmpty()/1600));
+            barLabel.Content = App.NumByteToString(d.HowMuchEmpty() * 1020) +" free of " + App.NumByteToString(1024*1600);
             d.UnmountDisk();
         }
     }

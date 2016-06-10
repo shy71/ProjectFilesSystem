@@ -28,10 +28,11 @@ namespace FMS_GUI
         /// Create a new Disk Icon
         /// </summary>
         /// <param name="d">disk needs to be already open!</param>
-        public FileIcon(FMS_adapter.FCB f, string name)
+        public FileIcon(FMS_adapter.Disk d, string name)
         {
             InitializeComponent();
             this.name.Content = name;
+            //לוהסיף פרטים על הדיסק וכו
             //bar.Value = (1 - (d.HowMuchEmpty() / 1020));
             //bar.ToolTip = ((1 - bar.Value) * 1020) + "B free of 1020 B";
         }

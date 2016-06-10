@@ -27,9 +27,9 @@ namespace FMS_GUI
         {
             InitializeComponent();
             var wr = new ItemPanel();
-            wr.OpenDiskEvent += OpenDisk;
+            wr.DoubleClick += OpenDisk;
             adr.SetText("C:\\");
-            myList.Items.Add(new ItemPanel());
+            myList.Items.Add(wr);
             
         }
         static public List<string> GetDisksNames(string path = "../Debug/")
@@ -44,26 +44,36 @@ namespace FMS_GUI
         }
         private void OpenDisk(object sender, EventArgs e)
         {
-            //opening disk
+            myList.Items.Clear();
+            var wr = new ItemPanel((sender as Button).Name);
+            wr.DoubleClick += OpenFile;
+            myList.Items.Add(wr);
+            adr.SetText(adr.GetText()+ (sender as Button).Name+"\\");
         }
-
+        private void OpenFile(object sender, EventArgs e)
+        {
+            myList.Items.Clear();
+            //inside file
+            adr.SetText(adr.GetText() + (sender as Button).Name + "\\");
+        }
         private void CreteDskMenu_Click(object sender, RoutedEventArgs e)
         {
             new NewDisk().ShowDialog();
+            (myList.Items.GetItemAt(0) as ItemPanel).Refresh();
             
         }
 
         private void SelectedItemProperties_Click(object sender, RoutedEventArgs e)
         {
             string name = ((ItemPanel)myList.Items.GetItemAt(0)).GetFocused();
-            if (GetDisksNames().Find(x => x == name) != null)
+            if(GetDisksNames().Find(x => x == name) != null)
             {
                 Disk d = new FMS_adapter.Disk();
                 d.MountDisk(name);
                 MessageBox.Show("Disk name: " + d.GetName()
                               + "\nDisk owner: " + d.GetOwner()
                               + "\nCreation date: " + d.GetCreationDate()
-                              + "\n" + d.HowMuchEmpty() + " Bytes free of B free of 1020 Bytes","Properties",MessageBoxButton.OK,MessageBoxImage.Information);
+                              + "\n" + App.NumByteToString(d.HowMuchEmpty()*1020) + " free of "+App.NumByteToString(1024*1600),"Properties",MessageBoxButton.OK,MessageBoxImage.Information);
             }
             //finish
         }

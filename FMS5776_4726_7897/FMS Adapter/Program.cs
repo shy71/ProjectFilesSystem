@@ -275,11 +275,11 @@ namespace FMS_adapter
         }
         #endregion
         #region LEVEL 3 FUNCTIONS
-        public IntPtr OpenFile(string fileName, string fileOwner, string openMode)
+        public FCB OpenFile(string fileName, string fileOwner, string openMode)
         {
             try
             {
-                return cppToCsharpAdapter.OpenFile(this.myDiskPointer, fileName, fileOwner, openMode);
+                return new FCB(cppToCsharpAdapter.OpenFile(this.myDiskPointer, fileName, fileOwner, openMode));
             }
             catch (SEHException)
             {
@@ -357,7 +357,14 @@ namespace FMS_adapter
         public string GetOwner() { return vhd.DiskOwner; }
         public string GetFormatDate() { return vhd.FormatDate; }
         public string GetCreationDate() { return vhd.ProdDate; }
-        public List<string> GetFilesNames() { return null; }//לעשות
+        public List<string> GetFilesNames()
+        { //למחוק ולעשות באמת
+            var l=new List<string>();
+            l.Add("AsfA");
+            l.Add("hnfg");
+            l.Add("gsret");
+            return l; 
+        }//לעשות
 
         #endregion
     }
@@ -590,7 +597,7 @@ namespace FMS_adapter
 
 
                 d.CreateFile("File1", "Ezra", "F", 20, 20, "I", 0);
-                FCB fcb = new FCB(d.OpenFile("File1", "Ezra", "IO"));
+                FCB fcb = d.OpenFile("File1", "Ezra", "IO");
                 fcb.WriteRecord("hello");
 
             }
