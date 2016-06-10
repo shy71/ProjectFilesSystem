@@ -313,6 +313,7 @@ namespace FMS_adapter
                 //Marshal.FreeHGlobal(buffer);
 
                 //return v;
+                return null;
             }
             catch (SEHException)
             {
