@@ -20,7 +20,6 @@
             </MenuItem>
             <MenuItem x:Name="SelectedItemProperties" Header="_Properties" HorizontalAlignment="Right" Width="70" Click="SelectedItemProperties_Click"/>
             <MenuItem x:Name="SelectedItemOpen" Header="_Open" HorizontalAlignment="Right" Width="45" Click="OpenDisk"/>
-            <MenuItem x:Name="SelectedItemClose" Header="_Close" HorizontalAlignment="Right" Width="45" Click="SelectedItemClose_Click"/>
         </Menu>
         <TextBlock TextWrapping="Wrap"/>
 
