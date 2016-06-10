@@ -3,6 +3,7 @@
 struct SectorDir
 {
 	int sectorNr;
+	SectorDir();
 	dirEntry DirEntry[15];
 	dirEntry& operator[](int index);
 

@@ -65,7 +65,9 @@ namespace FMS_adapter
         #endregion
         #region LEVEL 4 FUNCTIONS
         [DllImport(dllPath, CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr GetVolumeHeader(IntPtr THIS,IntPtr pvhd);
+        public static extern IntPtr GetVolumeHeader(IntPtr THIS, IntPtr pvhd);
+        [DllImport(dllPath, CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr GetFileNames(IntPtr THIS);
         #endregion
         #region FCB FUNCTIONS
         [DllImport(dllPath, CallingConvention = CallingConvention.Cdecl)]
@@ -294,6 +296,35 @@ namespace FMS_adapter
         }
         #endregion
         #region LEVEL 4 FUNCTIONS
+        public string[] GetFileNames()
+        {
+            try
+            {
+                //VolumeHeader v = new VolumeHeader();
+                //int structSize = Marshal.SizeOf(v.GetType()); //Marshal.SizeOf(typeof(Student));  
+                //IntPtr buffer = Marshal.AllocHGlobal(structSize);
+                //Marshal.StructureToPtr(v, buffer, true);
+
+                //// ... send buffer to dll 
+                //cppToCsharpAdapter.GetVolumeHeader(this.myDiskPointer, buffer);
+                //Marshal.PtrToStructure(buffer, v);
+
+                //// free allocate 
+                //Marshal.FreeHGlobal(buffer);
+
+                //return v;
+            }
+            catch (SEHException)
+            {
+                IntPtr cString = cppToCsharpAdapter.GetLastDiskErrorMessage(this.myDiskPointer);
+                string message = Marshal.PtrToStringAnsi(cString);
+                throw new Exception(message);
+            }
+            catch
+            {
+                throw;
+            }
+        }
         public VolumeHeader GetVolumeHeader()
         {
             try

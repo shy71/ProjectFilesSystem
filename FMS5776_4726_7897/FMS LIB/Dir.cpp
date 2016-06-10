@@ -1,6 +1,13 @@
 #include "Dir.h"
 #include<string.h>
 
+SectorDir::SectorDir()
+{
+	for (int i = 0; i < 15; i++)
+	{
+		DirEntry[i].Filename[0] = NULL;
+	}
+}
 dirEntry& SectorDir::operator[](int index){ return DirEntry[index]; }
 
 void RootDir::SetClus(unsigned int ClusNumber)
