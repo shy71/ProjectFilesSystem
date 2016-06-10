@@ -46,7 +46,9 @@ namespace FMS_GUI
         }
         private void OpenFile(object sender, EventArgs e)
         {
-
+            myList.Items.Clear();
+            //inside file
+            adr.SetText(adr.GetText() + (sender as Button).Name + "\\");
         }
         private void CreteDskMenu_Click(object sender, RoutedEventArgs e)
         {

@@ -357,7 +357,14 @@ namespace FMS_adapter
         public string GetOwner() { return vhd.DiskOwner; }
         public string GetFormatDate() { return vhd.FormatDate; }
         public string GetCreationDate() { return vhd.ProdDate; }
-        public List<string> GetFilesNames() { return new List<string>(); }//לעשות
+        public List<string> GetFilesNames()
+        { //למחוק ולעשות באמת
+            var l=new List<string>();
+            l.Add("AsfA");
+            l.Add("hnfg");
+            l.Add("gsret");
+            return l; 
+        }//לעשות
 
         #endregion
     }
