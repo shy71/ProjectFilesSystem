@@ -44,7 +44,7 @@ namespace FMS_GUI
         /// <summary>
         /// Create a new Disk Icon
         /// </summary>
-        /// <param name="d">disk needs to be already open!</param>
+        /// <param name="d">disk needs to be already open! and will be closed at the end</param>
         public DiskIcon(FMS_adapter.Disk d)
         {
             InitializeComponent();

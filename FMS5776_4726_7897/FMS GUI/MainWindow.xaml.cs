@@ -27,9 +27,9 @@ namespace FMS_GUI
         {
             InitializeComponent();
             var wr = new ItemPanel();
-            wr.OpenDiskEvent += OpenDisk;
+            wr.DoubleClick += OpenDisk;
             adr.SetText("C:\\");
-            myList.Items.Add(new ItemPanel());
+            myList.Items.Add(wr);
             
         }
         static public List<string> GetDisksNames(string path = "../Debug/")
@@ -38,9 +38,16 @@ namespace FMS_GUI
         }
         private void OpenDisk(object sender, EventArgs e)
         {
-            //opening disk
+            myList.Items.Clear();
+            var wr = new ItemPanel((sender as Button).Name);
+            wr.DoubleClick += OpenFile;
+            myList.Items.Add(wr);
+            adr.SetText(adr.GetText()+ (sender as Button).Name+"\\");
         }
+        private void OpenFile(object sender, EventArgs e)
+        {
 
+        }
         private void CreteDskMenu_Click(object sender, RoutedEventArgs e)
         {
             new NewDisk().ShowDialog();
