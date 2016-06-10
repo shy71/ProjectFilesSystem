@@ -33,7 +33,7 @@ namespace FMS_GUI
             }
             catch(Exception s)
             {
-                MessageBox.Show(s.Message, "Errot: Create Disk", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(s.Message, "Error: Create Disk", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             this.Close();
         }
