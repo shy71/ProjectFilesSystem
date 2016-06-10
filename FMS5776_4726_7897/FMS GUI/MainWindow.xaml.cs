@@ -32,7 +32,7 @@ namespace FMS_GUI
             myList.Items.Add(new ItemPanel());
             
         }
-        static private List<string> GetDisksNames(string path = "../Debug/")
+        static public List<string> GetDisksNames(string path = "../Debug/")
         {
             return Directory.GetFiles(path).Where(x => x.Substring(x.Length - 4) == ".dsk").Select(x => x.Substring(x.IndexOf('.') + 9)).Select(y => y.Substring(0, y.IndexOf(".dsk"))).ToList();
         }
