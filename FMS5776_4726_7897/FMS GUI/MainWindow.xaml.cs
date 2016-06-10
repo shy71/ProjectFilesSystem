@@ -44,20 +44,21 @@ namespace FMS_GUI
         private void CreteDskMenu_Click(object sender, RoutedEventArgs e)
         {
             new NewDisk().ShowDialog();
+            (myList.Items.GetItemAt(0) as ItemPanel).Refresh();
             
         }
 
         private void SelectedItemProperties_Click(object sender, RoutedEventArgs e)
         {
             string name = ((ItemPanel)myList.Items.GetItemAt(0)).GetFocused();
-            if(GetDiskNames().Find(x => x == name) != null)
+            if(GetDisksNames().Find(x => x == name) != null)
             {
                 Disk d = new FMS_adapter.Disk();
                 d.MountDisk(name);
                 MessageBox.Show("Disk name: " + d.GetName()
                               + "\nDisk owner: " + d.GetOwner()
                               + "\nCreation date: " + d.GetCreationDate()
-                              + "\n" + d.HowMuchEmpty() + "Bytes free of B free of 1020 Bytes","Properties",MessageBoxButton.OK,MessageBoxImage.Information);
+                              + "\n" + App.NumByteToString(d.HowMuchEmpty()*1020) + " free of "+App.NumByteToString(1024*1600),"Properties",MessageBoxButton.OK,MessageBoxImage.Information);
             }
             //finish
         }

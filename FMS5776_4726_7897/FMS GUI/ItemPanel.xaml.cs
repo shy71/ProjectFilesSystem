@@ -51,7 +51,19 @@ namespace FMS_GUI
                 win.Children.Add(bt);
             } 
         }
-
+        public void Refresh()
+        {
+            win.Children.Clear();
+            Button bt;
+            foreach (string Item in MainWindow.GetDisksNames())
+            {
+                bt = new Button();
+                bt.BorderThickness = new Thickness(2);
+                bt.Content = new DiskIcon(Item);
+                bt.PreviewMouseDoubleClick += OpenDisk;
+                win.Children.Add(bt);
+            } 
+        }
         public void OpenDisk(object sender, EventArgs e)
         {
             if (OpenDiskEvent != null)

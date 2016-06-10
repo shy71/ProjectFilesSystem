@@ -13,6 +13,15 @@ namespace FMS_GUI
     /// </summary>
     public partial class App : Application
     {
+        public static string NumByteToString(float num)
+        {
+            if(num<1000)
+                return Math.Round(num,3)+"B";
+            if(num<1000000)
+                return Math.Round(num/1000,2) +"KB";
+            else
+                return Math.Round(num / 1000000,2) + "MB";
+        }
     }
     public class EventValue : EventArgs
     {
