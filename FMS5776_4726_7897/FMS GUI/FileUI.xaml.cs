@@ -23,5 +23,10 @@ namespace FMS_GUI
         {
             InitializeComponent();
         }
+
+        private void OpenRec_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

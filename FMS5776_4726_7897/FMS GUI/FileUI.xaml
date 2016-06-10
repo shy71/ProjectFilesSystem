@@ -8,6 +8,6 @@
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
         <ListBox x:Name="RecordsList" Grid.Row="0"/>
-        
+        <Button x:Name="OpenRec" Content="Open" Click="OpenRec_Click" Grid.Row="1"/>
     </Grid>
 </Window>

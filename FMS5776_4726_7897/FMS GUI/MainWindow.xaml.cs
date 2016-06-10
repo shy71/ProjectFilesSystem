@@ -50,14 +50,14 @@ namespace FMS_GUI
         private void SelectedItemProperties_Click(object sender, RoutedEventArgs e)
         {
             string name = ((ItemPanel)myList.Items.GetItemAt(0)).GetFocused();
-            if(GetDiskNames().Find(x => x == name) != null)
+            if (GetDisksNames().Find(x => x == name) != null)
             {
                 Disk d = new FMS_adapter.Disk();
                 d.MountDisk(name);
                 MessageBox.Show("Disk name: " + d.GetName()
                               + "\nDisk owner: " + d.GetOwner()
                               + "\nCreation date: " + d.GetCreationDate()
-                              + "\n" + d.HowMuchEmpty() + "Bytes free of B free of 1020 Bytes","Properties",MessageBoxButton.OK,MessageBoxImage.Information);
+                              + "\n" + d.HowMuchEmpty() + " Bytes free of B free of 1020 Bytes","Properties",MessageBoxButton.OK,MessageBoxImage.Information);
             }
             //finish
         }
