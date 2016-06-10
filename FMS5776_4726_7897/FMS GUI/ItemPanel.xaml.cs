@@ -42,11 +42,11 @@ namespace FMS_GUI
         {
             InitializeComponent();
             Button bt;           
-            foreach (string Item in Directory.GetFiles("../Debug/").Where(x => x.Substring(x.Length - 4) == ".dsk").Select(x => x.Substring(x.IndexOf('.') + 9)))
+            foreach (string Item in MainWindow.GetDisksNames())
             {
                 bt = new Button();
                 bt.BorderThickness = new Thickness(2);
-                bt.Content = new DiskIcon(Item.Substring(0, Item.IndexOf(".dsk")));
+                bt.Content = new DiskIcon(Item);
                 bt.PreviewMouseDoubleClick += OpenDisk;
                 win.Children.Add(bt);
             } 
