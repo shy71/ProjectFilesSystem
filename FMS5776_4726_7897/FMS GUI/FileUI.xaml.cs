@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using FMS_adapter;
 
 namespace FMS_GUI
 {
@@ -19,14 +20,26 @@ namespace FMS_GUI
     /// </summary>
     public partial class FileUI : Window
     {
+        FCB fcb;
         public FileUI()
         {
             InitializeComponent();
         }
+        public FileUI(Disk d,string name, string owner,string openMode)
+        {
+            InitializeComponent();
+            fcb = d.OpenFile(name, owner, openMode);
+        }
 
         private void OpenRec_Click(object sender, RoutedEventArgs e)
         {
-
+            while(true)
+            {
+                
+                string s = "";
+                fcb.ReadRecord(ref s);
+               // if(fcb.
+            }
         }
     }
 }

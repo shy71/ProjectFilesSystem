@@ -66,6 +66,9 @@ namespace FMS_adapter
         #region LEVEL 4 FUNCTIONS
         [DllImport(dllPath, CallingConvention = CallingConvention.Cdecl)]
         public static extern IntPtr GetVolumeHeader(IntPtr THIS, IntPtr pvhd);
+
+        [DllImport(dllPath, CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr GetDirEntry(IntPtr THIS, IntPtr pvhd);
         [DllImport(dllPath, CallingConvention = CallingConvention.Cdecl)]
         public static extern IntPtr GetFileNames(IntPtr THIS);
         #endregion
@@ -403,7 +406,36 @@ namespace FMS_adapter
     public class FCB
     {
         private IntPtr myFCBPointer;
+        public DirEntry GetDirEntry()
+        {
+            try
+            {
 
+                DirEntry v = new DirEntry();
+                int structSize = Marshal.SizeOf(v.GetType()); //Marshal.SizeOf(typeof(Student));  
+                IntPtr buffer = Marshal.AllocHGlobal(structSize);
+                Marshal.StructureToPtr(v, buffer, true);
+
+                // ... send buffer to dll 
+                cppToCsharpAdapter.GetDirEntry(this.myFCBPointer, buffer);
+                Marshal.PtrToStructure(buffer, v);
+
+                // free allocate 
+                Marshal.FreeHGlobal(buffer);
+
+                return v;
+            }
+            catch (SEHException)
+            {
+                IntPtr cString = cppToCsharpAdapter.GetLastFcbErrorMessage(this.myFCBPointer);
+                string message = Marshal.PtrToStringAnsi(cString);
+                throw new Exception(message);
+            }
+            catch
+            {
+                throw;
+            }
+        }
         #region DESTRUCTOR
         public FCB(IntPtr p)
         {
@@ -433,7 +465,7 @@ namespace FMS_adapter
                 throw;
             }
         }
-        public void ReadRecord(object dest, uint readForUpdate = 0)
+        public void ReadRecord(ref string dest, uint readForUpdate = 0)
         {
             try
             {
@@ -599,7 +631,20 @@ namespace FMS_adapter
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 944)]
         string emptyArea;
     }
+    public class DirEntry
+    {
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 12)]
+        string filename;
+        public string Filename { get { return filename; } }
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 12)]
+        string fileOwner;
+        public string FileOwner { get { return filename; } }
 
+        uint fileAddr;
+        public uint FileAddr { get { return fileAddr; } }
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 10)]
+        string crDate;
+        public string CrDate { get { return crDate; } }
     //[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     //public class VolumeHeader
     //{
@@ -651,6 +696,27 @@ namespace FMS_adapter
     //    string emptyArea;
     //}
 
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 2)]
+        string recFormat;
+        public string RecFormat { get { return recFormat; } }//changed place to save bits which will later allow us to store more sectors in the file
+	    uint fileSize;
+        public uint FileSize { get { return fileSize; } }
+	    uint eofRecNum;
+        public uint EofRecNum { get { return eofRecNum; } }
+	    uint maxRecSize;
+        public uint MaxRecSize { get { return maxRecSize; } }
+	    uint actualRecSize;
+        public uint ActualRecSize { get { return actualRecSize; } }
+	    uint keyOffset;
+        public uint KeyOffset { get { return keyOffset; } }
+	    uint keySize;
+        public uint KeySize { get { return keySize; } }
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 2)]
+        string keyType;
+        public string KeyType { get { return keyType; } }
+        uint entryStatus;
+        public uint EntryStatus { get { return entryStatus; } }
+    }
     public class Program
     {
         public static string ToStringProperty(object t)
