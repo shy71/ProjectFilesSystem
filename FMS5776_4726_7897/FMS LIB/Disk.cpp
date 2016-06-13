@@ -389,7 +389,7 @@ char** Disk::GetFileNames()
 		for (int i = 0; i < count; i++)
 		{
 			fileNames2[i] = new char[12];
-			strcpy_s(fileNames2[i], fileNames[i]);
+			//strcpy_s(fileNames2[i], fileNames[i]);
 		}
 		return fileNames2;
 	}
