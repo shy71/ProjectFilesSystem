@@ -392,9 +392,8 @@ namespace FMS_adapter
         public List<string> GetFilesNames()
         { //למחוק ולעשות באמת
             var l=new List<string>();
-            l.Add("AsfA");
-            l.Add("hnfg");
-            l.Add("gsret");
+            IntPtr ptr = cppToCsharpAdapter.GetFileNames(myDiskPointer);
+            string s = ptr.ToString();
             return l; 
         }//לעשות
 
