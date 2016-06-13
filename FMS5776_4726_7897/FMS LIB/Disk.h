@@ -59,5 +59,5 @@ public:
 	string& Disk::GetLastErrorMessage();
 	void Disk::SetLastErrorMessage(string lastErrorMessage);
 	VolumeHeader GetVolumeHeader();
-	char** GetFileNames();
+	char* GetFileNames();
 };

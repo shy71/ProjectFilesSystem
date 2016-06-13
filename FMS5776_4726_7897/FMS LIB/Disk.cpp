@@ -374,23 +374,26 @@ VolumeHeader Disk::GetVolumeHeader()
 {
 	return this->vhd;
 }
-char** Disk::GetFileNames()
+char* Disk::GetFileNames()
 {
 	{
 		int count = 0;
-		char fileNames[30][12];
+		char *fileNames = new char[13 * 30 + 1];
+		fileNames[0] = NULL;
 		for (int i = 0; i < 15; i++)
-			strcpy_s(fileNames[i], rootDir.lsbSector[i].Filename);
+			if (rootDir.lsbSector[i].Filename[0]!=NULL)
+			{
+				
+				strcat(fileNames, rootDir.lsbSector[i].Filename);
+				strcat(fileNames, ",");
+			}
 		for (int j = 0; j < 15; j++)
-			strcpy_s(fileNames[15 + j], rootDir.lsbSector[j].Filename);
-		for (int i = 0; i < 30 && fileNames[i][0] != NULL; i++)
-			count++;
-		char **fileNames2 = new char*[count];
-		for (int i = 0; i < count; i++)
-		{
-			fileNames2[i] = new char[12];
-			//strcpy_s(fileNames2[i], fileNames[i]);
-		}
-		return fileNames2;
+			if (rootDir.msbSector[j].Filename[0] != NULL)
+			{
+				
+				strcat(fileNames, rootDir.msbSector[j].Filename);
+				strcat(fileNames, ",");
+			}
+		return fileNames;
 	}
 }

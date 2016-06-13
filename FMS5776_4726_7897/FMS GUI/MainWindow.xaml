@@ -17,6 +17,11 @@
                         <Image Source="Pic\New Disk1.png" />
                     </MenuItem.Icon>
                 </MenuItem>
+                <MenuItem x:Name="CreateFile" Header="New File" Click="CreteNewFile_Click">
+                    <MenuItem.Icon>
+                        <Image Source="Pic\File.jpg" Width="40" />
+                    </MenuItem.Icon>
+                </MenuItem>
             </MenuItem>
             <MenuItem x:Name="SelectedItemProperties" Header="_Properties" HorizontalAlignment="Right" Width="70" Click="SelectedItemProperties_Click"/>
             <MenuItem x:Name="SelectedItemOpen" Header="_Open" HorizontalAlignment="Right" Width="45" Click="OpenDisk"/>
@@ -25,5 +30,6 @@
 
         <ListBox x:Name="myList" Grid.Row="2" Grid.RowSpan="2" />
         <local:TextControl x:Name="adr" Grid.Row="1" IsEnabled="False"/>
+        <Button Content="^" HorizontalAlignment="Left" Margin="488,4,0,0" Grid.Row="1" VerticalAlignment="Top" Width="29" Height="21" Click="Button_Click"/>
     </Grid>
 </Window>

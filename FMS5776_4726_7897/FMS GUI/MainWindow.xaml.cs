@@ -62,7 +62,19 @@ namespace FMS_GUI
             (myList.Items.GetItemAt(0) as ItemPanel).Refresh();
             
         }
-
+        private void CreteNewFile_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                (myList.Items.GetItemAt(0) as ItemPanel).OpenFile();
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            
+        }
+        
         private void SelectedItemProperties_Click(object sender, RoutedEventArgs e)
         {
             string name = ((ItemPanel)myList.Items.GetItemAt(0)).GetFocused();
@@ -76,6 +88,21 @@ namespace FMS_GUI
                               + "\n" + App.NumByteToString(d.HowMuchEmpty()*1020) + " free of "+App.NumByteToString(1024*1600),"Properties",MessageBoxButton.OK,MessageBoxImage.Information);
             }
             //finish
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            if (adr.GetText().Count(x => x == '\\') == 1)
+                MessageBox.Show("You are already in the root level");
+            else
+            {
+                myList.Items.Clear();
+                var wr = new ItemPanel();
+                wr.DoubleClick += OpenDisk;
+                adr.SetText("C:\\");
+                myList.Items.Add(wr);
+            }
+
         }
     }
 }

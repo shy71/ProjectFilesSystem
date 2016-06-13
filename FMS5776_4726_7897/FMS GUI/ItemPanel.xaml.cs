@@ -23,7 +23,6 @@ namespace FMS_GUI
     /// </summary>
     public partial class ItemPanel : UserControl
     {
-        bool CtrlUp=true;
         Disk d = null;//לדאוג לסגור
         public event EventHandler DoubleClick;
 
@@ -62,6 +61,7 @@ namespace FMS_GUI
             }
             else
             {
+                win.Children.Clear();
                 var names = d.GetFilesNames();
                 Button bt;
                 foreach (string item in names)
@@ -87,13 +87,33 @@ namespace FMS_GUI
             Refresh();
            
         }
-
+        public void OpenFile(bool Create=true)
+        {
+            if (d == null)
+                throw new Exception("You cant create a file outside of a disk");
+            if (Create)
+            {
+                new NewFile(d).ShowDialog();
+                Refresh();
+            }
+        }
         public string GetFocused()
         {
             foreach (Button item in win.Children)
                 if (item.IsFocused)
                     return ((DiskIcon)item.Content).name.Content.ToString();
             throw new Exception("You didnt chose anything!");
+        }
+        public void Up()
+        {
+            if(d==null)
+                throw new Exception("You cant go higher! you are already in root level!");
+            else
+            {
+                d.UnmountDisk();
+                d = null;
+                Refresh();
+            }
         }
     }
 }

@@ -391,10 +391,11 @@ namespace FMS_adapter
         public string GetCreationDate() { return vhd.ProdDate; }
         public List<string> GetFilesNames()
         { //למחוק ולעשות באמת
-            var l=new List<string>();
-            IntPtr ptr = cppToCsharpAdapter.GetFileNames(myDiskPointer);
-            string s = ptr.ToString();
-            return l; 
+           var s= Marshal.PtrToStringAnsi(cppToCsharpAdapter.GetFileNames(myDiskPointer)).Split(',').ToList();
+           s.RemoveAt(s.Count-1);
+           if (s.FirstOrDefault()==null||s.First() == "")
+               s.Clear();
+           return s;
         }//לעשות
 
         #endregion
@@ -661,33 +662,26 @@ namespace FMS_adapter
         }
         static void Main(string[] args)
         {
-            try
-            {
-                int structSize = Marshal.SizeOf(typeof(VolumeHeader));
-                Console.WriteLine("Marshal.SizeOf(typeof(VolumeHeader) == " + structSize);
-                Disk d = new Disk();
-                Console.WriteLine("\nMake Disk:");
-//                Console.WriteLine(ToStringProperty(d.GetVolumeHeader()));
-                d.Createdisk("disk1", "oshri");
-                Console.WriteLine("\nCreate Disk:");
-               // Console.WriteLine(ToStringProperty(d.GetVolumeHeader()));
-                d.MountDisk("disk1");
-                d.Format("oshri");
-                Console.WriteLine("\nFormat Disk:");
-               // Console.WriteLine(ToStringProperty(d.GetVolumeHeader()));
+
+            int structSize = Marshal.SizeOf(typeof(VolumeHeader));
+            Console.WriteLine("Marshal.SizeOf(typeof(VolumeHeader) == " + structSize);
+            Disk d = new Disk();
+            d.Createdisk("work", "oshri");
+            d.MountDisk("work");
+            d.CreateFile("File1", "Ezra", "F", 20, 20, "I", 0);
+            d.CreateFile("Folders", "Ezra", "F", 20, 20, "I", 0);
+            d.CreateFile("Gmara", "Ezra", "F", 20, 20, "I", 0);
+            d.UnmountDisk();
 
 
-                d.CreateFile("File1", "Ezra", "F", 20, 20, "I", 0);
-                FCB fcb = d.OpenFile("File1", "Ezra", "IO");
-                fcb.WriteRecord("hello");
 
-            }
-            catch (Exception e)
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine(e.Message);
-                Console.ResetColor();
-            }
+            //catch (Exception e)
+            //{
+            //    Console.ForegroundColor = ConsoleColor.Red;
+            //    Console.WriteLine(e.Message);
+            //    Console.ResetColor();
+            //}
+
         }
     }
 }

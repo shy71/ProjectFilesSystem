@@ -376,9 +376,9 @@ extern "C"
 		const char* str = THIS->GetLastErrorMessage().c_str();
 		return str;
 	}
-	__declspec(dllexport) char** GetFileNames(Disk* THIS)
+	__declspec(dllexport) char* GetFileNames(Disk* THIS)
 	{
-		char** strl = THIS->GetFileNames();
+		char* strl = THIS->GetFileNames();
 		return strl;
 	}
 #pragma endregion
