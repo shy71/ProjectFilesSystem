@@ -45,12 +45,14 @@ void FCB::read(char *dest, unsigned int status)//finish function
 {
 	if (editLock)
 		throw "You can't read while locked in edit mode!";
-	if (IOstatus == "I" && status == 1)
+	if (IOstatus[0] == 'I' && status == 1)
 		throw "You can't open it for editing since it's read only.";
 	//flushFile();
 	d->readSector(currSecNr, &Buffer);
-	if (fileDesc.recFormat == "F")
+	if (fileDesc.recFormat[0] == 'F')
 	{
+		if (fileDesc.eofRecNr == currRecNr)
+			throw "File Is Finshed!";
 		//read from buffer the current record
 		dest = new char[fileDesc.actualRecSize];
 		for (int i = fileDesc.actualRecSize*currRecNrInBuff; i < fileDesc.actualRecSize*(currRecNrInBuff + 1); i++)//think of changing
@@ -89,10 +91,10 @@ void FCB::write(char *record)
 {
 	if (editLock)
 		throw "You can't write while locked in edit mode!";
-	if (IOstatus == "I")
+	if (IOstatus[0] == 'I')
 		throw "You can't edit these files because the file is read only.";
 	//flushFile();
-	if (fileDesc.recFormat == "F")
+	if (fileDesc.recFormat[0] == 'F')
 	{
 		for (int i = 0; i < fileDesc.maxRecSize; i++)
 			Buffer[currRecNrInBuff*fileDesc.maxRecSize + i] = record[i];
@@ -289,6 +291,8 @@ void FCB::seek(unsigned int from, int recordCount)//check for situation where he
 }
 void FCB::MoveRecord(int num)
 {
+	if (num == 0)
+		return;
 	if (num > 0)
 		if (fileDesc.eofRecNr < num + currRecNr)
 			throw "You have asked for a record out of the range of the file!";
@@ -304,7 +308,7 @@ void FCB::MoveRecord(int num)
 #pragma region Edit Mode Functions
 void FCB::updateCancel()
 {
-	if (IOstatus == "I")
+	if (IOstatus[0] == 'I')
 		throw "This file has been opened in read only status";
 	if (!editLock)
 		throw "You can't cancel an update, cause it isn't in update state";
@@ -312,7 +316,7 @@ void FCB::updateCancel()
 }
 void FCB::deleteRecord()//איך בשאר הדברים ידעו לדלג על הרשמוה?
 {
-	if (IOstatus == "I")
+	if (IOstatus[0] == 'I')
 		throw "This file has been opened in read only status";
 	if (!editLock)
 		throw "You can't delete the current record since it's not in update state";
@@ -323,7 +327,7 @@ void FCB::deleteRecord()//איך בשאר הדברים ידעו לדלג על הרשמוה?
 }
 void FCB::updateRecord(char *update)
 {
-	if (IOstatus == "I")
+	if (IOstatus[0] == 'I')
 		throw "This file has been opened in read only status";
 	if (!editLock)
 		throw "You are not in edit mode so you can't update the current record";
@@ -335,7 +339,7 @@ void FCB::GoToNextRecord()
 {
 	if (FAT.count() == 0)
 		throw "You have no space so you can't move to the next record...";
-	if (fileDesc.recFormat == "F")
+	if (fileDesc.recFormat[0] == 'F')
 	{
 		if (currRecNrInBuff < 1020 / fileDesc.maxRecSize - 1)//In next sector
 		{
@@ -406,9 +410,9 @@ void FCB::addRecord(char *record)//need to be d
 	seek(2, 0);//go to the last record
 	//check if this is the last record in the sector
 	bool isLast = true;
-	if (fileDesc.recFormat == "F" && currRecNrInBuff < 1020 / fileDesc.maxRecSize - 1)
+	if (fileDesc.recFormat[0] == 'F' && currRecNrInBuff < 1020 / fileDesc.maxRecSize - 1)
 		isLast = false;
-	else if (fileDesc.recFormat != "F")
+	else if (fileDesc.recFormat[0] != 'F')
 	{
 		int index = 0;
 		for (int i = 0; i < currRecNrInBuff && index < 1020; index++)

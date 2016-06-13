@@ -27,22 +27,32 @@ namespace FMS_GUI
         }
         public FileUI(Disk d,string name, string owner,string openMode)
         {
-            InitializeComponent();
-            fcb = d.OpenFile(name, owner, openMode);
-            List<string> recordlist = new List<string>();
-            while (true)
+           
+            try
             {
-                string s = "";
-                fcb.ReadRecord(ref s);
-                bool exists = false;
-                foreach (var c in s.Substring((int)fcb.GetDirEntry().KeyOffset, (int)fcb.GetDirEntry().KeySize))
-                    if (c != null)
-                        exists = true;
-                if (exists)
+
+                InitializeComponent();
+                fcb = d.OpenFile(name, owner, openMode);
+                fcb.SeekRecord(0, 0);
+                List<string> recordlist = new List<string>();
+                while (true)
                 {
-                    recordlist.Add(s);
-                    RecordsList.Items.Add(s.Substring((int)fcb.GetDirEntry().KeyOffset, (int)fcb.GetDirEntry().KeySize));
+                    string s;
+                    fcb.ReadRecord(out s, (int)fcb.GetDirEntry().MaxRecSize);
+                    bool exists = false;
+                    foreach (var c in s.Substring((int)fcb.GetDirEntry().KeyOffset, (int)fcb.GetDirEntry().KeySize))
+                        if (c != null)
+                            exists = true;
+                    if (exists)
+                    {
+                        recordlist.Add(s);
+                        RecordsList.Items.Add(s.Substring((int)fcb.GetDirEntry().KeyOffset, (int)fcb.GetDirEntry().KeySize));
+                    }
                 }
+            }
+            catch
+            {
+                fcb.SeekRecord(0, 0);
             }
         }
         private void OpenRec_Click(object sender, RoutedEventArgs e)

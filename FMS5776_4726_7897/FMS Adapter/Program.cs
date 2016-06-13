@@ -465,14 +465,14 @@ namespace FMS_adapter
                 throw;
             }
         }
-        public void ReadRecord(ref string dest, uint readForUpdate = 0)
+        public void ReadRecord(out string dest,int size, uint readForUpdate = 0)
         {
             try
             {
-                IntPtr buffer = Marshal.AllocHGlobal(Marshal.SizeOf(dest.GetType()));
+                IntPtr buffer = Marshal.AllocHGlobal(size);
                 cppToCsharpAdapter.ReadRecord(this.myFCBPointer, buffer, readForUpdate);
                 //copy to dest
-                Marshal.PtrToStructure(buffer, dest);
+               dest= Marshal.PtrToStringAnsi(buffer);
                 Marshal.FreeHGlobal(buffer);
             }
             catch (SEHException)
@@ -631,6 +631,7 @@ namespace FMS_adapter
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 944)]
         string emptyArea;
     }
+      [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     public class DirEntry
     {
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 12)]
@@ -735,6 +736,8 @@ namespace FMS_adapter
             d.Createdisk("work", "oshri");
             d.MountDisk("work");
             d.CreateFile("File1", "Ezra", "F", 20, 20, "I", 0);
+            FCB fcb = d.OpenFile("File1", "Ezra", "I");
+            fcb.WriteRecord("shy");
             d.CreateFile("Folders", "Ezra", "F", 20, 20, "I", 0);
             d.CreateFile("Gmara", "Ezra", "F", 20, 20, "I", 0);
             d.UnmountDisk();
