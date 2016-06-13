@@ -69,10 +69,14 @@ namespace FMS_GUI
                     bt = new Button();
                     bt.Content = new FileIcon(d, item);
                     bt.Name = item;
-                    bt.PreviewMouseDoubleClick += DoubleClickEvent;
+                    bt.PreviewMouseDoubleClick += OpenFile;
                     win.Children.Add(bt);
                 }
             }
+        }
+        public void OpenFile(object sender, EventArgs e)
+        {  
+            new FileUI(d, (sender as Button).Name, "Ezra", "I").ShowDialog();
         }
         public void DoubleClickEvent(object sender, EventArgs e)
         {
