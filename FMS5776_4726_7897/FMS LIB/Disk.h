@@ -59,22 +59,5 @@ public:
 	string& Disk::GetLastErrorMessage();
 	void Disk::SetLastErrorMessage(string lastErrorMessage);
 	VolumeHeader GetVolumeHeader();
-	char** GetFileNames()
-	{
-		int count = 0;
-		char fileNames[30][12];
-		for (int i = 0; i < 15; i++)
-			strcpy(fileNames[i],rootDir.lsbSector[i].Filename);
-		for (int j = 0; j < 15; j++)
-			strcpy(fileNames[15+j], rootDir.lsbSector[j].Filename);
-		for (int i = 0; i < 30 && fileNames[i][0] != NULL; i++)
-			count++;
-		char **fileNames2 =  new char*[count];
-		for (int i = 0; i < count; i++)
-		{
-			fileNames2[i] = new char[12];
-			strcpy(fileNames2[i],fileNames[i]);
-		}
-		return fileNames2;
-	}
+	char** GetFileNames();
 };
