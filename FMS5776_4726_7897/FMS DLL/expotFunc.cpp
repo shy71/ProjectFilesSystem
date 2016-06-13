@@ -347,6 +347,27 @@ extern "C"
 	}
 #pragma endregion
 
+
+	//DIR ENTRY
+
+	__declspec(dllexport) void GetDirEntry(FCB *THIS, dirEntry* buffer)
+	{
+		try
+		{
+			//return THIS->vhd;
+			memcpy_s(buffer, sizeof(dirEntry), &THIS->fileDesc, sizeof(dirEntry));
+		}
+		catch (exception ex)
+		{
+			THIS->SetLastErrorMessage(ex.what());
+			throw ex;
+		}
+		catch (char* ex)
+		{
+			THIS->SetLastErrorMessage(ex);
+			throw ex;
+		}
+	}
 	//CONSTRUCTORS AND DESTRUCTORS:
 
 #pragma region CREATE OR DELETE DISK / FCB 
