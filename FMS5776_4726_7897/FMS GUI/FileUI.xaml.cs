@@ -29,17 +29,24 @@ namespace FMS_GUI
         {
             InitializeComponent();
             fcb = d.OpenFile(name, owner, openMode);
-        }
-
-        private void OpenRec_Click(object sender, RoutedEventArgs e)
-        {
-            while(true)
+            List<string> recordlist = new List<string>();
+            while (true)
             {
-                
                 string s = "";
                 fcb.ReadRecord(ref s);
-               // if(fcb.
+                bool exists = false;
+                foreach (var c in s.Substring((int)fcb.GetDirEntry().KeyOffset, (int)fcb.GetDirEntry().KeySize))
+                    if (c != null)
+                        exists = true;
+                if (exists)
+                {
+                    recordlist.Add(s);
+                    RecordsList.Items.Add(s.Substring((int)fcb.GetDirEntry().KeyOffset, (int)fcb.GetDirEntry().KeySize));
+                }
             }
+        }
+        private void OpenRec_Click(object sender, RoutedEventArgs e)
+        {
         }
     }
 }
