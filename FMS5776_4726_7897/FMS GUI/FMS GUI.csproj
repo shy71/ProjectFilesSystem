@@ -53,8 +53,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Create Record.xaml.cs">
+      <DependentUpon>Create Record.xaml</DependentUpon>
+    </Compile>
     <Compile Include="DiskIcon.xaml.cs">
       <DependentUpon>DiskIcon.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="FieldItem.xaml.cs">
+      <DependentUpon>FieldItem.xaml</DependentUpon>
     </Compile>
     <Compile Include="FileIcon.xaml.cs">
       <DependentUpon>FileIcon.xaml</DependentUpon>
@@ -77,7 +83,15 @@
     <Compile Include="TextControl.xaml.cs">
       <DependentUpon>TextControl.xaml</DependentUpon>
     </Compile>
+    <Page Include="Create Record.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="DiskIcon.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="FieldItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

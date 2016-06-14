@@ -58,5 +58,15 @@ namespace FMS_GUI
         private void OpenRec_Click(object sender, RoutedEventArgs e)
         {
         }
+        private void CreateRec_Click(object sender, RoutedEventArgs e)
+        {
+            int size = (int)fcb.GetDirEntry().MaxRecSize;
+            //open creation of file window
+        }
+
+        private void RecProprerties_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
