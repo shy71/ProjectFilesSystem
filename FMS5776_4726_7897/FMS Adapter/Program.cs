@@ -472,7 +472,7 @@ namespace FMS_adapter
                 IntPtr buffer = Marshal.AllocHGlobal(size);
                 cppToCsharpAdapter.ReadRecord(this.myFCBPointer, buffer, readForUpdate);
                 //copy to dest
-               dest= Marshal.PtrToStringAnsi(buffer);
+                dest= Marshal.PtrToStringAnsi(buffer);
                 Marshal.FreeHGlobal(buffer);
             }
             catch (SEHException)

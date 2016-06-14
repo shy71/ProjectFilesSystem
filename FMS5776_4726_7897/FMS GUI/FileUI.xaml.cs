@@ -25,6 +25,17 @@ namespace FMS_GUI
         {
             InitializeComponent();
         }
+        public string Key(string record)
+        {
+            return record.Substring((int)fcb.GetDirEntry().KeyOffset, (int)fcb.GetDirEntry().KeySize);
+        }
+        public bool RecordExists(string record)
+        {
+            foreach (var c in Key(record))
+                if (c != null)
+                    return true;
+            return false;
+        }
         public FileUI(Disk d,string name, string owner,string openMode)
         {
            
@@ -39,11 +50,7 @@ namespace FMS_GUI
                 {
                     string s;
                     fcb.ReadRecord(out s, (int)fcb.GetDirEntry().MaxRecSize);
-                    bool exists = false;
-                    foreach (var c in s.Substring((int)fcb.GetDirEntry().KeyOffset, (int)fcb.GetDirEntry().KeySize))
-                        if (c != null)
-                            exists = true;
-                    if (exists)
+                    if (RecordExists(s))
                     {
                         recordlist.Add(s);
                         RecordsList.Items.Add(s.Substring((int)fcb.GetDirEntry().KeyOffset, (int)fcb.GetDirEntry().KeySize));
@@ -60,8 +67,15 @@ namespace FMS_GUI
         }
         private void CreateRec_Click(object sender, RoutedEventArgs e)
         {
-            int size = (int)fcb.GetDirEntry().MaxRecSize;
-            //open creation of file window
+            StringBuilder record = new StringBuilder();
+            new Create_Record(ref record, (int)fcb.GetDirEntry().MaxRecSize).ShowDialog();
+            string s = record.ToString() + (new string((char)0, (int)fcb.GetDirEntry().MaxRecSize - record.Length));
+            string currec;
+            fcb.SeekRecord(0, 0);
+            fcb.ReadRecord(out currec,(int)fcb.GetDirEntry().MaxRecSize);
+            while (RecordExists(currec));
+            fcb.SeekRecord(0, -1);
+            fcb.WriteRecord(s);
         }
 
         private void RecProprerties_Click(object sender, RoutedEventArgs e)
