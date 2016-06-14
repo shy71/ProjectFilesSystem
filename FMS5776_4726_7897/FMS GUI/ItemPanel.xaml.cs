@@ -94,7 +94,7 @@ namespace FMS_GUI
         public void OpenFile(bool Create=true)
         {
             if (d == null)
-                throw new Exception("You cant create a file outside of a disk");
+                throw new Exception("You can't create a file outside of a disk");
             if (Create)
             {
                 new NewFile(d).ShowDialog();
@@ -105,8 +105,12 @@ namespace FMS_GUI
         {
             foreach (Button item in win.Children)
                 if (item.IsFocused)
+                {
+                    if (item.Content.GetType() == typeof(FileIcon))
+                        return ((FileIcon)item.Content).name.Content.ToString();
                     return ((DiskIcon)item.Content).name.Content.ToString();
-            throw new Exception("You didnt chose anything!");
+                }
+            throw new Exception("You didnt choose anything!");
         }
         public void Up()
         {

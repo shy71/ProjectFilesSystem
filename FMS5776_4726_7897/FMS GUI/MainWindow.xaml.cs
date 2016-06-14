@@ -86,7 +86,24 @@ namespace FMS_GUI
                               + "\nCreation date: " + d.GetCreationDate()
                               + "\n" + App.NumByteToString(d.HowMuchEmpty()*1020) + " free of "+App.NumByteToString(1024*1600),"Properties",MessageBoxButton.OK,MessageBoxImage.Information);
             }
-            //finish
+            else //file type
+            {
+                FCB fcb;
+                foreach (string dname in GetDisksNames())
+                {
+                    Disk d = new Disk();
+                    d.MountDisk(dname);
+                    if(d.GetFilesNames().Contains(name))
+                    {
+                        fcb = d.OpenFile(name, "Ezra" , "I");
+                        MessageBox.Show(  "\nFile name: " + fcb.GetDirEntry().Filename
+                                        + "\nFile owner: " + fcb.GetDirEntry().FileOwner
+                                        + "\nFile Size: " + fcb.GetDirEntry().FileSize * 1020
+                                        + "\nCreation date: " + fcb.GetDirEntry().CrDate
+                                        + "\nFile key type: " + ((fcb.GetDirEntry().KeyType=="I")?"integer":"string"), "Properties", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                }
+            }
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

@@ -215,7 +215,7 @@ void Disk::alloc(DATtype & fat, unsigned int numofsector, unsigned int type, uns
 							}
 							for (int k = i; k <= i + j; k++)
 							{
-								dat.Dat[k].flip();//to change into boolen opertor
+								dat.Dat[k].flip();//to change into boolen operator
 								fat[k].flip();
 								UsedData[k].flip();
 
@@ -296,6 +296,14 @@ void Disk::createfile(string fileName, string fileOwner, string filetype, unsign
 		{
 			fheader.fileDesc.fileAddr = i * 2;
 			break;
+		}
+	for (int i = 0; i<1600; i++)
+		if (fheader.FAT[i])
+		{
+			Sector s;
+			for (int i = 0; i < 1020; i++)
+				s.RawData[i] = NULL;
+			writeSector(i, &s);
 		}
 	fheader.fileDesc.fileSize = sectorCount;
 	fheader.fileDesc.eofRecNr = 0;
