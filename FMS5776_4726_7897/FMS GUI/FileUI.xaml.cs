@@ -95,7 +95,10 @@ namespace FMS_GUI
             string currec;
             fcb.SeekRecord(0, 0);
             fcb.ReadRecord(out currec,(int)fcb.GetDirEntry().MaxRecSize,1);
-            while (RecordExists(currec));
+            do 
+            {
+            (RecordExists(currec)
+            }while(;
             fcb.UpdateRecord(s);
             Refresh();
         }
