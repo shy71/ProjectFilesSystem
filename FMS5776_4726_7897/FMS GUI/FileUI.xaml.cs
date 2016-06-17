@@ -81,7 +81,7 @@ namespace FMS_GUI
                         fcb.SeekRecord(1, -1);
                         if(recbuilder.Length < fcb.GetDirEntry().MaxRecSize)
                         {
-
+                            recbuilder.Append(new string((char)0, (int)(fcb.GetDirEntry().MaxRecSize - recbuilder.Length)));
                         }
                         fcb.WriteRecord(recbuilder.ToString());//update the record to its new version
                     }
