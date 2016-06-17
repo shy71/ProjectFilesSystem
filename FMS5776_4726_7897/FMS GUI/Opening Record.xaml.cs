@@ -20,15 +20,17 @@ namespace FMS_GUI
     public partial class Opening_Record : Window
     {
         List<string> fields;
+        int maxSize;
         StringBuilder record;
         string editField;
         public Opening_Record()
         {
             InitializeComponent();
         }
-        public Opening_Record(ref StringBuilder curRecord)
+        public Opening_Record(ref StringBuilder curRecord,int maxSize)
         {
             InitializeComponent();
+            this.maxSize = maxSize;
             record = curRecord;
             editField = "";
             fields = new List<string>(record.ToString().Split('.'));   
@@ -83,6 +85,11 @@ namespace FMS_GUI
                 record.Append(Key.FieldName + "," + Key.FieldContent + ".");
                 foreach(string field in fields)
                     record.Append(field.Split(',')[0] + "," + field.Split(',')[1] + ".");
+                if(record.Length > maxSize)
+                {
+                    MessageBox.Show("Your record is too big.\nRecord maximum size exceeded.","Record maximum size exceeded",MessageBoxButton.OK,MessageBoxImage.Error);
+                    return;
+                }
                 this.Close();
             }
         }

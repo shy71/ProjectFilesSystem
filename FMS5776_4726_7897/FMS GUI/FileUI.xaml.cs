@@ -75,10 +75,14 @@ namespace FMS_GUI
                 if(Key(record) == key)
                 {
                     StringBuilder recbuilder = new StringBuilder(record);
-                    new Opening_Record(ref recbuilder).ShowDialog();
+                    new Opening_Record(ref recbuilder,(int)fcb.GetDirEntry().MaxRecSize).ShowDialog();
                     if(recbuilder.ToString() != record)
                     {
                         fcb.SeekRecord(1, -1);
+                        if(recbuilder.Length < fcb.GetDirEntry().MaxRecSize)
+                        {
+
+                        }
                         fcb.WriteRecord(recbuilder.ToString());//update the record to its new version
                     }
                 }
