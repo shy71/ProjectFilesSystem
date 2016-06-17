@@ -20,7 +20,7 @@
         <local:UneditableField Grid.Row="2"  x:Name="Key"/>
         <TextBlock Text="Other Fields:" Grid.Row="3" FontSize="20"/>
         <ScrollViewer Grid.Row="4">
-            <ListBox x:Name="Fields" Grid.Row="4" Selected="Fields_Selected"/>
+            <ListBox x:Name="Fields" Grid.Row="4" SelectionChanged="Fields_Selected"/>
         </ScrollViewer>
         <Button x:Name="Done" Content="OK" Grid.Row="5" Click="Done_Click"/>
     </Grid>
