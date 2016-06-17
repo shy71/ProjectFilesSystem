@@ -36,5 +36,7 @@ public:
 
 	//level 4
 	string& GetLastErrorMessage();
+	int FCB::UpdatePlaceByRecordNumber(int num);
+	int GetSectorNumberByIndex(int num);
 	void SetLastErrorMessage(string lastErrorMessage);
 };

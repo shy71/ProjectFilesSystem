@@ -298,12 +298,13 @@ void Disk::createfile(string fileName, string fileOwner, string filetype, unsign
 			break;
 		}
 	for (int i = 0; i<1600; i++)
-		if (fheader.FAT[i]&&i!=(int)(fheader.fileDesc.fileAddr/2))
+		if (fheader.FAT[i])
 		{
 			Sector s;
 			s.sectorNr = i * 2;
 			for (int j = 0; j < 1020; j++)
 				s.RawData[j] = NULL;
+			if (i*2!=fheader.fileDesc.fileAddr)
 			writeSector(s.sectorNr, &s);
 			s.sectorNr = i * 2 + 1;
 			writeSector(s.sectorNr, &s);
@@ -366,6 +367,7 @@ FCB* Disk::openfile(string fileName, string UserName, string IOstatus)
 		fcb->FAT = fheader.FAT;
 		fcb->fileDesc = *dir;
 		fcb->currSecNr = dir->fileAddr + 1;
+		readSector(fcb->currSecNr, &fcb->Buffer);
 		return fcb;
 	}
 	else

@@ -45,7 +45,7 @@ void FCB::read(char *dest, unsigned int status)//finish function
 {
 	if (editLock)
 		throw "You can't read while locked in edit mode!";
-	if (IOstatus[0] == 'I' && status == 1)
+	if (IOstatus == "I" && status == 1)
 		throw "You can't open it for editing since it's read only.";
 	//flushFile();
 	d->readSector(currSecNr, &Buffer);
@@ -54,11 +54,12 @@ void FCB::read(char *dest, unsigned int status)//finish function
 		if (fileDesc.eofRecNr == currRecNr)
 			throw "File Is Finshed!";
 		//read from buffer the current record
-		dest = new char[fileDesc.actualRecSize];
-		for (int i = fileDesc.actualRecSize*currRecNrInBuff; i < fileDesc.actualRecSize*(currRecNrInBuff + 1); i++)//think of changing
-			dest[i] = Buffer[i];
+		strncpy(dest,Buffer.RawData + fileDesc.maxRecSize*currRecNrInBuff, fileDesc.maxRecSize);
+		//	dest = new char[fileDesc.maxRecSize];
+		//for (int i = fileDesc.maxRecSize*currRecNrInBuff; i < fileDesc.actualRecSize*(currRecNrInBuff + 1); i++)//think of changing
+		//	dest[i] = Buffer[i];
 		if (status == 0)
-			GoToNextRecord();
+			UpdatePlaceByRecordNumber(currRecNr + 1);
 		else
 			editLock = true;
 	}
@@ -87,22 +88,22 @@ void FCB::read(char *dest, unsigned int status)//finish function
 	//	}
 	//}
 }
-void FCB::write(char *record)
+void FCB::write(char *record)//סוף?
 {
 	if (editLock)
 		throw "You can't write while locked in edit mode!";
-	if (IOstatus[0] == 'I')
+	if (IOstatus=="I")
 		throw "You can't edit these files because the file is read only.";
 	//flushFile();
 	if (fileDesc.recFormat[0] == 'F')
 	{
 		for (int i = 0; i < fileDesc.maxRecSize; i++)
 			Buffer[currRecNrInBuff*fileDesc.maxRecSize + i] = record[i];
-		if (currRecNr > fileDesc.eofRecNr)
-			fileDesc.eofRecNr = currRecNr;
+		if (currRecNr == fileDesc.eofRecNr)
+			fileDesc.eofRecNr++;
 	}
 	flushFile();
-	GoToNextRecord();
+	UpdatePlaceByRecordNumber(currRecNr + 1);
 	//else //the file has varrying sized records
 	//{
 	//	int startOfRecord = 0;
@@ -158,139 +159,52 @@ void FCB::seek(unsigned int from, int recordCount)//check for situation where he
 	case 0://from beginning
 		if (recordCount < 0)
 			throw "You cant move backward from the start of the file";
-		currRecNr = currRecNrInBuff = 0;
-		for (int i = 0; i < 3200 && !FAT[i / 2]; i++)
-			currSecNr = i;
-		currSecNr++;
-		MoveRecord(recordCount);
-		/*if (fileDesc.recFormat == "F")
-		{
-		if (recordCount < 0)
-		throw "You are trying to access area before the begining of the file";
-		currRecNr = recordCount % (fileDesc.eofRecNr + 1);
-		currRecNrInBuff = 0;
-		currSecNr = -1;
-		for (int i = 0; i < 3200; i++)//get first sector
-		if (FAT[i/2])
-		{
-		currSecNr = i;
+		UpdatePlaceByRecordNumber(recordCount);
+
 		break;
-		}
-		while (recordCount > 1020 / fileDesc.maxRecSize)
-		{
-		recordCount -= 1020 / fileDesc.maxRecSize;
-		for (int i = currSecNr + 1; i < 1600; i++)
-		if (FAT[i / 2])
-		{
-		currSecNr = i;
-		break;
-		}
-		}
-		currRecNrInBuff = recordCount;
-		}
-		else
-		{
-		if (recordCount == 0)
-		{
-		currRecNr = currRecNrInBuff = 0;
-		for (int i = 0; i < 3200; i++)
-		{
-		if (FAT[i])
-		{
-		currSecNr = i+1;//the second sector in the cluster since the first is being used for the header
-		break;
-		}
-		}
-		}
-		else
-		throw "You can't jump there since it's the sizes of records vary";
-		}
-		break;*/
-		break;
-	case 1://from current place
-		/*currRecNr += recordCount;
-		currRecNr %= (fileDesc.eofRecNr + 1);
-		if (fileDesc.recFormat == "F")
-		{
-		if (currRecNrInBuff + recordCount < 1020 / fileDesc.maxRecSize)
-		currRecNrInBuff += recordCount;
-		else
-		{
-		recordCount -= (1020 / fileDesc.maxRecSize - currRecNrInBuff);
-		while (recordCount > 1020 / fileDesc.maxRecSize)
-		{
-		recordCount -= 1020 / fileDesc.maxRecSize;
-		for (int i = currSecNr + 1; i < 1600; i++)
-		if (FAT[i / 2])
-		{
-		currSecNr = i;
-		break;
-		}
-		}
-		currRecNrInBuff = recordCount;
-		}
-		}
-		else
-		throw "You can't jump there since it's the sizes of records vary";
-		break;*/
-		MoveRecord(recordCount);
+	case 1:
+		UpdatePlaceByRecordNumber(currRecNr + recordCount);
 		break;
 	case 2:
 		if (recordCount > 0)
 			throw "You cant move foreword from the start of the file";
-		MoveRecord(recordCount);
-		/*
-		if (fileDesc.recFormat == "F")
-		{
-		currRecNr = (fileDesc.eofRecNr + recordCount ) % (fileDesc.eofRecNr + 1);
-		int Secindex = 0;
-		for (; Secindex < 3200 && !FAT[Secindex / 2]; Secindex++)
-		Secindex++;
-		if (Secindex >= 3200)
-		throw "There isn't any space";
-		for (int i = 0; i < ((fileDesc.eofRecNr - 1) / (1020 / fileDesc.maxRecSize)) + 1 && Secindex < 3200;Secindex++)
-		if (FAT[Secindex / 2])
-		i++;
-		currSecNr = Secindex;
-
-		while (-recordCount > 1020 / fileDesc.maxRecSize)
-		{
-		recordCount += 1020 / fileDesc.maxRecSize;
-		for (int i = currSecNr - 1; i >= 0; i++)
-		if (FAT[i / 2])
-		currSecNr = i;
-		}
-		currRecNrInBuff = currRecNr % (1020 / fileDesc.maxRecSize);
-		}
-		else
-		{
-		if (recordCount == 0)
-		{
-		currRecNr = fileDesc.eofRecNr;
-		for (int i = 0; i < 1600; i++)
-		if (FAT[i])
-		currSecNr = i * 2 + 1;//the last sector
-		flushFile();
-		currRecNrInBuff = -1;
-		for (int i = 0; i < 1020; i++)
-		{
-		if (Buffer[i] == '~')
-		currRecNrInBuff++;
-		}
-		}
-		else
-		throw "You can't jump there since it's the sizes of records vary";
-		}
-		break;
-		*/
+		UpdatePlaceByRecordNumber(fileDesc.eofRecNr + recordCount);
 		break;
 	default:
 		throw "The starting point you entered is invalid";
 	}
 	//flushFile();
 }
+int FCB::UpdatePlaceByRecordNumber(int num)
+{
+	flushFile();
+	if (num<0)
+		throw "File Out Of Range";
+	if (num>fileDesc.eofRecNr)
+		throw "File Out Of Range";
+	currRecNr = num;
+	currSecNr = GetSectorNumberByIndex((num / ((int)(1020 / fileDesc.maxRecSize)) + 1));
+	d->readSector(currSecNr,&Buffer);
+	currRecNrInBuff = num % ((int)(1020 / fileDesc.maxRecSize));
+
+}
+int FCB::GetSectorNumberByIndex(int num)
+{
+	int count=0;
+	for (int i = 0; i < 1600; i++)
+		if (FAT[i])
+		{
+
+			if (count++ == num)
+				return i * 2;
+			if (count++ == num)
+				return i * 2 + 1;
+		}
+	throw "File Out Of Range";
+}
 void FCB::MoveRecord(int num)
 {
+	throw "what???";
 	if (num == 0)
 		return;
 	if (num > 0)
@@ -316,14 +230,16 @@ void FCB::updateCancel()
 }
 void FCB::deleteRecord()//איך בשאר הדברים ידעו לדלג על הרשמוה?
 {
-	if (IOstatus[0] == 'I')
+	if (IOstatus == "I")
 		throw "This file has been opened in read only status";
 	if (!editLock)
 		throw "You can't delete the current record since it's not in update state";
 	editLock = false;
 	for (int i = fileDesc.keyOffset; i < fileDesc.keyOffset + fileDesc.keySize; i++)
-		Buffer[i] = 0;
-	GoToNextRecord();
+		Buffer[currRecNrInBuff*fileDesc.maxRecSize+i] = 0;
+	flushFile();
+	UpdatePlaceByRecordNumber(currRecNr + 1);
+
 }
 void FCB::updateRecord(char *update)
 {
@@ -337,8 +253,7 @@ void FCB::updateRecord(char *update)
 #pragma endregion
 void FCB::GoToNextRecord()
 {
-	if (FAT.count() == 0)
-		throw "You have no space so you can't move to the next record...";
+	throw "what???";
 	if (fileDesc.recFormat[0] == 'F')
 	{
 		if (currRecNrInBuff < 1020 / fileDesc.maxRecSize - 1)//In next sector
@@ -409,48 +324,10 @@ void FCB::addRecord(char *record)//need to be d
 	flushFile();
 	seek(2, 0);//go to the last record
 	//check if this is the last record in the sector
-	bool isLast = true;
-	if (fileDesc.recFormat[0] == 'F' && currRecNrInBuff < 1020 / fileDesc.maxRecSize - 1)
-		isLast = false;
-	else if (fileDesc.recFormat[0] != 'F')
-	{
-		int index = 0;
-		for (int i = 0; i < currRecNrInBuff && index < 1020; index++)
-			if (Buffer[index] == '~')
-				i++;
-		if (currRecNrInBuff > 0)
-			index++;
-		if (1019 - index < strlen(record))
-		{
-			isLast = false;
-			Buffer[1019] = '~';
-		}
-	}
-	if (!isLast)//isn't last
-	{
-		fileDesc.eofRecNr++;
-		seek(2, 0);//go to end
+		//fileDesc.eofRecNr++;
+		//seek(2, 0);//go to end
 		write(record);
-	}
-	else // is the last
-	{
-		//check if there is another sector afterwards
-		bool nextSector = false;
-		for (int i = currSecNr + 1; i < 3200; i++)
-			if (FAT[i / 2])
-			{
-				nextSector = true;
-				break;
-			}
-		if (nextSector)
-		{
-			fileDesc.eofRecNr++;
-			GoToNextRecord();
-			write(record);
-		}
-		else
-			throw "No more space to add another record";
-	}
+
 }
 
 string& FCB::GetLastErrorMessage()
