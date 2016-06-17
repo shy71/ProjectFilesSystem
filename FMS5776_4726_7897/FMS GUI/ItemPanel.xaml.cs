@@ -76,7 +76,7 @@ namespace FMS_GUI
         }
         public void OpenFile(object sender, EventArgs e)
         {  
-            new FileUI(d, (sender as Button).Name, "Ezra", "I").ShowDialog();
+            new FileUI(d, (sender as Button).Name, "Ezra", "IO").ShowDialog();
         }
         public void DoubleClickEvent(object sender, EventArgs e)
         {
