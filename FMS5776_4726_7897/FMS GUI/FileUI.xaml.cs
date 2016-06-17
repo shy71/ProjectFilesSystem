@@ -100,9 +100,5 @@ namespace FMS_GUI
             Refresh();
         }
 
-        private void RecProprerties_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
     }
 }
