@@ -67,6 +67,22 @@ namespace FMS_GUI
         private void OpenRec_Click(object sender, RoutedEventArgs e)
         {
             string key = (string)RecordsList.SelectedItem;
+            while(true)
+            {
+                string record;
+                fcb.SeekRecord(0, 0);
+                fcb.ReadRecord(out record, (int)fcb.GetDirEntry().MaxRecSize);
+                if(Key(record) == key)
+                {
+                    StringBuilder recbuilder = new StringBuilder(record);
+                    new Opening_Record(ref recbuilder).ShowDialog();
+                    if(recbuilder.ToString() != record)
+                    {
+                        fcb.SeekRecord(1, -1);
+                        fcb.WriteRecord(recbuilder.ToString());//update the record to its new version
+                    }
+                }
+            }
         }
         private void CreateRec_Click(object sender, RoutedEventArgs e)
         {
@@ -77,7 +93,7 @@ namespace FMS_GUI
             fcb.SeekRecord(0, 0);
             fcb.ReadRecord(out currec,(int)fcb.GetDirEntry().MaxRecSize);
             while (RecordExists(currec));
-            fcb.SeekRecord(0, -1);
+            fcb.SeekRecord(1, -1);
             fcb.WriteRecord(s);
             Refresh();
         }

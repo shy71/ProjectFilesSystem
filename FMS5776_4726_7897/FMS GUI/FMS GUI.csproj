@@ -77,11 +77,17 @@
     <Compile Include="NewFile.xaml.cs">
       <DependentUpon>NewFile.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Opening Record.xaml.cs">
+      <DependentUpon>Opening Record.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SelectedItemProperties.xaml.cs">
       <DependentUpon>SelectedItemProperties.xaml</DependentUpon>
     </Compile>
     <Compile Include="TextControl.xaml.cs">
       <DependentUpon>TextControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UneditableField.xaml.cs">
+      <DependentUpon>UneditableField.xaml</DependentUpon>
     </Compile>
     <Page Include="Create Record.xaml">
       <SubType>Designer</SubType>
@@ -127,11 +133,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Opening Record.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="SelectedItemProperties.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="TextControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UneditableField.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
