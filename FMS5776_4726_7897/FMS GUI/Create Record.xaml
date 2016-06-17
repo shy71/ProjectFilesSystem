@@ -5,16 +5,18 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="5*"/>
+            <RowDefinition Height="0.5*"/>
             <RowDefinition Height="1*"/>
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
         <ScrollViewer>
             <StackPanel x:Name="Fields" Grid.Row="0"/>
         </ScrollViewer>
-        <Button x:Name="AddField" Grid.Row="2" Content="+" Click="AddField_Click" Margin="0,0,239,0"/>
-        <Button x:Name="Done" Grid.Row="2" Content="Done with record" Click="Done_Click" Margin="89,0,0,0"/>
-        <Button x:Name="EraseField" Grid.Row="2" Content="-" Click="EraseField_Click" Margin="45,0,194,0"/>
-        <ComboBox x:Name="KeyField" Grid.Row="1" DropDownOpened="KeyField_DropDownOpened"/>
+        <Button x:Name="AddField" Grid.Row="3" Content="+" Click="AddField_Click" Margin="0,0,239,0"/>
+        <Button x:Name="Done" Grid.Row="3" Content="Done with record" Click="Done_Click" Margin="89,0,0,0"/>
+        <Button x:Name="EraseField" Grid.Row="3" Content="-" Click="EraseField_Click" Margin="45,0,194,0"/>
+        <ComboBox x:Name="KeyField" Grid.Row="2" DropDownOpened="KeyField_DropDownOpened"/>
+        <TextBlock Text="Key:" Grid.Row="1" FontSize="18"/>
     </Grid>
     
 </Window>

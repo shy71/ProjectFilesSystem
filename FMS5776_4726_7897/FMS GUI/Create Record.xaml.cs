@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using FMS_adapter;
 
 namespace FMS_GUI
 {
@@ -21,16 +22,16 @@ namespace FMS_GUI
     {
         StringBuilder record;
         FieldItem field;
-        int MaxSize;
+        DirEntry dirEntry;
         public Create_Record()
         {
             InitializeComponent();
         }
-        public Create_Record(ref StringBuilder s,int maxsize)
+        public Create_Record(ref StringBuilder s,DirEntry dirEntry)
         {
+            this.dirEntry = dirEntry;
             InitializeComponent();
             record = s;
-            MaxSize = maxsize;
         }
         public void fillUpKeyFieldCombobox()
         {
@@ -50,12 +51,30 @@ namespace FMS_GUI
             bool foundKey = false;
             foreach(FieldItem f in Fields.Children)
             {
-                if (f.Name == KeyField.SelectedItem)
+                if (f.Name == (string)KeyField.SelectedItem)
                 {
                     string s = f.Name + "," + f.Content + "." + record.ToString();
                     record.Clear();
                     record.Append(s);
                     foundKey = true;
+                    if (dirEntry.KeyType == "I")//integer type
+                    {
+                        int keyNum;
+                        bool isInteger = int.TryParse(f.Content, out keyNum);
+                        if (!isInteger)
+                        {
+                            foundKey = false;
+                            MessageBox.Show("That is an invalid key, since it must be of integer type.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                            break;
+                        }
+                    }
+                    else if(f.Content.Length > dirEntry.KeySize)
+                    {
+                        foundKey = false;
+                        MessageBox.Show("That is an invalid key, since it must be The correct length.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        break;
+                    }
+                    //Maybe add relevence to the offset. for now we always just put the key field in the begining, therefore we want the offset to always be 0. so we'll just have to show the teacher it that way
                 }
                 else
                     record.Append(f.Name + "," + f.Content + ".");
@@ -65,7 +84,7 @@ namespace FMS_GUI
                 MessageBox.Show("You haven't chosen a key...\n", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 record.Clear();
             }
-            else if (record.Length > MaxSize)
+            else if (record.Length > dirEntry.MaxRecSize)
             {
                 MessageBox.Show("You exceeded the maximum record length...\nTry taking off a few fields.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 record.Clear();
@@ -86,5 +105,6 @@ namespace FMS_GUI
         {
             fillUpKeyFieldCombobox();
         }
+
     }
 }
