@@ -38,12 +38,14 @@ namespace FMS_GUI
         }
         public FileUI(Disk d,string name, string owner,string openMode)
         {
-           
+            InitializeComponent();
+            fcb = d.OpenFile(name, owner, openMode);
+            Refresh();
+        }
+        private void Refresh()
+        {
             try
             {
-
-                InitializeComponent();
-                fcb = d.OpenFile(name, owner, openMode);
                 fcb.SeekRecord(0, 0);
                 List<string> recordlist = new List<string>();
                 while (true)
@@ -64,11 +66,12 @@ namespace FMS_GUI
         }
         private void OpenRec_Click(object sender, RoutedEventArgs e)
         {
+            string key = (string)RecordsList.SelectedItem;
         }
         private void CreateRec_Click(object sender, RoutedEventArgs e)
         {
             StringBuilder record = new StringBuilder();
-            new Create_Record(ref record, (int)fcb.GetDirEntry().MaxRecSize).ShowDialog();
+            new Create_Record(ref record,fcb.GetDirEntry()).ShowDialog();
             string s = record.ToString() + (new string((char)0, (int)fcb.GetDirEntry().MaxRecSize - record.Length));
             string currec;
             fcb.SeekRecord(0, 0);
@@ -76,6 +79,7 @@ namespace FMS_GUI
             while (RecordExists(currec));
             fcb.SeekRecord(0, -1);
             fcb.WriteRecord(s);
+            Refresh();
         }
 
         private void RecProprerties_Click(object sender, RoutedEventArgs e)
