@@ -80,7 +80,7 @@ namespace FMS_adapter
         public static extern void ReadRecord(IntPtr THIS, IntPtr dest, uint readForUpdate = 0);
 
         [DllImport(dllPath, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void WriteRecord(IntPtr THIS, IntPtr source);
+        public static extern void WriteRecord(IntPtr THIS, string source);
 
         [DllImport(dllPath, CallingConvention = CallingConvention.Cdecl)]
         public static extern void SeekRecord(IntPtr THIS, uint from, int pos);
@@ -486,14 +486,12 @@ namespace FMS_adapter
                 throw;
             }
         }
-        public void WriteRecord(object source)
+        public void WriteRecord(string source)
         {
             try
             {
-                IntPtr buffer = Marshal.AllocHGlobal(Marshal.SizeOf(source.GetType()));
-                Marshal.StructureToPtr(source, buffer, true);
-                cppToCsharpAdapter.WriteRecord(this.myFCBPointer, buffer);
-                Marshal.FreeHGlobal(buffer);
+
+                cppToCsharpAdapter.WriteRecord(this.myFCBPointer, source);
             }
             catch (SEHException)
             {

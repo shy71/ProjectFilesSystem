@@ -90,7 +90,7 @@ namespace FMS_GUI
         private void CreateRec_Click(object sender, RoutedEventArgs e)
         {
             StringBuilder record = new StringBuilder();
-            new Create_Record(ref record,fcb.GetDirEntry()).ShowDialog();
+            new Create_Record(ref record, fcb.GetDirEntry()).ShowDialog();
             string s = record.ToString() + (new string((char)0, (int)fcb.GetDirEntry().MaxRecSize - record.Length));
             string currec;
             fcb.SeekRecord(0, 0);
