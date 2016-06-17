@@ -67,6 +67,25 @@ namespace FMS_GUI
         private void OpenRec_Click(object sender, RoutedEventArgs e)
         {
             string key = (string)RecordsList.SelectedItem;
+            while(true)
+            {
+                string record;
+                fcb.SeekRecord(0, 0);
+                fcb.ReadRecord(out record, (int)fcb.GetDirEntry().MaxRecSize,1);
+                if(Key(record) == key)
+                {
+                    StringBuilder recbuilder = new StringBuilder(record);
+                    new Opening_Record(ref recbuilder,(int)fcb.GetDirEntry().MaxRecSize).ShowDialog();
+                    if(recbuilder.ToString() != record)
+                    {
+                        if(recbuilder.Length < fcb.GetDirEntry().MaxRecSize)
+                        {
+                            recbuilder.Append(new string((char)0, (int)(fcb.GetDirEntry().MaxRecSize - recbuilder.Length)));
+                        }
+                        fcb.UpdateRecord(recbuilder.ToString());//update the record to its new version
+                    }
+                }
+            }
         }
         private void CreateRec_Click(object sender, RoutedEventArgs e)
         {
@@ -75,16 +94,11 @@ namespace FMS_GUI
             string s = record.ToString() + (new string((char)0, (int)fcb.GetDirEntry().MaxRecSize - record.Length));
             string currec;
             fcb.SeekRecord(0, 0);
-            fcb.ReadRecord(out currec,(int)fcb.GetDirEntry().MaxRecSize);
+            fcb.ReadRecord(out currec,(int)fcb.GetDirEntry().MaxRecSize,1);
             while (RecordExists(currec));
-            fcb.SeekRecord(0, -1);
-            fcb.WriteRecord(s);
+            fcb.UpdateRecord(s);
             Refresh();
         }
 
-        private void RecProprerties_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
     }
 }

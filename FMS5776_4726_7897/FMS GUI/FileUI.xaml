@@ -8,7 +8,6 @@
         </Grid.RowDefinitions>
         <Menu HorizontalAlignment="Left" Height="23" VerticalAlignment="Top" Width="517" Panel.ZIndex="1">
             <MenuItem x:Name="CreateRec" Header="_Add Record" Width="78" Click="CreateRec_Click"/>
-            <MenuItem x:Name="RecProprerties" Header="_Properties" HorizontalAlignment="Right" Width="70" Click="RecProprerties_Click"/>
             <MenuItem x:Name="OpenRec" Header="_Open" HorizontalAlignment="Right" Width="45" Click="OpenRec_Click"/>
         </Menu>
         <ListBox x:Name="RecordsList" Grid.Row="1"/>
