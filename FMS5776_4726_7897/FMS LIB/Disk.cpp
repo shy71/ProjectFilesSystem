@@ -298,14 +298,17 @@ void Disk::createfile(string fileName, string fileOwner, string filetype, unsign
 			break;
 		}
 	for (int i = 0; i<1600; i++)
-		if (fheader.FAT[i])
+		if (fheader.FAT[i]&&i!=(int)(fheader.fileDesc.fileAddr/2))
 		{
 			Sector s;
-			for (int i = 0; i < 1020; i++)
-				s.RawData[i] = NULL;
-			writeSector(i, &s);
+			s.sectorNr = i * 2;
+			for (int j = 0; j < 1020; j++)
+				s.RawData[j] = NULL;
+			writeSector(s.sectorNr, &s);
+			s.sectorNr = i * 2 + 1;
+			writeSector(s.sectorNr, &s);
 		}
-	fheader.fileDesc.fileSize = sectorCount;
+	fheader.fileDesc.fileSize = sectorCount;//? shoult the file header sector be included?
 	fheader.fileDesc.eofRecNr = 0;
 	fheader.sectorNr = fheader.fileDesc.fileAddr;
 	writeSector(fheader.fileDesc.fileAddr, (Sector*)&fheader);
