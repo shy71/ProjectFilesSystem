@@ -27,7 +27,7 @@ namespace FMS_GUI
         }
         public string Key(string record)
         {
-            return record.Substring((int)fcb.GetDirEntry().KeyOffset, (int)fcb.GetDirEntry().KeySize);
+            return record.Split('.')[0].Split(',')[1];
         }
         public bool RecordExists(string record)
         {
@@ -55,7 +55,7 @@ namespace FMS_GUI
                     if (RecordExists(s))
                     {
                         recordlist.Add(s);
-                        RecordsList.Items.Add(s.Substring((int)fcb.GetDirEntry().KeyOffset, (int)fcb.GetDirEntry().KeySize));
+                        RecordsList.Items.Add(s.Split('.')[0].Split(',')[1]);
                     }
                 }
             }

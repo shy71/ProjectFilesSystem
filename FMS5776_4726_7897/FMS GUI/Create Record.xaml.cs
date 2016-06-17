@@ -48,7 +48,7 @@ namespace FMS_GUI
 
         private void Done_Click(object sender, RoutedEventArgs e)
         {
-            bool foundKey = false;
+            bool foundKey = false,goodKey=true,goodlength=true;
             foreach(FieldItem f in Fields.Children)
             {
                 if (f.Name == (string)KeyField.SelectedItem)
@@ -63,14 +63,14 @@ namespace FMS_GUI
                         bool isInteger = int.TryParse(f.Content, out keyNum);
                         if (!isInteger)
                         {
-                            foundKey = false;
+                            goodKey = false;
                             MessageBox.Show("That is an invalid key, since it must be of integer type.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                             break;
                         }
                     }
-                    else if(f.Content.Length > dirEntry.KeySize)
+                    if(f.Content.Length != dirEntry.KeySize)
                     {
-                        foundKey = false;
+                        goodlength = false;
                         MessageBox.Show("That is an invalid key, since it must be The correct length.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                         break;
                     }
@@ -79,9 +79,9 @@ namespace FMS_GUI
                 else
                     record.Append(f.Name + "," + f.Content + ".");
             }
-            if(!foundKey)
+            if(!foundKey || !goodKey || !goodlength)
             {
-                MessageBox.Show("You haven't chosen a key...\n", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("You haven't chosen a  key or it is an invalid key...\n", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 record.Clear();
             }
             else if (record.Length > dirEntry.MaxRecSize)

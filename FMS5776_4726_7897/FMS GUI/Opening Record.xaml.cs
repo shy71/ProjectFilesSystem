@@ -33,7 +33,9 @@ namespace FMS_GUI
             this.maxSize = maxSize;
             record = curRecord;
             editField = "";
-            fields = new List<string>(record.ToString().Split('.'));   
+            fields = new List<string>(record.ToString().Split('.'));
+            fields.RemoveAll(x => x == "");
+            Refresh();
         }
         private void DelField_Click(object sender, RoutedEventArgs e)
         {
@@ -53,6 +55,7 @@ namespace FMS_GUI
             fItem.Name = name;
             fItem.Content = content;
             Fields.Items.Insert(index, fItem);
+            fields.Remove(editField);
         }
         private void Refresh()
         {
@@ -81,8 +84,9 @@ namespace FMS_GUI
             }
             else
             {
+                Fields_Selected(this, e);
                 record.Clear();
-                record.Append(Key.FieldName + "," + Key.FieldContent + ".");
+                record.Append(Key.FieldName.Text + "," + Key.FieldContent.Text + ".");
                 foreach(string field in fields)
                     record.Append(field.Split(',')[0] + "," + field.Split(',')[1] + ".");
                 if(record.Length > maxSize)
