@@ -94,11 +94,15 @@ namespace FMS_GUI
             string s = record.ToString() + (new string((char)0, (int)fcb.GetDirEntry().MaxRecSize - record.Length));
             string currec;
             fcb.SeekRecord(0, 0);
-            do
+            if (fcb.GetDirEntry().EofRecNum != 0)
             {
-                fcb.ReadRecord(out currec, (int)fcb.GetDirEntry().MaxRecSize, 1);
-            }while (RecordExists(currec));
-            fcb.UpdateRecord(s);
+                do
+                {
+                    fcb.ReadRecord(out currec, (int)fcb.GetDirEntry().MaxRecSize, 0);
+                } while (RecordExists(currec));
+                fcb.SeekRecord(1, -1);
+            }
+            fcb.WriteRecord(s);
             Refresh();
         }
 
