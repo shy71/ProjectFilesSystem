@@ -120,5 +120,29 @@ namespace FMS_GUI
             }
 
         }
+
+        private void DeleteSelectedItem_Click(object sender, RoutedEventArgs e)
+        {
+            string name = ((ItemPanel)myList.Items.GetItemAt(0)).GetFocused();
+            if (GetDisksNames().Find(x => x == name) != null)
+            {
+                Disk d = new FMS_adapter.Disk();
+                //delete the whole disk
+                
+            }
+            else //file type
+            {
+                FCB fcb;
+                foreach (string dname in GetDisksNames())
+                {
+                    Disk d = new Disk();
+                    d.MountDisk(dname);
+                    if (d.GetFilesNames().Contains(name))
+                    {
+                        d.DelFile(name, "Ezra");//fix for any owner
+                    }
+                }
+            }
+        }
     }
 }
