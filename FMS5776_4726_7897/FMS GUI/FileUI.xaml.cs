@@ -47,22 +47,29 @@ namespace FMS_GUI
             try
             {
                 fcb.SeekRecord(0, 0);
-                List<string> recordlist = new List<string>();
-                //FIX
+                RecordsList.Items.Clear();
+                //List<string> recordlist = new List<string>();
                 while (true)
                 {
                     string s;
-                    fcb.ReadRecord(out s, (int)fcb.GetDirEntry().MaxRecSize);
-                    if (RecordExists(s))
+                    if (fcb.GetCurrentRecordNumber() != fcb.GetDirEntry().EofRecNum)
                     {
-                        recordlist.Add(s);
-                        RecordsList.Items.Add(s.Split('.')[0].Split(',')[1]);
+                        fcb.ReadRecord(out s, (int)fcb.GetDirEntry().MaxRecSize);
+                        if (RecordExists(s))
+                        {
+                            //recordlist.Add(s);
+                            RecordsList.Items.Add(s.Split('.')[0].Split(',')[1]);
+                        }
+                    }
+                    else
+                    {
+                        break;
                     }
                 }
             }
             catch(Exception e)
             {
-                //MessageBox.Show(e.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(e.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 fcb.SeekRecord(0, 0);
             }
             catch
@@ -79,7 +86,13 @@ namespace FMS_GUI
                 while (true)
                 {
                     string record;
-                    fcb.ReadRecord(out record, (int)fcb.GetDirEntry().MaxRecSize, 1);
+                    if(fcb.GetDirEntry().EofRecNum != fcb.GetCurrentRecordNumber())
+                        fcb.ReadRecord(out record, (int)fcb.GetDirEntry().MaxRecSize, 1);
+                    else
+                    {
+                        MessageBox.Show("The file couldn't be found...", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
                     if (Key(record) == key)
                     {
                         StringBuilder recbuilder = new StringBuilder(record);
@@ -90,9 +103,16 @@ namespace FMS_GUI
                             {
                                 recbuilder.Append(new string((char)0, (int)(fcb.GetDirEntry().MaxRecSize - recbuilder.Length)));
                             }
-                            fcb.UpdateRecord(recbuilder.ToString());//update the record to its new version
+                            //fcb.UpdateRecord(recbuilder.ToString());
+                            fcb.UpdateRecCancel();
+                            fcb.WriteRecord(recbuilder.ToString());//update the record to its new version
                         }
+                        else
+                            fcb.UpdateRecCancel();
+                        return;
                     }
+                    else
+                        fcb.UpdateRecCancel();
                 }
             }
             catch

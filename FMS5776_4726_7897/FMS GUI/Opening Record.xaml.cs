@@ -35,6 +35,9 @@ namespace FMS_GUI
             editField = "";
             fields = new List<string>(record.ToString().Split('.'));
             fields.RemoveAll(x => x == "");
+            Key.FieldName.Text = (fields[0].Split(','))[0];
+            Key.FieldContent.Text = (fields[0].Split(','))[1];
+            fields.Remove(fields[0]);
             Refresh();
         }
         private void DelField_Click(object sender, RoutedEventArgs e)
@@ -53,16 +56,14 @@ namespace FMS_GUI
             Fields.Items.RemoveAt(Fields.SelectedIndex);
             FieldItem fItem = new FieldItem();
             fItem.Name = name;
+            fItem.name.Text = name;
             fItem.Content = content;
+            fItem.content.Text = content;
             Fields.Items.Insert(index, fItem);
-            fields.Remove(editField);
         }
         private void Refresh()
         {
             Fields.Items.Clear();
-            Key.FieldName.Text = (fields[0].Split(','))[0];
-            Key.FieldContent.Text = (fields[0].Split(','))[1];
-            fields.Remove(fields[0]);
             foreach(string field in fields)
             {
                 UneditableField f = new UneditableField();
@@ -104,13 +105,14 @@ namespace FMS_GUI
             {
                 if (field.GetType() == typeof(FieldItem))
                 {
+                    int index = Fields.Items.IndexOf(field);
+                    Fields.Items.RemoveAt(index);
+                    fields[fields.FindIndex((x) => x == editField)] = ((FieldItem)field).Name + "," + ((FieldItem)field).Content;
                     UneditableField f = new UneditableField();
                     f.FieldName.Text = ((FieldItem)field).Name;
                     f.FieldContent.Text = ((FieldItem)field).Content;
-                    int index = Fields.Items.IndexOf(field);
-                    Fields.Items.RemoveAt(index);
-                    Fields.Items.Insert(index, f);
-                    fields[fields.FindIndex((x) => x == editField)] = editField;
+                    Fields.Items.Add(f);
+                    return;
                 }
             }
         }
