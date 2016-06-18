@@ -103,7 +103,9 @@ namespace FMS_GUI
                             {
                                 recbuilder.Append(new string((char)0, (int)(fcb.GetDirEntry().MaxRecSize - recbuilder.Length)));
                             }
-                            fcb.UpdateRecord(recbuilder.ToString());//update the record to its new version
+                            //fcb.UpdateRecord(recbuilder.ToString());
+                            fcb.UpdateRecCancel();
+                            fcb.WriteRecord(recbuilder.ToString());//update the record to its new version
                         }
                         else
                             fcb.UpdateRecCancel();

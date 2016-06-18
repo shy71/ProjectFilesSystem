@@ -108,15 +108,12 @@ namespace FMS_GUI
                     int index = Fields.Items.IndexOf(field);
                     Fields.Items.RemoveAt(index);
                     fields[fields.FindIndex((x) => x == editField)] = ((FieldItem)field).Name + "," + ((FieldItem)field).Content;
+                    UneditableField f = new UneditableField();
+                    f.FieldName.Text = ((FieldItem)field).Name;
+                    f.FieldContent.Text = ((FieldItem)field).Content;
+                    Fields.Items.Add(f);
+                    return;
                 }
-            }
-            Fields.Items.Clear();
-            foreach (string field in fields)
-            {
-                UneditableField f = new UneditableField();
-                f.FieldName.Text = field.Split(',')[0];
-                f.FieldContent.Text = field.Split(',')[1];
-                Fields.Items.Add(f);
             }
         }
     }

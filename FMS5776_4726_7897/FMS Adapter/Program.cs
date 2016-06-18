@@ -95,7 +95,7 @@ namespace FMS_adapter
         public static extern void DeleteRecord(IntPtr THIS);
 
         [DllImport(dllPath, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void UpdateRecord(IntPtr THIS, IntPtr source);
+        public static extern void UpdateRecord(IntPtr THIS, string source);
 
         [DllImport(dllPath, CallingConvention = CallingConvention.Cdecl)]
         public static extern bool IsLastRecord(IntPtr THIS);
@@ -619,14 +619,11 @@ namespace FMS_adapter
                 throw;
             }
         }
-        public void UpdateRecord(object source)
+        public void UpdateRecord(string source)
         {
             try
             {
-                IntPtr buffer = Marshal.AllocHGlobal(Marshal.SizeOf(source.GetType()));
-                Marshal.StructureToPtr(source, buffer, true);
-                cppToCsharpAdapter.UpdateRecord(this.myFCBPointer, buffer);
-                Marshal.FreeHGlobal(buffer);
+                cppToCsharpAdapter.UpdateRecord(this.myFCBPointer,source);
             }
             catch (SEHException)
             {
