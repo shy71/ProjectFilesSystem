@@ -275,6 +275,40 @@ extern "C"
 			throw ex;
 		}
 	}
+	__declspec(dllexport) int GetCurrentRecordNumber(FCB* THIS)
+	{
+		try
+		{
+			return THIS->currRecNr;
+		}
+		catch (exception ex)
+		{
+			THIS->SetLastErrorMessage(ex.what());
+			throw ex;
+		}
+		catch (char* ex)
+		{
+			THIS->SetLastErrorMessage(ex);
+			throw ex;
+		}
+	}
+	__declspec(dllexport) bool IsLastRecord(FCB* THIS)
+	{
+		try
+		{
+			return THIS->isLast();
+		}
+		catch (exception ex)
+		{
+			THIS->SetLastErrorMessage(ex.what());
+			throw ex;
+		}
+		catch (char* ex)
+		{
+			THIS->SetLastErrorMessage(ex);
+			throw ex;
+		}
+	}
 	__declspec(dllexport) void WriteRecord(FCB* THIS, char *data)
 	{
 		try

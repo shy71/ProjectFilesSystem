@@ -96,6 +96,12 @@ namespace FMS_adapter
 
         [DllImport(dllPath, CallingConvention = CallingConvention.Cdecl)]
         public static extern void UpdateRecord(IntPtr THIS, IntPtr source);
+
+        [DllImport(dllPath, CallingConvention = CallingConvention.Cdecl)]
+        public static extern bool IsLastRecord(IntPtr THIS);
+
+        [DllImport(dllPath, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int GetCurrentRecordNumber(IntPtr THIS);
         #endregion
         #region VHD FUNCTIONS
         
@@ -513,6 +519,41 @@ namespace FMS_adapter
             {
 
                 cppToCsharpAdapter.AddRecord(this.myFCBPointer, source);
+            }
+            catch (SEHException)
+            {
+                IntPtr cString = cppToCsharpAdapter.GetLastFcbErrorMessage(this.myFCBPointer);
+                string message = Marshal.PtrToStringAnsi(cString);
+                throw new Exception(message);
+            }
+            catch
+            {
+                throw;
+            }
+        }
+        public int GetCurrentRecordNumber()
+        {
+            try
+            {
+                return cppToCsharpAdapter.GetCurrentRecordNumber(this.myFCBPointer);
+            }
+            catch (SEHException)
+            {
+                IntPtr cString = cppToCsharpAdapter.GetLastFcbErrorMessage(this.myFCBPointer);
+                string message = Marshal.PtrToStringAnsi(cString);
+                throw new Exception(message);
+            }
+            catch
+            {
+                throw;
+            }
+        }
+        public bool IsLastRecord()
+        {
+            try
+            {
+
+                return cppToCsharpAdapter.IsLastRecord(this.myFCBPointer);
             }
             catch (SEHException)
             {

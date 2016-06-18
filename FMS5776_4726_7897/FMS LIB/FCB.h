@@ -39,4 +39,5 @@ public:
 	int FCB::UpdatePlaceByRecordNumber(int num);
 	int GetSectorNumberByIndex(int num);
 	void SetLastErrorMessage(string lastErrorMessage);
+	bool isLast(){ return currRecNr == fileDesc.eofRecNr; }
 };
