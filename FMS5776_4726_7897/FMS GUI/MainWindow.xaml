@@ -25,12 +25,13 @@
             </MenuItem>
             <MenuItem x:Name="DeleteSelectedItem" Header="_Delete File" HorizontalAlignment="Right" Width="70" Click="DeleteSelectedItem_Click"/>
             <MenuItem x:Name="SelectedItemProperties" Header="_Properties" HorizontalAlignment="Right" Width="70" Click="SelectedItemProperties_Click"/>
-            <MenuItem x:Name="SelectedItemOpen" Header="_Open" HorizontalAlignment="Right" Width="45" Click="OpenDisk"/>
+            <MenuItem x:Name="SelectedItemOpen" Header="_Open" HorizontalAlignment="Right" Width="45" Click="OpenClick"/>
+            <local:TextControl x:Name="UserName" Width="127" Str="Username" Changed="UserName_Changed"/>
         </Menu>
         <TextBlock TextWrapping="Wrap"/>
 
         <ListBox x:Name="myList" Grid.Row="2" Grid.RowSpan="2" />
         <local:TextControl x:Name="adr" Grid.Row="1" IsEnabled="False"/>
-        <Button Content="^" HorizontalAlignment="Left" Margin="488,4,0,0" Grid.Row="1" VerticalAlignment="Top" Width="29" Height="21" Click="Button_Click"/>
+        <Button Content="^" HorizontalAlignment="Right"  Grid.Row="1" Width="30"  Click="Button_Click" FontWeight="Bold" FontSize="24"/>
     </Grid>
 </Window>

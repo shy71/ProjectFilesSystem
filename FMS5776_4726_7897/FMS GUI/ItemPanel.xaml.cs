@@ -24,6 +24,14 @@ namespace FMS_GUI
     public partial class ItemPanel : UserControl
     {
         Disk d = null;//לדאוג לסגור
+        private string username;
+            
+        public string Username
+        {
+            get { return username; }
+            set { username = value; }
+        }
+        
         public event EventHandler DoubleClick;
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -38,6 +46,16 @@ namespace FMS_GUI
             field = value;
             OnPropertyChanged(propertyName);
             return true;
+        }
+        public bool RootLevel()
+        {
+            return d == null;
+        }
+        public Disk GetDisk()
+        {
+            if (d != null)
+                return d;
+            throw new Exception("You are not Inside a disk!");
         }
         public ItemPanel()
         {
@@ -75,8 +93,21 @@ namespace FMS_GUI
             }
         }
         public void OpenFile(object sender, EventArgs e)
-        {  
-            new FileUI(d, (sender as Button).Name, "Ezra", "IO").ShowDialog();//fix for any owner
+        {
+            OpenFile((sender as Button).Name);
+        }
+        public void OpenFile(string name)
+        {
+            try
+            {
+            if(Username==null)
+                throw new Exception("You need to enter your username!");
+            new FileUI(d, name, Username, "IO").ShowDialog();//fix for any owner
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         public void DoubleClickEvent(object sender, EventArgs e)
         {
@@ -91,7 +122,7 @@ namespace FMS_GUI
             Refresh();
            
         }
-        public void OpenFile(bool Create=true)
+        public void CreateFile(bool Create=true)
         {
             if (d == null)
                 throw new Exception("You can't create a file outside of a disk");

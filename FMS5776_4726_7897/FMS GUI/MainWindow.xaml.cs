@@ -22,126 +22,207 @@ namespace FMS_GUI
     /// </summary>
     public partial class MainWindow : Window
     {
-        List<string> disks=new List<string>();
+        List<string> disks = new List<string>();
         public MainWindow()
-        {
-            InitializeComponent();
-            var wr = new ItemPanel();
-            wr.DoubleClick += OpenDisk;
-            adr.SetText("C:\\");
-            myList.Items.Add(wr);
-            
-        }
-        static public List<string> GetDisksNames(string path = "../Debug/")
-        {
-            return Directory.GetFiles(path).Where(x => x.Substring(x.Length - 4) == ".dsk").Select(x => x.Substring(x.IndexOf('.') + 9)).Select(y => y.Substring(0, y.IndexOf(".dsk"))).ToList();
-        }
-        /*static public List<string> GetDiskFileNames(Disk d)
-        {
-            uint address = d.GetVolumeHeader().AddrRootDir;
-
-
-        }*/
-        private void OpenDisk(object sender, EventArgs e)
-        {
-            myList.Items.Clear();
-            var wr = new ItemPanel((sender as Button).Name);
-            wr.DoubleClick += OpenFile;
-            myList.Items.Add(wr);
-            adr.SetText(adr.GetText()+ (sender as Button).Name+"\\");
-        }
-        private void OpenFile(object sender, EventArgs e)
-        {
-            //myList.Items.Clear();
-            adr.SetText(adr.GetText() + (sender as Button).Name + "\\");
-        }
-        private void CreteDskMenu_Click(object sender, RoutedEventArgs e)
-        {
-            new NewDisk().ShowDialog();
-            (myList.Items.GetItemAt(0) as ItemPanel).Refresh();
-            
-        }
-        private void CreteNewFile_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                (myList.Items.GetItemAt(0) as ItemPanel).OpenFile();
-            }
-            catch(Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-            
-        }
-        
-        private void SelectedItemProperties_Click(object sender, RoutedEventArgs e)
-        {
-            string name = ((ItemPanel)myList.Items.GetItemAt(0)).GetFocused();
-            if(GetDisksNames().Find(x => x == name) != null)
-            {
-                Disk d = new FMS_adapter.Disk();
-                d.MountDisk(name);
-                MessageBox.Show("Disk name: " + d.GetName()
-                              + "\nDisk owner: " + d.GetOwner()
-                              + "\nCreation date: " + d.GetCreationDate()
-                              + "\n" + App.NumByteToString(d.HowMuchEmpty()*1020) + " free of "+App.NumByteToString(1024*1600),"Properties",MessageBoxButton.OK,MessageBoxImage.Information);
-            }
-            else //file type
-            {
-                FCB fcb;
-                foreach (string dname in GetDisksNames())
-                {
-                    Disk d = new Disk();
-                    d.MountDisk(dname);
-                    if(d.GetFilesNames().Contains(name))
-                    {
-                        fcb = d.OpenFile(name, "Ezra" , "I");
-                        MessageBox.Show(  "\nFile name: " + fcb.GetDirEntry().Filename
-                                        + "\nFile owner: " + fcb.GetDirEntry().FileOwner
-                                        + "\nFile Size: " + fcb.GetDirEntry().FileSize * 1020
-                                        + "\nCreation date: " + fcb.GetDirEntry().CrDate
-                                        + "\nFile key type: " + ((fcb.GetDirEntry().KeyType=="I")?"integer":"string"), "Properties", MessageBoxButton.OK, MessageBoxImage.Information);
-                    }
-                }
-            }
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            if (adr.GetText().Count(x => x == '\\') == 1)
-                MessageBox.Show("You are already in the root level");
-            else
-            {
-                myList.Items.Clear();
+                InitializeComponent();
                 var wr = new ItemPanel();
                 wr.DoubleClick += OpenDisk;
                 adr.SetText("C:\\");
                 myList.Items.Add(wr);
             }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+            }
 
+        }
+        static public List<string> GetDisksNames(string path = "../Debug/")
+        {
+            return Directory.GetFiles(path).Where(x => x.Substring(x.Length - 4) == ".dsk").Select(x => x.Substring(x.IndexOf('.') + 9)).Select(y => y.Substring(0, y.IndexOf(".dsk"))).ToList();
+
+        }
+        private void OpenDisk(object sender, EventArgs e)
+        {
+            try
+            {
+                OpenDisk((sender as Button).Name);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+        private void OpenDisk(string name)
+        {
+            try
+            {
+                myList.Items.Clear();
+                var wr = new ItemPanel(name);
+                wr.DoubleClick += OpenFile;
+                myList.Items.Add(wr);
+                adr.SetText(adr.GetText() + name + "\\");
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+            }
+        }
+        private void OpenFile(object sender, EventArgs e)
+        {
+            try
+            {
+                //myList.Items.Clear();
+                adr.SetText(adr.GetText() + (sender as Button).Name + "\\");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+        private void CreteDskMenu_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (((ItemPanel)myList.Items.GetItemAt(0)).RootLevel())
+                {
+                    new NewDisk().ShowDialog();
+                    (myList.Items.GetItemAt(0) as ItemPanel).Refresh();
+                }
+                else
+                    MessageBox.Show("You cant cretae a new disk from inside a file");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
+        }
+        private void CreteNewFile_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                (myList.Items.GetItemAt(0) as ItemPanel).CreateFile();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
+        }
+
+        private void SelectedItemProperties_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                string name = ((ItemPanel)myList.Items.GetItemAt(0)).GetFocused();
+                if (((ItemPanel)myList.Items.GetItemAt(0)).RootLevel())
+                {
+                    Disk d = new FMS_adapter.Disk();
+                    d.MountDisk(name);
+                    MessageBox.Show("Disk name: " + d.GetName()
+                                  + "\nDisk owner: " + d.GetOwner()
+                                  + "\nCreation date: " + d.GetCreationDate()
+                                  + "\n" + App.NumByteToString(d.HowMuchEmpty() * 1020) + " free of " + App.NumByteToString(1024 * 1600), "Properties", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                else //file type
+                {
+                    if (UserName.GetText() == null)
+                    {
+                        MessageBox.Show("You need to enter your username!");
+                        return;
+                    }
+                    FCB fcb = ((ItemPanel)myList.Items.GetItemAt(0)).GetDisk().OpenFile(name, UserName.GetText(), "I");
+                    DirEntry entry = fcb.GetDirEntry();
+                    MessageBox.Show("\nFile name: " + entry.Filename
+                                            + "\nFile owner: " + entry.FileOwner
+                                            + "\nFile Size: " + entry.FileSize * 1020
+                                            + "\nCreation date: " + entry.CrDate
+                                            + "\nFile key type: " + ((entry.KeyType == "I") ? "integer" : "string"), "Properties", MessageBoxButton.OK, MessageBoxImage.Information);
+                    fcb.CloseFile();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (adr.GetText().Count(x => x == '\\') == 1)
+                    MessageBox.Show("You are already in the root level");
+                else
+                {
+                    myList.Items.Clear();
+                    var wr = new ItemPanel();
+                    wr.DoubleClick += OpenDisk;
+                    adr.SetText("C:\\");
+                    myList.Items.Add(wr);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void DeleteSelectedItem_Click(object sender, RoutedEventArgs e)
         {
-            string name = ((ItemPanel)myList.Items.GetItemAt(0)).GetFocused();
-            if (GetDisksNames().Find(x => x == name) != null)
+            try
             {
-                Disk d = new FMS_adapter.Disk();
-                //delete the whole disk
-                
-            }
-            else //file type
-            {
-                FCB fcb;
-                foreach (string dname in GetDisksNames())
+                string name = ((ItemPanel)myList.Items.GetItemAt(0)).GetFocused();
+                if (((ItemPanel)myList.Items.GetItemAt(0)).RootLevel())
                 {
-                    Disk d = new Disk();
-                    d.MountDisk(dname);
-                    if (d.GetFilesNames().Contains(name))
-                    {
-                        d.DelFile(name, "Ezra");//fix for any owner
-                    }
+                    Disk d = new FMS_adapter.Disk();
+                    File.Delete(name + ".dsk");
+                    ((ItemPanel)myList.Items.GetItemAt(0)).Refresh();
+
                 }
+                else //file type
+                {
+                    if (UserName.GetText() == null)
+                    {
+                        MessageBox.Show("You need to enter your username!");
+                        return;
+                    }
+                    ((ItemPanel)myList.Items.GetItemAt(0)).GetDisk().DelFile(name, UserName.GetText());
+                    ((ItemPanel)myList.Items.GetItemAt(0)).Refresh();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+        private void OpenClick(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (((ItemPanel)myList.Items.GetItemAt(0)).RootLevel())
+                    OpenDisk(((ItemPanel)myList.Items.GetItemAt(0)).GetFocused());
+                else
+                    ((ItemPanel)myList.Items.GetItemAt(0)).OpenFile(((ItemPanel)myList.Items.GetItemAt(0)).GetFocused());
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void UserName_Changed(object sender, EventValue e)
+        {
+            try
+            {
+                ((ItemPanel)myList.Items.GetItemAt(0)).Username = (sender as TextControl).GetText();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
     }

@@ -62,9 +62,9 @@ dirEntry* RootDir::getEntry(const char name[12])
 {
 	for (int i = 0; i < 15; i++)
 	{
-		if (strcmp(lsbSector[i].Filename, name) == 0)
+		if (lsbSector[i].entryStatus==1&&strcmp(lsbSector[i].Filename, name) == 0)
 			return &lsbSector[i];
-		if (strcmp(msbSector[i].Filename, name) == 0)
+		if (lsbSector[i].entryStatus == 1&&strcmp(msbSector[i].Filename, name) == 0)
 			return &msbSector[i];
 	}
 	return NULL;

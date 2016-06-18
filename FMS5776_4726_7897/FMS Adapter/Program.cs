@@ -637,7 +637,7 @@ namespace FMS_adapter
         public string Filename { get { return filename; } }
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 12)]
         string fileOwner;
-        public string FileOwner { get { return filename; } }
+        public string FileOwner { get { return fileOwner; } }
 
         uint fileAddr;
         public uint FileAddr { get { return fileAddr; } }

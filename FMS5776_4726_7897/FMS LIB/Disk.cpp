@@ -394,14 +394,14 @@ char* Disk::GetFileNames()
 		char *fileNames = new char[13 * 30 + 1];
 		fileNames[0] = NULL;
 		for (int i = 0; i < 15; i++)
-			if (rootDir.lsbSector[i].Filename[0]!=NULL)
+			if (rootDir.lsbSector[i].entryStatus==1)
 			{
 				
 				strcat(fileNames, rootDir.lsbSector[i].Filename);
 				strcat(fileNames, ",");
 			}
 		for (int j = 0; j < 15; j++)
-			if (rootDir.msbSector[j].Filename[0] != NULL)
+			if (rootDir.msbSector[j].entryStatus == 1)
 			{
 				
 				strcat(fileNames, rootDir.msbSector[j].Filename);
