@@ -129,19 +129,16 @@ namespace FMS_GUI
                 }
                 else //file type
                 {
-                    if (UserName.GetText() == null)
-                    {
-                        MessageBox.Show("You need to enter your username!");
-                        return;
-                    }
-                    FCB fcb = ((ItemPanel)myList.Items.GetItemAt(0)).GetDisk().OpenFile(name, UserName.GetText(), "I");
+
+                    FCB fcb = ((ItemPanel)myList.Items.GetItemAt(0)).GetDisk().OpenFile(name,"System" , "I");
                     DirEntry entry = fcb.GetDirEntry();
                     MessageBox.Show("\nFile name: " + entry.Filename
                                             + "\nFile owner: " + entry.FileOwner
-                                            + "\nFile Size: " + entry.FileSize * 1020
+                                            + "\nFile Size: " + App.NumByteToString(entry.FileSize * 1020)
                                             + "\nCreation date: " + entry.CrDate
                                             +"\nRecord Size: " + entry.MaxRecSize
-                                            + "\nFile key type: " + ((entry.KeyType == "I") ? "integer" : "string"), "Properties", MessageBoxButton.OK, MessageBoxImage.Information);
+                                            + "\nFile key type: " + ((entry.KeyType == "I") ? "integer" : "string")
+                                            + "\n" + App.NumByteToString(1020 * entry.FileSize - entry.EofRecNum * entry.MaxRecSize) + " free of " + App.NumByteToString(1020 * entry.FileSize), "Properties", MessageBoxButton.OK, MessageBoxImage.Information);
                     fcb.CloseFile();
                 }
             }

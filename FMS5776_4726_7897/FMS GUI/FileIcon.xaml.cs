@@ -32,9 +32,13 @@ namespace FMS_GUI
         {
             InitializeComponent();
             this.name.Content = name;
-            //לוהסיף פרטים על הדיסק וכו
-            //bar.Value = (1 - (d.HowMuchEmpty() / 1020));
-            //bar.ToolTip = ((1 - bar.Value) * 1020) + "B free of 1020 B";
+            FMS_adapter.FCB fcb = d.OpenFile(name, "System", "I");
+            FMS_adapter.DirEntry entry=fcb.GetDirEntry();
+            bar.Minimum = 0;
+            bar.Maximum = ((int)(1020 * entry.FileSize) / entry.MaxRecSize);
+            bar.Value = entry.EofRecNum;
+           this.ToolTip = App.NumByteToString(1020 * entry.FileSize-entry.EofRecNum * entry.MaxRecSize) + " free of " + App.NumByteToString(1020 * entry.FileSize);
+            fcb.CloseFile();
         }
     }
 }
