@@ -11,10 +11,10 @@
             <ColumnDefinition Width="7*"/>
         </Grid.ColumnDefinitions>
         <Border Grid.Column="0" BorderBrush="Black" BorderThickness="1">
-            <TextBlock x:Name="FieldName" Grid.Column="0" Background="White"/>
+            <TextBlock x:Name="FieldName" Grid.Column="0" Background="White" MinWidth="90" MinHeight="40"/>
         </Border>
         <Border Grid.Column="1" BorderBrush="Black" BorderThickness="1">
-            <TextBlock x:Name="FieldContent" Grid.Column="1" Background="White"/>
+            <TextBlock x:Name="FieldContent" Grid.Column="1" Background="White" MinWidth="150" MinHeight="40"/>
         </Border>
     </Grid>
 </UserControl>

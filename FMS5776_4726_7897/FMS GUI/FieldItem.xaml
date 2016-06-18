@@ -10,7 +10,7 @@
             <ColumnDefinition Width="3*"/>
             <ColumnDefinition Width="7*"/>
         </Grid.ColumnDefinitions>
-        <TextBox x:Name="name" LostFocus="name_LostFocus"/>
-        <TextBox x:Name="content" LostFocus="content_LostFocus" Grid.Column="1"/>
+        <TextBox x:Name="name" LostFocus="name_LostFocus" MinWidth="90"/>
+        <TextBox x:Name="content" LostFocus="content_LostFocus" Grid.Column="1" MinWidth="150"/>
     </Grid>
 </UserControl>

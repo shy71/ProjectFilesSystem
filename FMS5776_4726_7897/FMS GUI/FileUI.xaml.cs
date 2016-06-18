@@ -59,6 +59,11 @@ namespace FMS_GUI
                     }
                 }
             }
+            catch(Exception e)
+            {
+                //MessageBox.Show(e.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                fcb.SeekRecord(0, 0);
+            }
             catch
             {
                 fcb.SeekRecord(0, 0);
@@ -66,44 +71,60 @@ namespace FMS_GUI
         }
         private void OpenRec_Click(object sender, RoutedEventArgs e)
         {
-            string key = (string)RecordsList.SelectedItem;
-            while(true)
+            try
             {
-                string record;
-                fcb.SeekRecord(0, 0);
-                fcb.ReadRecord(out record, (int)fcb.GetDirEntry().MaxRecSize,1);
-                if(Key(record) == key)
+                string key = (string)RecordsList.SelectedItem;
+                while (true)
                 {
-                    StringBuilder recbuilder = new StringBuilder(record);
-                    new Opening_Record(ref recbuilder,(int)fcb.GetDirEntry().MaxRecSize).ShowDialog();
-                    if(recbuilder.ToString() != record)
+                    string record;
+                    fcb.SeekRecord(0, 0);
+                    fcb.ReadRecord(out record, (int)fcb.GetDirEntry().MaxRecSize, 1);
+                    if (Key(record) == key)
                     {
-                        if(recbuilder.Length < fcb.GetDirEntry().MaxRecSize)
+                        StringBuilder recbuilder = new StringBuilder(record);
+                        new Opening_Record(ref recbuilder, (int)fcb.GetDirEntry().MaxRecSize).ShowDialog();
+                        if (recbuilder.ToString() != record)
                         {
-                            recbuilder.Append(new string((char)0, (int)(fcb.GetDirEntry().MaxRecSize - recbuilder.Length)));
+                            if (recbuilder.Length < fcb.GetDirEntry().MaxRecSize)
+                            {
+                                recbuilder.Append(new string((char)0, (int)(fcb.GetDirEntry().MaxRecSize - recbuilder.Length)));
+                            }
+                            fcb.UpdateRecord(recbuilder.ToString());//update the record to its new version
                         }
-                        fcb.UpdateRecord(recbuilder.ToString());//update the record to its new version
                     }
                 }
+            }
+            catch
+            {
+                fcb.SeekRecord(0, 0);
             }
         }
         private void CreateRec_Click(object sender, RoutedEventArgs e)
         {
-            StringBuilder record = new StringBuilder();
-            new Create_Record(ref record, fcb.GetDirEntry()).ShowDialog();
-            string s = record.ToString() + (new string((char)0, (int)fcb.GetDirEntry().MaxRecSize - record.Length));
-            string currec;
-            fcb.SeekRecord(0, 0);
-            if (fcb.GetDirEntry().EofRecNum != 0)
+            try
             {
-                do
+                StringBuilder record = new StringBuilder();
+                new Create_Record(ref record, fcb.GetDirEntry()).ShowDialog();
+                string s = record.ToString() + (new string((char)0, (int)fcb.GetDirEntry().MaxRecSize - record.Length));
+                string currec;
+                //FIXddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
+                fcb.SeekRecord(0, 0);
+                if (fcb.GetDirEntry().EofRecNum != 0)
                 {
-                    fcb.ReadRecord(out currec, (int)fcb.GetDirEntry().MaxRecSize, 0);
-                } while (RecordExists(currec));
-                fcb.SeekRecord(1, -1);
+                    do
+                    {
+                        
+                        fcb.ReadRecord(out currec, (int)fcb.GetDirEntry().MaxRecSize, 0);
+                    } while (RecordExists(currec));
+                    fcb.SeekRecord(1, -1);
+                }
+                fcb.WriteRecord(s);
+                Refresh();
             }
-            fcb.WriteRecord(s);
-            Refresh();
+            catch
+            {
+                fcb.SeekRecord(0, 0);
+            }
         }
 
     }
