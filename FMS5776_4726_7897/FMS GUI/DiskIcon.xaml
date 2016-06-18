@@ -19,7 +19,7 @@
                 <RowDefinition Height="1.5*"/>
             </Grid.RowDefinitions>
             <Label x:Name="name" HorizontalAlignment="Left"  VerticalAlignment="Center"  FontFamily="Bold"/>
-            <ProgressBar x:Name="bar"  Grid.Row="1" Margin="10,5,20,5"/>
+            <ProgressBar x:Name="bar"  Grid.Row="1" Margin="10,5,20,5" Minimum="0" Maximum="1600"/>
             <Label x:Name="barLabel" HorizontalAlignment="Center" VerticalAlignment="Top" FontFamily="Bold" Grid.Row="2" />
         </Grid>
 

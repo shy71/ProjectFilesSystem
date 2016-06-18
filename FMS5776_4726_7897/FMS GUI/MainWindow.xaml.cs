@@ -140,6 +140,7 @@ namespace FMS_GUI
                                             + "\nFile owner: " + entry.FileOwner
                                             + "\nFile Size: " + entry.FileSize * 1020
                                             + "\nCreation date: " + entry.CrDate
+                                            +"\nRecord Size: " + entry.MaxRecSize
                                             + "\nFile key type: " + ((entry.KeyType == "I") ? "integer" : "string"), "Properties", MessageBoxButton.OK, MessageBoxImage.Information);
                     fcb.CloseFile();
                 }

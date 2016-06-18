@@ -26,11 +26,11 @@ namespace FMS_GUI
             this.d = d;
         }
 
-        private void Create_Click(object sender, RoutedEventArgs e)
+        private void Create_Click(object sender, RoutedEventArgs e) 
         {
             try
             {
-                d.CreateFile(name.GetText(), owner.GetText(), "F", 60, 60, "I", 0 );
+                d.CreateFile(name.GetText(), owner.GetText(), "F", uint.Parse(RecordSize.GetText()), ((uint)(uint.Parse(FileSize.GetText()) / 1020)) + 1, KeyType.GetText(), 0);
                 this.Close();
             }
             catch (Exception s)

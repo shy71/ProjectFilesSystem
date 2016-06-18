@@ -8,12 +8,16 @@
             <RowDefinition Height="1.5*"/>
             <RowDefinition Height="2*"/>
             <RowDefinition Height="2*"/>
+            <RowDefinition Height="2*"/>
             <RowDefinition Height="3*"/>
         </Grid.RowDefinitions>
         <Label Content="Create new file!" HorizontalAlignment="Center" FontFamily="Bold"/>
         <local:TextControl x:Name="name"  Grid.Row="1" Str="File Name"/>
         <local:TextControl x:Name="owner" Grid.Row="2" Str="File Owner Name"/>
-        <Button Content="Create" Grid.Row="3" Click="Create_Click">
+        <local:TextControl x:Name="RecordSize" Str="Record Size(B)" HorizontalAlignment="Left" Width="98" Grid.Row="3"/>
+        <local:TextControl x:Name="FileSize" Str="File Size(B)" HorizontalAlignment="Center" Width="98" Grid.Row="3"/>
+        <local:TextControl x:Name="KeyType" Str="I(ntger)/S(tring)" HorizontalAlignment="Right" Width="98" Grid.Row="3"/>
+        <Button Content="Create" Grid.Row="4" Click="Create_Click">
             <Button.Style>
                 <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
                     <Style.Triggers>
@@ -23,10 +27,20 @@
                         <DataTrigger Binding="{Binding ElementName=owner, Path=ForeG}" Value="Gray">
                             <Setter Property="Button.IsEnabled" Value="false"/>
                         </DataTrigger>
+                        <DataTrigger Binding="{Binding ElementName=FileSize, Path=ForeG}" Value="Gray">
+                            <Setter Property="Button.IsEnabled" Value="false"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding ElementName=RecordSize, Path=ForeG}" Value="Gray">
+                            <Setter Property="Button.IsEnabled" Value="false"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding ElementName=KeyType, Path=ForeG}" Value="Gray">
+                            <Setter Property="Button.IsEnabled" Value="false"/>
+                        </DataTrigger>
                     </Style.Triggers>
                 </Style>
             </Button.Style>
         </Button>
+
 
     </Grid>
 </Window>

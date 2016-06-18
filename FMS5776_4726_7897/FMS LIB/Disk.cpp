@@ -190,6 +190,8 @@ void Disk::writePlusCpy(unsigned int sor, unsigned int cpy, DAT sec)
 }
 void Disk::alloc(DATtype & fat, unsigned int numofsector, unsigned int type, unsigned int index)
 {
+	if (numofsector>3200)
+		throw "doesn't have enough space!";
 	int num = (numofsector / 2) + (numofsector % 2);
 	DATtype UsedData = dat.Dat;
 	try
