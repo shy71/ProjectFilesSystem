@@ -22,8 +22,13 @@
                         <Image Source="Pic\File.jpg" Width="40" />
                     </MenuItem.Icon>
                 </MenuItem>
+                <MenuItem x:Name="CreateFolder" Header="New Folder" Click="CreateFolder_Click">
+                    <MenuItem.Icon>
+                        <Image Source="Pic\Folder.jpg" Width="40" />
+                    </MenuItem.Icon>
+                </MenuItem>
             </MenuItem>
-            <MenuItem x:Name="DeleteSelectedItem" Header="_Delete File" HorizontalAlignment="Right" Width="70" Click="DeleteSelectedItem_Click"/>
+            <MenuItem x:Name="DeleteSelectedItem" Header="_Delete" HorizontalAlignment="Right" Width="50" Click="DeleteSelectedItem_Click"/>
             <MenuItem x:Name="SelectedItemProperties" Header="_Properties" HorizontalAlignment="Right" Width="70" Click="SelectedItemProperties_Click"/>
             <MenuItem x:Name="SelectedItemOpen" Header="_Open" HorizontalAlignment="Right" Width="45" Click="OpenClick"/>
             <local:TextControl x:Name="UserName" Width="127" Str="Username" Changed="UserName_Changed"/>

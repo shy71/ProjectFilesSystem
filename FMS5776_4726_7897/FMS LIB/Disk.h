@@ -60,4 +60,6 @@ public:
 	void Disk::SetLastErrorMessage(string lastErrorMessage);
 	VolumeHeader GetVolumeHeader();
 	char* GetFileNames();
+	string getEnd(){ return end; }
+	void setEnd(string end){ this->end = end; }
 };

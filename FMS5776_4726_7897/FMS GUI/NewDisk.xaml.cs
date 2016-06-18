@@ -19,9 +19,14 @@ namespace FMS_GUI
     /// </summary>
     public partial class NewDisk : Window
     {
-        public NewDisk() 
+        string end;
+        public NewDisk(string end) 
         {
             InitializeComponent();
+            if (end == "")
+                this.end = ".dsk";
+            else
+                this.end = ".dsk." + end;
         }
 
         private void Create_Click(object sender, RoutedEventArgs e)
@@ -29,6 +34,7 @@ namespace FMS_GUI
             try
             {
                 FMS_adapter.Disk d = new FMS_adapter.Disk();
+                d.SetEnd(end);
                 d.Createdisk(name.GetText(), owner.GetText());
             }
             catch(Exception s)

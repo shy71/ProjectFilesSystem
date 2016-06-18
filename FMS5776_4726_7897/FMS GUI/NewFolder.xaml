@@ -1,0 +1,29 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:FMS_GUI" x:Class="FMS_GUI.NewFolder"
+        Title="NewFolder" Height="200" Width="300">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1.5*"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="2*"/>
+        </Grid.RowDefinitions>
+        <Label Content="Create new Folder!" HorizontalAlignment="Center" FontFamily="Bold"/>
+        <Label Content="(if there is already a folder with that name you will simply enter her)" VerticalContentAlignment="Bottom" FontFamily="Bold"/>
+        <local:TextControl x:Name="name"  Grid.Row="1" Str="Folder Name"/>
+        <Button Content="Create" Grid.Row="4" Click="Create_Click">
+            <Button.Style>
+                <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ElementName=name, Path=ForeG}" Value="Gray">
+                            <Setter Property="Button.IsEnabled" Value="false"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
+
+
+    </Grid>
+</Window>

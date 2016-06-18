@@ -27,11 +27,17 @@ namespace FMS_GUI
             InitializeComponent();
         }
         public DiskIcon(string str) : this(TryOpen(str)) { }
-        static FMS_adapter.Disk TryOpen(string str)
+        public DiskIcon(string str,string sub) : this(TryOpen(str,sub)) { }
+        static FMS_adapter.Disk TryOpen(string str,string sub="")
         {
+            if (sub == "")
+                sub = ".dsk";
+            else
+                sub = ".dsk." + sub;
             try
             {
                 FMS_adapter.Disk d = new FMS_adapter.Disk();
+                d.SetEnd(sub);
                 d.MountDisk(str);
                 return d;
             }

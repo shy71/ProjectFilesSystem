@@ -201,6 +201,42 @@ extern "C"
 			throw ex;
 		}
 	}
+	__declspec(dllexport) char* GetEnd(Disk* THIS)
+	{
+		try
+		{
+			char *str = new char[100];
+			strcpy(str, THIS->getEnd().c_str());
+			return str;
+		}
+		catch (exception ex)
+		{
+			THIS->SetLastErrorMessage(ex.what());
+			throw ex;
+		}
+		catch (char* ex)
+		{
+			THIS->SetLastErrorMessage(ex);
+			throw ex;
+		}
+	}
+	__declspec(dllexport) void SetEnd(Disk* THIS,char * str)
+	{
+		try
+		{
+			THIS->setEnd(str);
+		}
+		catch (exception ex)
+		{
+			THIS->SetLastErrorMessage(ex.what());
+			throw ex;
+		}
+		catch (char* ex)
+		{
+			THIS->SetLastErrorMessage(ex);
+			throw ex;
+		}
+	}
 	__declspec(dllexport)  void  GetVolumeHeader(Disk* THIS,VolumeHeader* buffer)
 	{
 		try

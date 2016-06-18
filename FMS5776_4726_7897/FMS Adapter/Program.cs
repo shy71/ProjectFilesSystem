@@ -102,6 +102,10 @@ namespace FMS_adapter
 
         [DllImport(dllPath, CallingConvention = CallingConvention.Cdecl)]
         public static extern IntPtr GetName(IntPtr THIS);
+        [DllImport(dllPath, CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr GetEnd(IntPtr THIS);
+        [DllImport(dllPath, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void SetEnd(IntPtr THIS,string end);
         #endregion
     }
     public class Disk
@@ -362,35 +366,14 @@ namespace FMS_adapter
                 throw;
             }
         }
-        //VolumeHeader GetVolumeHeader()
-        //{
-        //    try
-        //    {
-
-        //        VolumeHeader v = new VolumeHeader();
-        //        //int structSize = Marshal.SizeOf(v.GetType()); //Marshal.SizeOf(typeof(Student));  
-        //        //IntPtr buffer = Marshal.AllocHGlobal(structSize);
-        //        //Marshal.StructureToPtr(v, buffer, true);
-
-        //        // ... send buffer to dll 
-        //        Marshal.PtrToStructure(cppToCsharpAdapter.GetVolumeHeader(this.myDiskPointer), v);
-
-        //        // free allocate 
-        //        //Marshal.FreeHGlobal(buffer);
-
-        //        return v;
-        //    }
-        //    catch (SEHException)
-        //    {
-        //        IntPtr cString = cppToCsharpAdapter.GetLastDiskErrorMessage(this.myDiskPointer);
-        //        string message = Marshal.PtrToStringAnsi(cString);
-        //        throw new Exception(message);
-        //    }
-        //    catch
-        //    {
-        //        throw;
-        //    }
-        //}
+        public string GetEnd()
+        {
+            return Marshal.PtrToStringAnsi(cppToCsharpAdapter.GetEnd(myDiskPointer));
+        }
+        public void SetEnd(string str)
+        {
+            cppToCsharpAdapter.SetEnd(myDiskPointer, str);
+        }
         public string GetName() { return vhd.DiskName; }
         public string GetOwner() { return vhd.DiskOwner; }
         public string GetFormatDate() { return vhd.FormatDate; }

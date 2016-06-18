@@ -31,6 +31,13 @@ namespace FMS_GUI
             get { return username; }
             set { username = value; }
         }
+        private string parent="";
+
+        public string Parent
+        {
+            get { return parent; }
+            set { parent = value; }
+        }
         
         public event EventHandler DoubleClick;
 
@@ -47,7 +54,7 @@ namespace FMS_GUI
             OnPropertyChanged(propertyName);
             return true;
         }
-        public bool RootLevel()
+        public bool InFolder()
         {
             return d == null;
         }
@@ -62,16 +69,27 @@ namespace FMS_GUI
             InitializeComponent();
             Refresh();
         }
-        public void Refresh()
+        public void Refresh(string ParentSub="")
         {
+            ParentSub = Parent;
             if (d == null)
             {
                 win.Children.Clear();
                 Button bt;
-                foreach (string Item in MainWindow.GetDisksNames())
+                foreach (string Item in MainWindow.GetDisksNames(ParentSub))
                 {
                     bt = new Button();
-                    bt.Content = new DiskIcon(Item);
+                    bt.ToolTip = "Disk";
+                    bt.Content = new DiskIcon(Item,ParentSub);
+                    bt.Name = Item;
+                    bt.PreviewMouseDoubleClick += DoubleClickEvent;
+                    win.Children.Add(bt);
+                }
+                foreach (string Item in MainWindow.GetFolderNames(ParentSub))
+                {
+                    bt = new Button();
+                    bt.ToolTip = "Folder";
+                    bt.Content = new FolderIcon(Item);
                     bt.Name = Item;
                     bt.PreviewMouseDoubleClick += DoubleClickEvent;
                     win.Children.Add(bt);
@@ -114,13 +132,27 @@ namespace FMS_GUI
             if (DoubleClick != null)
                 DoubleClick(sender, e);
         }
-        public ItemPanel(string DiskName)
+        public ItemPanel(string DiskName,string sub)
         {
+            Parent = sub;
+            if (sub == "")
+                sub = ".dsk";
+            else
+                sub = ".dsk." + sub;
+
             InitializeComponent();
             d = new Disk();
+            d.SetEnd(sub);
             d.MountDisk(DiskName);
             Refresh();
            
+        }
+        public ItemPanel(string FolderName,bool IsFolder)
+        {
+            Parent = FolderName;
+            InitializeComponent();
+            Refresh();
+
         }
         public void CreateFile(bool Create=true)
         {
@@ -132,6 +164,19 @@ namespace FMS_GUI
                 Refresh();
             }
         }
+        public bool FolderFocused()
+        {
+            foreach (Button item in win.Children)
+                if (item.IsFocused)
+                {
+                    if (item.Content.GetType() == typeof(FileIcon))
+                        return false;
+                    else if (item.Content.GetType() == typeof(FolderIcon))
+                        return true;
+                    return false;
+                }
+            throw new Exception("You didnt choose anything!");
+        }
         public string GetFocused()
         {
             foreach (Button item in win.Children)
@@ -139,6 +184,8 @@ namespace FMS_GUI
                 {
                     if (item.Content.GetType() == typeof(FileIcon))
                         return ((FileIcon)item.Content).name.Content.ToString();
+                    else if (item.Content.GetType() == typeof(FolderIcon))
+                        return ((FolderIcon)item.Content).name.Content.ToString();
                     return ((DiskIcon)item.Content).name.Content.ToString();
                 }
             throw new Exception("You didnt choose anything!");

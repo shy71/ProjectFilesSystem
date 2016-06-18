@@ -39,28 +39,60 @@ namespace FMS_GUI
             }
 
         }
-        static public List<string> GetDisksNames(string path = "../Debug/")
+        static public List<string> GetDisksNames(string parentSub ="" )
         {
-            return Directory.GetFiles(path).Where(x => x.Substring(x.Length - 4) == ".dsk").Select(x => x.Substring(x.IndexOf('.') + 9)).Select(y => y.Substring(0, y.IndexOf(".dsk"))).ToList();
-
+            if(parentSub=="")
+            return Directory.GetFiles("../Debug/").Where(x => x.Substring(x.Length - 4) == ".dsk").Select(x => x.Substring(x.IndexOf('.') + 9)).Select(y => y.Substring(0, y.IndexOf(".dsk"))).ToList();
+            else
+                return Directory.GetFiles("../Debug/").Select(x => x.Substring(x.IndexOf('.') + 9)).Where(x => x.Contains(".dsk") &&x.Length>parentSub.Length&& x.Substring(x.Length-parentSub.Length) == parentSub).Select(y => y.Substring(0, y.Length-parentSub.Length-1)).Where(x => x.Substring(x.Length - 4) == ".dsk").Select(y => y.Substring(0, y.IndexOf(".dsk"))).ToList();
+        }
+        static public List<string> GetFolderNames(string parentSub = "")
+        {
+            if (parentSub == "")
+                return Directory.GetFiles("../Debug/").Where(x => x.Substring(x.Length - 4) != ".dsk" && x.Contains(".dsk")).Select(y => y.Substring(y.LastIndexOf(".") + 1)).Distinct().ToList();
+            else
+                return Directory.GetFiles("../Debug/").Where(x => x.Contains(".dsk") &&x.Length>parentSub.Length&& x.Substring(x.Length - parentSub.Length) == parentSub).Select(y => y.Substring(0, y.Length - parentSub.Length-1)).Where(x => x.Substring(x.Length - 4) != ".dsk").Select(y => y.Substring(y.LastIndexOf(".") + 1)).Distinct().ToList();
         }
         private void OpenDisk(object sender, EventArgs e)
         {
             try
             {
-                OpenDisk((sender as Button).Name);
+                if ((sender as Button).ToolTip == "Disk")
+                    OpenDisk((sender as Button).Name);
+                else
+                    OpenFolder((sender as Button).Name);
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
         }
+        private void OpenFolder(string name)
+        {
+            try
+            {
+                string str;
+                if((myList.Items.GetItemAt(0) as ItemPanel).Parent=="")
+                    str="";
+                else
+                    str="."+(myList.Items.GetItemAt(0) as ItemPanel).Parent;
+                var wr = new ItemPanel(name+str,true);
+                myList.Items.Clear();
+                wr.DoubleClick += OpenDisk;
+                myList.Items.Add(wr);
+                adr.SetText(adr.GetText() + name + "\\");
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+            }
+        }
         private void OpenDisk(string name)
         {
             try
             {
-                myList.Items.Clear();
-                var wr = new ItemPanel(name);
+                var wr = new ItemPanel(name,(myList.Items.GetItemAt(0) as ItemPanel).Parent);
+                myList.Items.Clear();              
                 wr.DoubleClick += OpenFile;
                 myList.Items.Add(wr);
                 adr.SetText(adr.GetText() + name + "\\");
@@ -86,9 +118,9 @@ namespace FMS_GUI
         {
             try
             {
-                if (((ItemPanel)myList.Items.GetItemAt(0)).RootLevel())
+                if (((ItemPanel)myList.Items.GetItemAt(0)).InFolder())
                 {
-                    new NewDisk().ShowDialog();
+                    new NewDisk(((ItemPanel)myList.Items.GetItemAt(0)).Parent).ShowDialog();
                     (myList.Items.GetItemAt(0) as ItemPanel).Refresh();
                 }
                 else
@@ -118,14 +150,32 @@ namespace FMS_GUI
             try
             {
                 string name = ((ItemPanel)myList.Items.GetItemAt(0)).GetFocused();
-                if (((ItemPanel)myList.Items.GetItemAt(0)).RootLevel())
+                if ((myList.Items.GetItemAt(0) as ItemPanel).FolderFocused())
+                {
+                    string path;
+                    if((myList.Items.GetItemAt(0) as ItemPanel).Parent=="")
+                        path=name;
+                    else
+                        path=name+ "."+(myList.Items.GetItemAt(0) as ItemPanel).Parent;
+                    string disks = string.Join(" , ", GetDisksNames(path));
+                    string folders = string.Join(" , ", GetFolderNames(path));
+                      MessageBox.Show("Folder Name: "+name
+                          + "\nNumber Of Files: " + GetDisksNames(path).Count()
+                          + "\nFiles: "+ disks
+                          + "\nNumber Of Subfolders: " + GetFolderNames(path).Count()
+                          + "\nSubfolders: " + folders ,"Prperties",MessageBoxButton.OK,MessageBoxImage.Information);
+                }
+                else  if (((ItemPanel)myList.Items.GetItemAt(0)).InFolder())
                 {
                     Disk d = new FMS_adapter.Disk();
+                    if((myList.Items.GetItemAt(0) as ItemPanel).Parent!="")
+                        d.SetEnd(".dsk."+(myList.Items.GetItemAt(0) as ItemPanel).Parent);
                     d.MountDisk(name);
                     MessageBox.Show("Disk name: " + d.GetName()
                                   + "\nDisk owner: " + d.GetOwner()
                                   + "\nCreation date: " + d.GetCreationDate()
                                   + "\n" + App.NumByteToString(d.HowMuchEmpty() * 1020) + " free of " + App.NumByteToString(1024 * 1600), "Properties", MessageBoxButton.OK, MessageBoxImage.Information);
+                d.UnmountDisk();
                 }
                 else //file type
                 {
@@ -154,6 +204,28 @@ namespace FMS_GUI
             {
                 if (adr.GetText().Count(x => x == '\\') == 1)
                     MessageBox.Show("You are already in the root level");
+                else if ((myList.Items.GetItemAt(0) as ItemPanel).Parent.Count(x => x == '.') == 0 && (myList.Items.GetItemAt(0) as ItemPanel).InFolder())
+                {
+                    myList.Items.Clear();
+                    var wr = new ItemPanel();
+                    wr.DoubleClick += OpenDisk;
+                    adr.SetText("C:\\");
+                    myList.Items.Add(wr);
+                }
+                else if ((myList.Items.GetItemAt(0) as ItemPanel).Parent!="")
+                {
+                    var wr = new ItemPanel((myList.Items.GetItemAt(0) as ItemPanel).Parent.Substring(((myList.Items.GetItemAt(0) as ItemPanel).InFolder())?(myList.Items.GetItemAt(0) as ItemPanel).Parent.IndexOf(".") + 1:0), true);
+                    myList.Items.Clear();
+                    wr.DoubleClick += OpenDisk;
+                    string addr="";//="C:\\";
+                    foreach (string item in wr.Parent.Split('.'))
+                    {
+                        addr = item + "\\" + addr;
+                    }
+                    adr.SetText("C:\\" + addr);
+                    myList.Items.Add(wr);
+                }
+
                 else
                 {
                     myList.Items.Clear();
@@ -174,13 +246,18 @@ namespace FMS_GUI
             try
             {
                 string name = ((ItemPanel)myList.Items.GetItemAt(0)).GetFocused();
-                if (((ItemPanel)myList.Items.GetItemAt(0)).RootLevel())
+                if (((ItemPanel)myList.Items.GetItemAt(0)).FolderFocused())
                 {
-                    Disk d = new FMS_adapter.Disk();
-                    File.Delete(name + ".dsk");
-                    ((ItemPanel)myList.Items.GetItemAt(0)).Refresh();
-
+                    string end;
+                    if(((ItemPanel)myList.Items.GetItemAt(0)).Parent=="")
+                        end = name;
+                    else
+                        end = name + "." + ((ItemPanel)myList.Items.GetItemAt(0)).Parent;
+                    foreach (string item in Directory.GetFiles("../Debug/").Select(x => x.Substring(x.IndexOf('.') + 9)).Where(x => x.Substring(x.Length - end.Length) == end))
+                        File.Delete(item);
                 }
+                else if (((ItemPanel)myList.Items.GetItemAt(0)).InFolder())
+                    File.Delete(name + ".dsk." + (myList.Items.GetItemAt(0) as ItemPanel).Parent);
                 else //file type
                 {
                     if (UserName.GetText() == null)
@@ -189,8 +266,8 @@ namespace FMS_GUI
                         return;
                     }
                     ((ItemPanel)myList.Items.GetItemAt(0)).GetDisk().DelFile(name, UserName.GetText());
-                    ((ItemPanel)myList.Items.GetItemAt(0)).Refresh();
                 }
+                ((ItemPanel)myList.Items.GetItemAt(0)).Refresh();
             }
             catch (Exception ex)
             {
@@ -201,7 +278,9 @@ namespace FMS_GUI
         {
             try
             {
-                if (((ItemPanel)myList.Items.GetItemAt(0)).RootLevel())
+                if (((ItemPanel)myList.Items.GetItemAt(0)).InFolder()&&(myList.Items.GetItemAt(0) as ItemPanel).FolderFocused())
+                    OpenFolder(((ItemPanel)myList.Items.GetItemAt(0)).GetFocused());
+                else if(((ItemPanel)myList.Items.GetItemAt(0)).InFolder())
                     OpenDisk(((ItemPanel)myList.Items.GetItemAt(0)).GetFocused());
                 else
                     ((ItemPanel)myList.Items.GetItemAt(0)).OpenFile(((ItemPanel)myList.Items.GetItemAt(0)).GetFocused());
@@ -222,6 +301,11 @@ namespace FMS_GUI
             {
                 MessageBox.Show(ex.Message);
             }
+        }
+
+        private void CreateFolder_Click(object sender, RoutedEventArgs e)
+        {
+            new NewFolder(OpenFolder).ShowDialog();
         }
     }
 }
