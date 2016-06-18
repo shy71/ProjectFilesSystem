@@ -83,6 +83,9 @@ namespace FMS_adapter
         public static extern void WriteRecord(IntPtr THIS, string source);
 
         [DllImport(dllPath, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void AddRecord(IntPtr THIS, string source);
+
+        [DllImport(dllPath, CallingConvention = CallingConvention.Cdecl)]
         public static extern void SeekRecord(IntPtr THIS, uint from, int pos);
 
         [DllImport(dllPath, CallingConvention = CallingConvention.Cdecl)]
@@ -492,6 +495,24 @@ namespace FMS_adapter
             {
 
                 cppToCsharpAdapter.WriteRecord(this.myFCBPointer, source);
+            }
+            catch (SEHException)
+            {
+                IntPtr cString = cppToCsharpAdapter.GetLastFcbErrorMessage(this.myFCBPointer);
+                string message = Marshal.PtrToStringAnsi(cString);
+                throw new Exception(message);
+            }
+            catch
+            {
+                throw;
+            }
+        }
+        public void AddRecord(string source)
+        {
+            try
+            {
+
+                cppToCsharpAdapter.AddRecord(this.myFCBPointer, source);
             }
             catch (SEHException)
             {

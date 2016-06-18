@@ -48,6 +48,7 @@ namespace FMS_GUI
             {
                 fcb.SeekRecord(0, 0);
                 List<string> recordlist = new List<string>();
+                //FIX
                 while (true)
                 {
                     string s;
@@ -74,10 +75,10 @@ namespace FMS_GUI
             try
             {
                 string key = (string)RecordsList.SelectedItem;
+                fcb.SeekRecord(0, 0);
                 while (true)
                 {
                     string record;
-                    fcb.SeekRecord(0, 0);
                     fcb.ReadRecord(out record, (int)fcb.GetDirEntry().MaxRecSize, 1);
                     if (Key(record) == key)
                     {
@@ -106,19 +107,7 @@ namespace FMS_GUI
                 StringBuilder record = new StringBuilder();
                 new Create_Record(ref record, fcb.GetDirEntry()).ShowDialog();
                 string s = record.ToString() + (new string((char)0, (int)fcb.GetDirEntry().MaxRecSize - record.Length));
-                string currec;
-                //FIXddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
-                fcb.SeekRecord(0, 0);
-                if (fcb.GetDirEntry().EofRecNum != 0)
-                {
-                    do
-                    {
-                        
-                        fcb.ReadRecord(out currec, (int)fcb.GetDirEntry().MaxRecSize, 0);
-                    } while (RecordExists(currec));
-                    fcb.SeekRecord(1, -1);
-                }
-                fcb.WriteRecord(s);
+                fcb.AddRecord(s);
                 Refresh();
             }
             catch

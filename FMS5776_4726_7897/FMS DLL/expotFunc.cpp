@@ -258,6 +258,23 @@ extern "C"
 			throw ex;
 		}
 	}
+	__declspec(dllexport) void AddRecord(FCB* THIS, char *data)
+	{
+		try
+		{
+			THIS->addRecord(data);
+		}
+		catch (exception ex)
+		{
+			THIS->SetLastErrorMessage(ex.what());
+			throw ex;
+		}
+		catch (char* ex)
+		{
+			THIS->SetLastErrorMessage(ex);
+			throw ex;
+		}
+	}
 	__declspec(dllexport) void WriteRecord(FCB* THIS, char *data)
 	{
 		try
