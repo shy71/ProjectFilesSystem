@@ -31,6 +31,8 @@ namespace FMS_GUI
         }
         public bool RecordExists(string record)
         {
+            if (record == "")
+                return false;
             foreach (var c in Key(record))
                 if (c != null)
                     return true;
@@ -113,7 +115,7 @@ namespace FMS_GUI
                     }
                     else
                         fcb.UpdateRecCancel();
-                    fcb.ReadRecord(out record, (int)fcb.GetDirEntry().MaxRecSize);
+                    fcb.SeekRecord(1, 1);
                 }
             }
             catch
@@ -140,8 +142,45 @@ namespace FMS_GUI
         }
 
         private void DeleteRec_Click(object sender, RoutedEventArgs e)
-        {
-
+        {  
+            if(RecordsList.SelectedItem == null)
+            {
+                MessageBox.Show("You haven't seleted anything to edit.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+            try
+            {
+                fcb.SeekRecord(0, 0);
+                string key = (string)RecordsList.SelectedItem,record;
+                while (true)
+                {
+                    if (fcb.GetDirEntry().EofRecNum != fcb.GetCurrentRecordNumber())
+                        fcb.ReadRecord(out record, (int)fcb.GetDirEntry().MaxRecSize, 1);
+                    else
+                    {
+                        MessageBox.Show("The file couldn't be found...", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
+                    if (Key(record) == key)
+                    {
+                        fcb.DeleteRecord();
+                        Refresh();
+                        return;
+                    }
+                    else
+                        fcb.UpdateRecCancel();
+                    fcb.SeekRecord(1, 1);
+                }
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                fcb.SeekRecord(0, 0);
+            }
+            catch
+            {
+                fcb.SeekRecord(0, 0);
+            }
         }
 
         private void RecordsList_PreviewMouseDoubleClick(object sender, MouseButtonEventArgs e)
