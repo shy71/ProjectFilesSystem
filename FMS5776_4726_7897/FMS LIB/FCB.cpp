@@ -222,7 +222,7 @@ void FCB::MoveRecord(int num)
 #pragma region Edit Mode Functions
 void FCB::updateCancel()
 {
-	if (IOstatus[0] == 'I')
+	if (IOstatus == "I")
 		throw "This file has been opened in read only status";
 	if (!editLock)
 		throw "You can't cancel an update, cause it isn't in update state";
@@ -243,7 +243,7 @@ void FCB::deleteRecord()//איך בשאר הדברים ידעו לדלג על הרשמוה?
 }
 void FCB::updateRecord(char *update)
 {
-	if (IOstatus[0] == 'I')
+	if (IOstatus == "I")
 		throw "This file has been opened in read only status";
 	if (!editLock)
 		throw "You are not in edit mode so you can't update the current record";
