@@ -144,5 +144,10 @@ namespace FMS_GUI
 
         }
 
+        private void RecordsList_PreviewMouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            OpenRec_Click(sender, null);
+        }
+
     }
 }

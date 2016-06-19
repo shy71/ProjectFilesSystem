@@ -81,6 +81,7 @@ namespace FMS_GUI
                 wr.DoubleClick += OpenDisk;
                 myList.Items.Add(wr);
                 adr.SetText(adr.GetText() + name + "\\");
+                UserName_Changed(UserName, null);
             }
             catch (Exception e)
             {
@@ -96,6 +97,7 @@ namespace FMS_GUI
                 wr.DoubleClick += OpenFile;
                 myList.Items.Add(wr);
                 adr.SetText(adr.GetText() + name + "\\");
+                UserName_Changed(UserName, null);
             }
             catch (Exception e)
             {
@@ -211,6 +213,7 @@ namespace FMS_GUI
                     wr.DoubleClick += OpenDisk;
                     adr.SetText("C:\\");
                     myList.Items.Add(wr);
+                    UserName_Changed(UserName, null);
                 }
                 else if ((myList.Items.GetItemAt(0) as ItemPanel).Parent!="")
                 {
@@ -224,6 +227,7 @@ namespace FMS_GUI
                     }
                     adr.SetText("C:\\" + addr);
                     myList.Items.Add(wr);
+                    UserName_Changed(UserName, null);
                 }
 
                 else
@@ -233,6 +237,7 @@ namespace FMS_GUI
                     wr.DoubleClick += OpenDisk;
                     adr.SetText("C:\\");
                     myList.Items.Add(wr);
+                    UserName_Changed(UserName, null);
                 }
             }
             catch (Exception ex)
