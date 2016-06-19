@@ -39,6 +39,8 @@ namespace FMS_GUI
             foreach(FieldItem f in Fields.Children)
                 if(f.Name != "")
                     KeyField.Items.Add(f.Name);
+            if (KeyField.Items.IsEmpty)
+                KeyField.Items.Add("You done have yet any fields to chosse from!");
         }
         private void AddField_Click(object sender, RoutedEventArgs e)
         {

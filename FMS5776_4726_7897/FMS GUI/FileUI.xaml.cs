@@ -60,7 +60,7 @@ namespace FMS_GUI
                         if (RecordExists(s))
                         {
                             //recordlist.Add(s);
-                            RecordsList.Items.Add(s.Split('.')[0].Split(',')[1]);
+                            RecordsList.Items.Add("Record: " + s.Split('.')[0].Split(',')[1]);
                         }
                     }
                     else
@@ -83,7 +83,7 @@ namespace FMS_GUI
         {
             try
             {
-                string key = (string)RecordsList.SelectedItem;
+                string key = RecordsList.SelectedItem.ToString().Substring("Record: ".Length);
                 string record;
                 fcb.SeekRecord(0, 0);
                 while (true)
@@ -129,6 +129,8 @@ namespace FMS_GUI
             {
                 StringBuilder record = new StringBuilder();
                 new Create_Record(ref record, fcb.GetDirEntry()).ShowDialog();
+                if (record.Length == 0)
+                    return;
                 string s = record.ToString() + (new string((char)0, (int)fcb.GetDirEntry().MaxRecSize - record.Length));
                 fcb.AddRecord(s);
                 Refresh();

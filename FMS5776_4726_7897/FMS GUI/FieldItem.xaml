@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="FMS_GUI.FieldItem"
+﻿<UserControl xmlns:FMS_GUI="clr-namespace:FMS_GUI"  x:Class="FMS_GUI.FieldItem"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -10,7 +10,7 @@
             <ColumnDefinition Width="3*"/>
             <ColumnDefinition Width="7*"/>
         </Grid.ColumnDefinitions>
-        <TextBox x:Name="name" LostFocus="name_LostFocus" MinWidth="90"/>
-        <TextBox x:Name="content" LostFocus="content_LostFocus" Grid.Column="1" MinWidth="150"/>
+        <FMS_GUI:TextControl x:Name="name" LostFocus="name_LostFocus" MinWidth="90" Str="Field Name"/>
+        <FMS_GUI:TextControl x:Name="content" LostFocus="content_LostFocus" Grid.Column="1" MinWidth="150" Str="Value"/>
     </Grid>
 </UserControl>
