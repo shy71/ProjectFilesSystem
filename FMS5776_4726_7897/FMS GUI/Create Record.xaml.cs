@@ -50,6 +50,7 @@ namespace FMS_GUI
 
         private void Done_Click(object sender, RoutedEventArgs e)
         {
+            record.Clear();
             bool foundKey = false,goodKey=true,goodlength=true;
             foreach(FieldItem f in Fields.Children)
             {

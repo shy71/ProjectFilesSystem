@@ -15,6 +15,7 @@
         <Menu HorizontalAlignment="Left" Height="23" VerticalAlignment="Top" Width="517" Panel.ZIndex="1">
             <MenuItem x:Name="DelField" Header="_Delete Field" Width="78" Click="DelField_Click"/>
             <MenuItem x:Name="EditField" Header="_Edit Field" HorizontalAlignment="Right" Width="70" Click="EditField_Click"/>
+            <MenuItem x:Name="AddField" Header="_Add Field" HorizontalAlignment="Right" Width="65" Click="AddField_Click"/>
         </Menu>
         <TextBlock Text="Key:" Grid.Row="1" FontSize="20"/>
         <local:UneditableField Grid.Row="2"  x:Name="Key"/>

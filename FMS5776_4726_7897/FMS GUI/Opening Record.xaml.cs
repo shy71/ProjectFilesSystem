@@ -23,16 +23,18 @@ namespace FMS_GUI
         int maxSize;
         StringBuilder record;
         string editField;
+        bool isAdding;
         public Opening_Record()
         {
             InitializeComponent();
         }
-        public Opening_Record(ref StringBuilder curRecord,int maxSize)
+        public Opening_Record(ref StringBuilder curRecord, int maxSize)
         {
             InitializeComponent();
             this.maxSize = maxSize;
             record = curRecord;
             editField = "";
+            isAdding = false;
             fields = new List<string>(record.ToString().Split('.'));
             fields.RemoveAll(x => x == "");
             Key.FieldName.Text = (fields[0].Split(','))[0];
@@ -59,7 +61,7 @@ namespace FMS_GUI
         }
         private void EditField_Click(object sender, RoutedEventArgs e)
         {
-            if(Fields.SelectedItem == null)
+            if (Fields.SelectedItem == null)
             {
                 MessageBox.Show("You haven't seleted anything to edit.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
@@ -79,7 +81,7 @@ namespace FMS_GUI
         private void Refresh()
         {
             Fields.Items.Clear();
-            foreach(string field in fields)
+            foreach (string field in fields)
             {
                 UneditableField f = new UneditableField();
                 f.FieldName.Text = field.Split(',')[0];
@@ -90,11 +92,11 @@ namespace FMS_GUI
         private void Done_Click(object sender, RoutedEventArgs e)
         {
             MessageBoxResult res = MessageBox.Show("Would you like to save the changes you made? (if you made any)", "Save Changes", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
-            if(res == MessageBoxResult.Cancel)
+            if (res == MessageBoxResult.Cancel)
             {
                 return;
             }
-            else if(res == MessageBoxResult.No)
+            else if (res == MessageBoxResult.No)
             {
                 this.Close();
             }
@@ -103,11 +105,11 @@ namespace FMS_GUI
                 Fields_Selected(this, e);
                 record.Clear();
                 record.Append(Key.FieldName.Text + "," + Key.FieldContent.Text + ".");
-                foreach(string field in fields)
+                foreach (string field in fields)
                     record.Append(field.Split(',')[0] + "," + field.Split(',')[1] + ".");
-                if(record.Length > maxSize)
+                if (record.Length > maxSize)
                 {
-                    MessageBox.Show("Your record is too big.\nRecord maximum size exceeded.","Record maximum size exceeded",MessageBoxButton.OK,MessageBoxImage.Error);
+                    MessageBox.Show("Your record is too big.\nRecord maximum size exceeded.", "Record maximum size exceeded", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
                 this.Close();
@@ -116,20 +118,36 @@ namespace FMS_GUI
 
         private void Fields_Selected(object sender, RoutedEventArgs e)
         {
-            foreach(UserControl field in Fields.Items)
+            foreach (UserControl field in Fields.Items)
             {
                 if (field.GetType() == typeof(FieldItem))
                 {
                     int index = Fields.Items.IndexOf(field);
+                    string name = ((FieldItem)field).name.textBox.Text, content = ((FieldItem)field).content.textBox.Text;
                     Fields.Items.RemoveAt(index);
-                    fields[fields.FindIndex((x) => x == editField)] = ((FieldItem)field).Name + "," + ((FieldItem)field).Content;
+                    if (isAdding)
+                    {
+                        fields.Add(name + "," + content);
+                        isAdding = false;
+                    }
+                    else
+                        fields[fields.FindIndex((x) => x == editField)] = name + "," + content;
                     UneditableField f = new UneditableField();
-                    f.FieldName.Text = ((FieldItem)field).Name;
-                    f.FieldContent.Text = ((FieldItem)field).Content;
+                    f.FieldName.Text = name;
+                    f.FieldContent.Text = content;
                     Fields.Items.Add(f);
                     return;
                 }
             }
+        }
+
+        private void AddField_Click(object sender, RoutedEventArgs e)
+        {
+
+            Fields_Selected(this,e);
+            isAdding = true;
+            FieldItem fItem = new FieldItem();
+            Fields.Items.Add(fItem);
         }
     }
 }
