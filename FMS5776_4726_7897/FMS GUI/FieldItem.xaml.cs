@@ -29,12 +29,12 @@ namespace FMS_GUI
 
         private void name_LostFocus(object sender, RoutedEventArgs e)
         {
-            Name = ((TextBox)sender).Text.ToString();
+            Name = name.GetText();
         }
 
         private void content_LostFocus(object sender, RoutedEventArgs e)
         {
-            Content = ((TextBox)sender).Text.ToString();
+            Content = content.GetText();
         }
     }
 }

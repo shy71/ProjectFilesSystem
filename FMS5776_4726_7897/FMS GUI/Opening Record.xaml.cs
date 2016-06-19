@@ -66,9 +66,9 @@ namespace FMS_GUI
             Fields.Items.RemoveAt(Fields.SelectedIndex);
             FieldItem fItem = new FieldItem();
             fItem.Name = name;
-            fItem.name.Text = name;
+            fItem.name.SetText(name);
             fItem.Content = content;
-            fItem.content.Text = content;
+            fItem.content.SetText(content);
             Fields.Items.Insert(index, fItem);
         }
         private void Refresh()
