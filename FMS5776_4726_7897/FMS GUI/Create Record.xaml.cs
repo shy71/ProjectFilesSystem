@@ -65,14 +65,14 @@ namespace FMS_GUI
                         {
                             goodKey = false;
                             MessageBox.Show("That is an invalid key, since it must be of integer type.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                            break;
+                            return;
                         }
                     }
                     if(f.Content.Length != dirEntry.KeySize)
                     {
                         goodlength = false;
                         MessageBox.Show("That is an invalid key, since it must be The correct length.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                        break;
+                        return;
                     }
                     //Maybe add relevence to the offset. for now we always just put the key field in the begining, therefore we want the offset to always be 0. so we'll just have to show the teacher it that way
                 }

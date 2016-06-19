@@ -49,6 +49,11 @@ namespace FMS_GUI
         }
         private void EditField_Click(object sender, RoutedEventArgs e)
         {
+            if(Fields.SelectedItem == null)
+            {
+                MessageBox.Show("You haven't seleted anything to edit.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
             string name = ((UneditableField)Fields.SelectedItem).FieldName.Text;
             string content = ((UneditableField)Fields.SelectedItem).FieldContent.Text;
             int index = Fields.SelectedIndex;
