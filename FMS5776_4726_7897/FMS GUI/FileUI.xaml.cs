@@ -82,10 +82,10 @@ namespace FMS_GUI
             try
             {
                 string key = (string)RecordsList.SelectedItem;
+                string record;
                 fcb.SeekRecord(0, 0);
                 while (true)
                 {
-                    string record;
                     if(fcb.GetDirEntry().EofRecNum != fcb.GetCurrentRecordNumber())
                         fcb.ReadRecord(out record, (int)fcb.GetDirEntry().MaxRecSize, 1);
                     else
@@ -113,6 +113,7 @@ namespace FMS_GUI
                     }
                     else
                         fcb.UpdateRecCancel();
+                    fcb.ReadRecord(out record, (int)fcb.GetDirEntry().MaxRecSize);
                 }
             }
             catch
