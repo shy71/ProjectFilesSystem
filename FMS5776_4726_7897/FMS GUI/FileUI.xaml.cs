@@ -151,7 +151,7 @@ namespace FMS_GUI
             try
             {
                 fcb.SeekRecord(0, 0);
-                string key = (string)RecordsList.SelectedItem,record;
+                string key = RecordsList.SelectedItem.ToString().Substring("Record: ".Length), record;
                 while (true)
                 {
                     if (fcb.GetDirEntry().EofRecNum != fcb.GetCurrentRecordNumber())
@@ -181,6 +181,11 @@ namespace FMS_GUI
             {
                 fcb.SeekRecord(0, 0);
             }
+        }
+
+        private void RecordsList_PreviewMouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            OpenRec_Click(sender, null);
         }
 
     }

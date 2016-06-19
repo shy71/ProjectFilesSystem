@@ -11,6 +11,6 @@
             <MenuItem x:Name="OpenRec" Header="_Open" HorizontalAlignment="Right" Width="45" Click="OpenRec_Click"/>
             <MenuItem x:Name="DeleteRec" Header="_Delete" HorizontalAlignment="Right" Width="50" Click="DeleteRec_Click"/>
         </Menu>
-        <ListBox x:Name="RecordsList" Grid.Row="0" Margin="0,28,0,0"/>
+        <ListBox x:Name="RecordsList" Grid.Row="0" Margin="0,28,0,0" PreviewMouseDoubleClick="RecordsList_PreviewMouseDoubleClick"/>
     </Grid>
 </Window>
