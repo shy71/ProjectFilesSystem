@@ -23,6 +23,7 @@ namespace FMS_GUI
         int maxSize;
         StringBuilder record;
         string editField;
+        bool isAdding;
         public Opening_Record()
         {
             InitializeComponent();
@@ -33,6 +34,7 @@ namespace FMS_GUI
             this.maxSize = maxSize;
             record = curRecord;
             editField = "";
+            isAdding = false;
             fields = new List<string>(record.ToString().Split('.'));
             fields.RemoveAll(x => x == "");
             Key.FieldName.Text = (fields[0].Split(','))[0];
@@ -117,7 +119,13 @@ namespace FMS_GUI
                 {
                     int index = Fields.Items.IndexOf(field);
                     Fields.Items.RemoveAt(index);
-                    fields[fields.FindIndex((x) => x == editField)] = ((FieldItem)field).Name + "," + ((FieldItem)field).Content;
+                    if (isAdding)
+                    {
+                        fields.Add(((FieldItem)field).Name + "," + ((FieldItem)field).Content);
+                        isAdding = false;
+                    }
+                    else
+                        fields[fields.FindIndex((x) => x == editField)] = ((FieldItem)field).Name + "," + ((FieldItem)field).Content;
                     UneditableField f = new UneditableField();
                     f.FieldName.Text = ((FieldItem)field).Name;
                     f.FieldContent.Text = ((FieldItem)field).Content;
@@ -129,6 +137,10 @@ namespace FMS_GUI
 
         private void AddField_Click(object sender, RoutedEventArgs e)
         {
+            Fields_Selected(this,e);
+            isAdding = true;
+            FieldItem fItem = new FieldItem();
+            Fields.Items.Add(fItem);
         }
     }
 }
