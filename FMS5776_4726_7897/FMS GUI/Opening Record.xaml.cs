@@ -48,7 +48,7 @@ namespace FMS_GUI
             EditField.Visibility = Visibility.Collapsed;
             AddField.Visibility = Visibility.Collapsed;
             Done.Click += DoneReadOnly;
-
+            Done.Click -= Done_Click;
         }
         public void DoneReadOnly(object sender, EventArgs e)
         {
