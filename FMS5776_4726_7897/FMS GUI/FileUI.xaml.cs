@@ -137,5 +137,10 @@ namespace FMS_GUI
             }
         }
 
+        private void DeleteRec_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
     }
 }
