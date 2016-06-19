@@ -177,10 +177,6 @@ namespace FMS_GUI
                 MessageBox.Show(exception.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 fcb.SeekRecord(0, 0);
             }
-            catch
-            {
-                fcb.SeekRecord(0, 0);
-            }
         }
 
         private void RecordsList_PreviewMouseDoubleClick(object sender, MouseButtonEventArgs e)

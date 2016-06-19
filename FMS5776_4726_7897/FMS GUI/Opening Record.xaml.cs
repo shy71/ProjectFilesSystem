@@ -27,7 +27,7 @@ namespace FMS_GUI
         {
             InitializeComponent();
         }
-        public Opening_Record(ref StringBuilder curRecord,int maxSize)
+        public Opening_Record(ref StringBuilder curRecord, int maxSize)
         {
             InitializeComponent();
             this.maxSize = maxSize;
@@ -54,7 +54,7 @@ namespace FMS_GUI
         }
         private void EditField_Click(object sender, RoutedEventArgs e)
         {
-            if(Fields.SelectedItem == null)
+            if (Fields.SelectedItem == null)
             {
                 MessageBox.Show("You haven't seleted anything to edit.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
@@ -74,7 +74,7 @@ namespace FMS_GUI
         private void Refresh()
         {
             Fields.Items.Clear();
-            foreach(string field in fields)
+            foreach (string field in fields)
             {
                 UneditableField f = new UneditableField();
                 f.FieldName.Text = field.Split(',')[0];
@@ -85,11 +85,11 @@ namespace FMS_GUI
         private void Done_Click(object sender, RoutedEventArgs e)
         {
             MessageBoxResult res = MessageBox.Show("Would you like to save the changes you made? (if you made any)", "Save Changes", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
-            if(res == MessageBoxResult.Cancel)
+            if (res == MessageBoxResult.Cancel)
             {
                 return;
             }
-            else if(res == MessageBoxResult.No)
+            else if (res == MessageBoxResult.No)
             {
                 this.Close();
             }
@@ -98,11 +98,11 @@ namespace FMS_GUI
                 Fields_Selected(this, e);
                 record.Clear();
                 record.Append(Key.FieldName.Text + "," + Key.FieldContent.Text + ".");
-                foreach(string field in fields)
+                foreach (string field in fields)
                     record.Append(field.Split(',')[0] + "," + field.Split(',')[1] + ".");
-                if(record.Length > maxSize)
+                if (record.Length > maxSize)
                 {
-                    MessageBox.Show("Your record is too big.\nRecord maximum size exceeded.","Record maximum size exceeded",MessageBoxButton.OK,MessageBoxImage.Error);
+                    MessageBox.Show("Your record is too big.\nRecord maximum size exceeded.", "Record maximum size exceeded", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
                 this.Close();
@@ -111,7 +111,7 @@ namespace FMS_GUI
 
         private void Fields_Selected(object sender, RoutedEventArgs e)
         {
-            foreach(UserControl field in Fields.Items)
+            foreach (UserControl field in Fields.Items)
             {
                 if (field.GetType() == typeof(FieldItem))
                 {
@@ -125,6 +125,10 @@ namespace FMS_GUI
                     return;
                 }
             }
+        }
+
+        private void AddField_Click(object sender, RoutedEventArgs e)
+        {
         }
     }
 }
