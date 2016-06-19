@@ -118,17 +118,18 @@ namespace FMS_GUI
                 if (field.GetType() == typeof(FieldItem))
                 {
                     int index = Fields.Items.IndexOf(field);
+                    string name = ((FieldItem)field).name.textBox.Text, content = ((FieldItem)field).content.textBox.Text;
                     Fields.Items.RemoveAt(index);
                     if (isAdding)
                     {
-                        fields.Add(((FieldItem)field).Name + "," + ((FieldItem)field).Content);
+                        fields.Add(name + "," + content);
                         isAdding = false;
                     }
                     else
-                        fields[fields.FindIndex((x) => x == editField)] = ((FieldItem)field).Name + "," + ((FieldItem)field).Content;
+                        fields[fields.FindIndex((x) => x == editField)] = name + "," + content;
                     UneditableField f = new UneditableField();
-                    f.FieldName.Text = ((FieldItem)field).Name;
-                    f.FieldContent.Text = ((FieldItem)field).Content;
+                    f.FieldName.Text = name;
+                    f.FieldContent.Text = content;
                     Fields.Items.Add(f);
                     return;
                 }
@@ -137,6 +138,7 @@ namespace FMS_GUI
 
         private void AddField_Click(object sender, RoutedEventArgs e)
         {
+
             Fields_Selected(this,e);
             isAdding = true;
             FieldItem fItem = new FieldItem();
