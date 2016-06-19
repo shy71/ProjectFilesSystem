@@ -118,9 +118,9 @@ namespace FMS_GUI
         {
             try
             {
-            if(Username==null)
-                throw new Exception("You need to enter your username!");
-            new FileUI(d, name, Username, "IO").ShowDialog();//fix for any owner
+                if(Username==null)
+                    throw new Exception("You need to enter your username!");
+                new FileUI(d, name, Username, "IO").ShowDialog();//fix for any owner
             }
             catch (Exception ex)
             {
