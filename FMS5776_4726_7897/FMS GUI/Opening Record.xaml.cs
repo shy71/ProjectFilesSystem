@@ -47,7 +47,12 @@ namespace FMS_GUI
             DelField.Visibility = Visibility.Collapsed;
             EditField.Visibility = Visibility.Collapsed;
             AddField.Visibility = Visibility.Collapsed;
+            Done.Click += DoneReadOnly;
 
+        }
+        public void DoneReadOnly(object sender, EventArgs e)
+        {
+            this.Close();
         }
         private void DelField_Click(object sender, RoutedEventArgs e)
         {
