@@ -158,7 +158,7 @@ namespace FMS_GUI
                         fcb.ReadRecord(out record, (int)fcb.GetDirEntry().MaxRecSize, 1);
                     else
                     {
-                        MessageBox.Show("The file couldn't be found...", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        MessageBox.Show("The record couldn't be found...", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                         return;
                     }
                     if (Key(record) == key)
