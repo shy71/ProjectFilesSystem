@@ -170,6 +170,7 @@ namespace FMS_adapter
         {
             try
             {
+                if(this.myDiskPointer.ToString()!="0")
                 cppToCsharpAdapter.UnmountDisk(this.myDiskPointer);
             }
             catch (SEHException)

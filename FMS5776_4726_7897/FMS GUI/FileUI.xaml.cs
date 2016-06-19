@@ -43,6 +43,12 @@ namespace FMS_GUI
             InitializeComponent();
             fcb = d.OpenFile(name, owner, openMode);
             Refresh();
+            if (openMode == "I")
+            {
+                CreateRec.Visibility = Visibility.Collapsed;
+                DeleteRec.Visibility = Visibility.Collapsed;
+                OpenRec.Click += OpenRecReadOnly;
+            }
         }
         private void Refresh()
         {
@@ -78,6 +84,29 @@ namespace FMS_GUI
             {
                 fcb.SeekRecord(0, 0);
             }
+        }
+        private void OpenRecReadOnly(object sender, RoutedEventArgs e)
+        {
+                string key = RecordsList.SelectedItem.ToString().Substring("Record: ".Length);
+                string record;
+                fcb.SeekRecord(0, 0);
+                while (true)
+                {
+                    if (fcb.GetDirEntry().EofRecNum != fcb.GetCurrentRecordNumber())
+                        fcb.ReadRecord(out record, (int)fcb.GetDirEntry().MaxRecSize, 0);
+                    else
+                    {
+                        MessageBox.Show("The file couldn't be found...", "Error", MessageBoxButton.OK, MessageBoxImage.Error);//to change to exp
+                        return;
+                    }
+                    if (RecordExists(record))
+                        if (Key(record) == key)
+                        {
+                            StringBuilder recbuilder = new StringBuilder(record);
+                            new Opening_Record(ref recbuilder, (int)fcb.GetDirEntry().MaxRecSize,true).ShowDialog();
+                            return;
+                        }
+                }
         }
         private void OpenRec_Click(object sender, RoutedEventArgs e)
         {

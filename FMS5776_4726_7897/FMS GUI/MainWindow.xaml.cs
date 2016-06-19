@@ -77,11 +77,13 @@ namespace FMS_GUI
                 else
                     str="."+(myList.Items.GetItemAt(0) as ItemPanel).Parent;
                 var wr = new ItemPanel(name+str,true);
+                (myList.Items.GetItemAt(0) as ItemPanel).Clear();
                 myList.Items.Clear();
                 wr.DoubleClick += OpenDisk;
                 myList.Items.Add(wr);
                 adr.SetText(adr.GetText() + name + "\\");
                 UserName_Changed(UserName, null);
+                FormatBtn.Visibility = Visibility.Hidden;
             }
             catch (Exception e)
             {
@@ -93,11 +95,13 @@ namespace FMS_GUI
             try
             {
                 var wr = new ItemPanel(name,(myList.Items.GetItemAt(0) as ItemPanel).Parent);
+                (myList.Items.GetItemAt(0) as ItemPanel).Clear();
                 myList.Items.Clear();              
                 wr.DoubleClick += OpenFile;
                 myList.Items.Add(wr);
                 adr.SetText(adr.GetText() + name + "\\");
                 UserName_Changed(UserName, null);
+                FormatBtn.Visibility = Visibility.Visible;
             }
             catch (Exception e)
             {
@@ -110,6 +114,7 @@ namespace FMS_GUI
             {
                 //myList.Items.Clear();
                 adr.SetText(adr.GetText() + (sender as Button).Name + "\\");
+                FormatBtn.Visibility = Visibility.Hidden;
             }
             catch (Exception ex)
             {
@@ -176,6 +181,7 @@ namespace FMS_GUI
                     MessageBox.Show("Disk name: " + d.GetName()
                                   + "\nDisk owner: " + d.GetOwner()
                                   + "\nCreation date: " + d.GetCreationDate()
+                                  +((d.GetFormatDate()==null)?"":"\nFormat Date: " +d.GetFormatDate())
                                   + "\n" + App.NumByteToString(d.HowMuchEmpty() * 1020) + " free of " + App.NumByteToString(1024 * 1600), "Properties", MessageBoxButton.OK, MessageBoxImage.Information);
                 d.UnmountDisk();
                 }
@@ -208,16 +214,19 @@ namespace FMS_GUI
                     MessageBox.Show("You are already in the root level");
                 else if ((myList.Items.GetItemAt(0) as ItemPanel).Parent.Count(x => x == '.') == 0 && (myList.Items.GetItemAt(0) as ItemPanel).InFolder())
                 {
+                    (myList.Items.GetItemAt(0) as ItemPanel).Clear();
                     myList.Items.Clear();
                     var wr = new ItemPanel();
                     wr.DoubleClick += OpenDisk;
                     adr.SetText("C:\\");
                     myList.Items.Add(wr);
                     UserName_Changed(UserName, null);
+                    FormatBtn.Visibility = Visibility.Hidden;
                 }
                 else if ((myList.Items.GetItemAt(0) as ItemPanel).Parent!="")
                 {
                     var wr = new ItemPanel((myList.Items.GetItemAt(0) as ItemPanel).Parent.Substring(((myList.Items.GetItemAt(0) as ItemPanel).InFolder())?(myList.Items.GetItemAt(0) as ItemPanel).Parent.IndexOf(".") + 1:0), true);
+                    (myList.Items.GetItemAt(0) as ItemPanel).Clear();
                     myList.Items.Clear();
                     wr.DoubleClick += OpenDisk;
                     string addr="";//="C:\\";
@@ -228,16 +237,20 @@ namespace FMS_GUI
                     adr.SetText("C:\\" + addr);
                     myList.Items.Add(wr);
                     UserName_Changed(UserName, null);
+                    FormatBtn.Visibility = Visibility.Hidden;
                 }
 
                 else
                 {
+                    (myList.Items.GetItemAt(0) as ItemPanel).Clear();
                     myList.Items.Clear();
                     var wr = new ItemPanel();
                     wr.DoubleClick += OpenDisk;
                     adr.SetText("C:\\");
                     myList.Items.Add(wr);
                     UserName_Changed(UserName, null);
+                    FormatBtn.Visibility = Visibility.Hidden;
+
                 }
             }
             catch (Exception ex)
@@ -310,7 +323,27 @@ namespace FMS_GUI
 
         private void CreateFolder_Click(object sender, RoutedEventArgs e)
         {
+             try
+            {
             new NewFolder(OpenFolder).ShowDialog();
+             }
+            catch (Exception ex)
+             {
+                 MessageBox.Show(ex.Message);
+             }
         }
+
+        private void FormatBtn_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                (myList.Items.GetItemAt(0) as ItemPanel).Format();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
     }
 }

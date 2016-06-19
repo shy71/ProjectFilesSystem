@@ -6,7 +6,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <WrapPanel x:Name="win" MaxWidth="700">
+        <WrapPanel x:Name="win" MaxWidth="600">
         </WrapPanel>
     </Grid>
 </UserControl>

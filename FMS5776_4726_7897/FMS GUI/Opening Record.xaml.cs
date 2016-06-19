@@ -40,6 +40,11 @@ namespace FMS_GUI
             fields.Remove(fields[0]);
             Refresh();
         }
+        public Opening_Record(ref StringBuilder curRecord, int maxSize,bool ReadOnly):this(ref curRecord,maxSize)
+        {
+            DelField.Visibility = Visibility.Collapsed;
+            EditField.Visibility = Visibility.Collapsed;
+        }
         private void DelField_Click(object sender, RoutedEventArgs e)
         {
             if (Fields.SelectedItem == null)

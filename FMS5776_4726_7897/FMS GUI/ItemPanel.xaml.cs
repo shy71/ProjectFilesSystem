@@ -54,6 +54,15 @@ namespace FMS_GUI
             OnPropertyChanged(propertyName);
             return true;
         }
+        public void Clear()
+        {
+                        if (d != null)
+                d.UnmountDisk();
+        }
+        ~ItemPanel()
+        {
+            Clear();
+        }
         public bool InFolder()
         {
             return d == null;
@@ -120,7 +129,10 @@ namespace FMS_GUI
             {
                 if(Username==null)
                     throw new Exception("You need to enter your username!");
-                new FileUI(d, name, Username, "IO").ShowDialog();//fix for any owner
+               if(MessageBox.Show("Do you want to open it in read-only mode?", "Open Mode", MessageBoxButton.YesNo, MessageBoxImage.Question)==MessageBoxResult.Yes)
+                   new FileUI(d, name, Username, "I").ShowDialog();
+               else
+                new FileUI(d, name, Username, "IO").ShowDialog();
             }
             catch (Exception ex)
             {
@@ -189,6 +201,16 @@ namespace FMS_GUI
                     return ((DiskIcon)item.Content).name.Content.ToString();
                 }
             throw new Exception("You didnt choose anything!");
+        }
+        public void Format()
+        {
+            if (d == null)
+                throw new Exception("you cant format outside of a disk!");
+            if (Username == null)
+                throw new Exception("You need to enter your username!");
+            d.Format(Username);
+            Refresh();
+
         }
         public void Up()
         {
