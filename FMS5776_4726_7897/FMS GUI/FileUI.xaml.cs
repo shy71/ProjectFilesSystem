@@ -95,26 +95,29 @@ namespace FMS_GUI
                         MessageBox.Show("The file couldn't be found...", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                         return;
                     }
-                    if (Key(record) == key)
+                    if (RecordExists(record))
                     {
-                        StringBuilder recbuilder = new StringBuilder(record);
-                        new Opening_Record(ref recbuilder, (int)fcb.GetDirEntry().MaxRecSize).ShowDialog();
-                        if (recbuilder.ToString() != record)
+                        if (Key(record) == key)
                         {
-                            if (recbuilder.Length < fcb.GetDirEntry().MaxRecSize)
+                            StringBuilder recbuilder = new StringBuilder(record);
+                            new Opening_Record(ref recbuilder, (int)fcb.GetDirEntry().MaxRecSize).ShowDialog();
+                            if (recbuilder.ToString() != record)
                             {
-                                recbuilder.Append(new string((char)0, (int)(fcb.GetDirEntry().MaxRecSize - recbuilder.Length)));
+                                if (recbuilder.Length < fcb.GetDirEntry().MaxRecSize)
+                                {
+                                    recbuilder.Append(new string((char)0, (int)(fcb.GetDirEntry().MaxRecSize - recbuilder.Length)));
+                                }
+                                //fcb.UpdateRecord(recbuilder.ToString());
+                                fcb.UpdateRecCancel();
+                                fcb.WriteRecord(recbuilder.ToString());//update the record to its new version
                             }
-                            //fcb.UpdateRecord(recbuilder.ToString());
-                            fcb.UpdateRecCancel();
-                            fcb.WriteRecord(recbuilder.ToString());//update the record to its new version
+                            else
+                                fcb.UpdateRecCancel();
+                            return;
                         }
                         else
                             fcb.UpdateRecCancel();
-                        return;
                     }
-                    else
-                        fcb.UpdateRecCancel();
                     fcb.SeekRecord(1, 1);
                 }
             }
@@ -161,14 +164,17 @@ namespace FMS_GUI
                         MessageBox.Show("The record couldn't be found...", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                         return;
                     }
-                    if (Key(record) == key)
+                    if (RecordExists(record))
                     {
-                        fcb.DeleteRecord();
-                        Refresh();
-                        return;
+                        if (Key(record) == key)
+                        {
+                            fcb.DeleteRecord();
+                            Refresh();
+                            return;
+                        }
+                        else
+                            fcb.UpdateRecCancel();
                     }
-                    else
-                        fcb.UpdateRecCancel();
                     fcb.SeekRecord(1, 1);
                 }
             }
