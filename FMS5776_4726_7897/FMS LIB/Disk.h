@@ -29,7 +29,7 @@ public:
 	Disk(string, string, char);
 	~Disk();
 	void createDisk(string, string);//creates a disk
-	void mountDisk(string);//mounts a existing disk
+	void mountDisk(string);//mounts a existing disk 
 	void unmountDisk();//unmounts a existing disk
 	void recreateDisk(string);//recreates a certain disk
 	fstream* getdskfl();// returns the file where the disk is saved in
