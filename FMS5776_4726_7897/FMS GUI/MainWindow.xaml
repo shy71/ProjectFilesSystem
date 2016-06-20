@@ -65,7 +65,7 @@
         <ListBox x:Name="myList" Grid.Row="2" Grid.RowSpan="2" />
         <local:TextControl x:Name="adr" Grid.Row="1" IsEnabled="False"/>
         <Button x:Name="FormatBtn" Content="Format Disk" HorizontalAlignment="Right"  Grid.Row="1" Visibility="Collapsed"   Click="FormatBtn_Click" Margin="0,0,55,0" />
-        <Button Content="^" HorizontalAlignment="Right"  Grid.Row="1" Width="30"  Click="Button_Click" FontWeight="Bold" FontSize="24"/>
+        <Button Content="^" HorizontalAlignment="Right"  Grid.Row="1" Width="30"  Click="GoLevelUp_Click" FontWeight="Bold" FontSize="24"/>
         <Button Grid.Row="1" Style="{x:Null}" HorizontalAlignment="Right" Margin="0,0,30,0" Click="RefreshBtn">
             <Button.Content>
                 <Image Source="Pic\Refresh.png"/>

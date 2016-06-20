@@ -214,7 +214,7 @@ namespace FMS_GUI
                 string key = Key(record.ToString());
                 foreach (string item in RecordsList.Items)
                     if (item.Substring("Record: ".Length) == key)
-                        throw new Exception("You cant create two records with the same key!");
+                        throw new Exception("You can't create two records with the same key!");
                 string s = record.ToString() + (new string((char)0, (int)fcb.GetDirEntry().MaxRecSize - record.Length));
                 fcb.AddRecord(s);
                 Refresh();

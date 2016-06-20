@@ -158,7 +158,7 @@ void FCB::seek(unsigned int from, int recordCount)//check for situation where he
 	{
 	case 0://from beginning
 		if (recordCount < 0)
-			throw "You cant move backward from the start of the file";
+			throw "You can't move backward from the start of the file";
 		UpdatePlaceByRecordNumber(recordCount);
 
 		break;
@@ -167,7 +167,7 @@ void FCB::seek(unsigned int from, int recordCount)//check for situation where he
 		break;
 	case 2:
 		if (recordCount > 0)
-			throw "You cant move foreword from the start of the file";
+			throw "You can't move foreword from the start of the file";
 		UpdatePlaceByRecordNumber(fileDesc.eofRecNr + recordCount);
 		break;
 	default:
