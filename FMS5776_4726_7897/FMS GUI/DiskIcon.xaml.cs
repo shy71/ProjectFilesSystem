@@ -57,7 +57,7 @@ namespace FMS_GUI
             d.GetVolumeHeader();
             name.Content=d.GetName();
             bar.Value=1600-d.HowMuchEmpty();
-            barLabel.Content = App.NumByteToString(d.HowMuchEmpty() * 1020) +" free of " + App.NumByteToString(1024*1600);
+            barLabel.Content = App.NumByteToString(d.HowMuchEmpty()*2 * 1020) +" free of " + App.NumByteToString(1024*3200);
             d.UnmountDisk();
         }
     }

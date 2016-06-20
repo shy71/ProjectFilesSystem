@@ -31,13 +31,45 @@
             <MenuItem x:Name="DeleteSelectedItem" Header="_Delete" HorizontalAlignment="Right" Width="50" Click="DeleteSelectedItem_Click"/>
             <MenuItem x:Name="SelectedItemProperties" Header="_Properties" HorizontalAlignment="Right" Width="70" Click="SelectedItemProperties_Click"/>
             <MenuItem x:Name="SelectedItemOpen" Header="_Open" HorizontalAlignment="Right" Width="45" Click="OpenClick"/>
+            <MenuItem  x:Name="ExtendFile" Header="_Extend File" HorizontalAlignment="Right" Width="78" Visibility="{Binding ElementName=FormatBtn,Path=Visibility}">
+                <MenuItem x:Name="By1" Header="_By 1KB" Click="ExtendBtn_Click">
+                    <MenuItem.Icon>
+                        <Image Source="Pic\File.jpg" Width="40" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem x:Name="By10" Header="_By 10KB" Click="ExtendBtn_Click">
+                    <MenuItem.Icon>
+                        <Image Source="Pic\File.jpg" Width="40" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem x:Name="By50" Header="_By 50KB" Click="ExtendBtn_Click">
+                    <MenuItem.Icon>
+                        <Image Source="Pic\File.jpg" Width="40" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem x:Name="By100" Header="_By 100KB" Click="ExtendBtn_Click">
+                    <MenuItem.Icon>
+                        <Image Source="Pic\File.jpg" Width="40" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem x:Name="By500" Header="_By 500KB" Click="ExtendBtn_Click">
+                    <MenuItem.Icon>
+                        <Image Source="Pic\File.jpg" Width="40" />
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
             <local:TextControl x:Name="UserName" Width="127" Str="Username" Changed="UserName_Changed"/>
         </Menu>
         <TextBlock TextWrapping="Wrap"/>
 
         <ListBox x:Name="myList" Grid.Row="2" Grid.RowSpan="2" />
         <local:TextControl x:Name="adr" Grid.Row="1" IsEnabled="False"/>
-        <Button x:Name="FormatBtn" Content="Format Disk" HorizontalAlignment="Right"  Grid.Row="1"   Click="FormatBtn_Click" Margin="0,0,30,0" Visibility="Hidden"/>
+        <Button x:Name="FormatBtn" Content="Format Disk" HorizontalAlignment="Right"  Grid.Row="1" Visibility="Collapsed"   Click="FormatBtn_Click" Margin="0,0,55,0" />
         <Button Content="^" HorizontalAlignment="Right"  Grid.Row="1" Width="30"  Click="Button_Click" FontWeight="Bold" FontSize="24"/>
+        <Button Grid.Row="1" Style="{x:Null}" HorizontalAlignment="Right" Margin="0,0,30,0" Click="RefreshBtn">
+            <Button.Content>
+                <Image Source="Pic\Refresh.png"/>
+            </Button.Content>
+        </Button>
     </Grid>
 </Window>

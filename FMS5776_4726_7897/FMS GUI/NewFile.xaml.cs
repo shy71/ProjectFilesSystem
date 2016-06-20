@@ -30,7 +30,7 @@ namespace FMS_GUI
         {
             try
             {
-                d.CreateFile(name.GetText(), owner.GetText(), "F", uint.Parse(RecordSize.GetText()), ((uint)(uint.Parse(FileSize.GetText()) / 1020)) + 1, KeyType.GetText(), 0);
+                d.CreateFile(name.GetText(), owner.GetText(), "F", uint.Parse(RecordSize.GetText()), ((uint)(uint.Parse(FileSize.GetText()) / 1020)) + 1, KeyType.GetText(), 0,uint.Parse(KeySize.GetText()));
                 this.Close();
             }
             catch (Exception s)

@@ -196,7 +196,7 @@ void Disk::alloc(DATtype & fat, unsigned int numofsector, unsigned int type, uns
 	DATtype UsedData = dat.Dat;
 	try
 	{
-		UsedData.reset();
+		//UsedData.reset();
 		int j = 0;
 		if (type == 0)
 		{
@@ -219,7 +219,7 @@ void Disk::alloc(DATtype & fat, unsigned int numofsector, unsigned int type, uns
 							{
 								dat.Dat[k].flip();//to change into boolen operator
 								fat[k].flip();
-								UsedData[k].flip();
+								//UsedData[k].flip();
 
 							}
 
@@ -274,6 +274,12 @@ void Disk::createfile(string fileName, string fileOwner, string filetype, unsign
 		throw "The disk is full!";
 	if (rootDir.getEntry(fileName.c_str()) != NULL)
 		throw "A file with that name is already exits";
+	if (fileName.length() > 11)
+		throw "The file name is to long!";
+	if (fileOwner.length() > 11)
+		throw "The file owner name is to long!";
+	if (keyType != "S"&&keyType != "I")
+		throw "Unrcoginzied key type!";
 	FileHeader fheader;
 	strcpy_s(fheader.fileDesc.Filename, fileName.c_str());
 	strcpy_s(fheader.fileDesc.fileOwner, fileOwner.c_str());

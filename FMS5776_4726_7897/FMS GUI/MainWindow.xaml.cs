@@ -83,7 +83,7 @@ namespace FMS_GUI
                 myList.Items.Add(wr);
                 adr.SetText(adr.GetText() + name + "\\");
                 UserName_Changed(UserName, null);
-                FormatBtn.Visibility = Visibility.Hidden;
+                FormatBtn.Visibility = Visibility.Collapsed;
             }
             catch (Exception e)
             {
@@ -114,7 +114,7 @@ namespace FMS_GUI
             {
                 //myList.Items.Clear();
                 adr.SetText(adr.GetText() + (sender as Button).Name + "\\");
-                FormatBtn.Visibility = Visibility.Hidden;
+                FormatBtn.Visibility = Visibility.Collapsed;
             }
             catch (Exception ex)
             {
@@ -182,7 +182,7 @@ namespace FMS_GUI
                                   + "\nDisk owner: " + d.GetOwner()
                                   + "\nCreation date: " + d.GetCreationDate()
                                   +((d.GetFormatDate()==null)?"":"\nFormat Date: " +d.GetFormatDate())
-                                  + "\n" + App.NumByteToString(d.HowMuchEmpty() * 1020) + " free of " + App.NumByteToString(1024 * 1600), "Properties", MessageBoxButton.OK, MessageBoxImage.Information);
+                                  + "\n" + App.NumByteToString(d.HowMuchEmpty()*2 * 1020) + " free of " + App.NumByteToString(1024 * 3200), "Properties", MessageBoxButton.OK, MessageBoxImage.Information);
                 d.UnmountDisk();
                 }
                 else //file type
@@ -194,8 +194,9 @@ namespace FMS_GUI
                                             + "\nFile owner: " + entry.FileOwner
                                             + "\nFile Size: " + App.NumByteToString(entry.FileSize * 1020)
                                             + "\nCreation date: " + entry.CrDate
-                                            +"\nRecord Size: " + entry.MaxRecSize
+                                            + "\nRecord Size: " + entry.MaxRecSize
                                             + "\nFile key type: " + ((entry.KeyType == "I") ? "integer" : "string")
+                                            + "\nFile key size: " + entry.KeySize
                                             + "\n" + App.NumByteToString(1020 * entry.FileSize - entry.EofRecNum * entry.MaxRecSize) + " free of " + App.NumByteToString(1020 * entry.FileSize), "Properties", MessageBoxButton.OK, MessageBoxImage.Information);
                     fcb.CloseFile();
                 }
@@ -221,7 +222,7 @@ namespace FMS_GUI
                     adr.SetText("C:\\");
                     myList.Items.Add(wr);
                     UserName_Changed(UserName, null);
-                    FormatBtn.Visibility = Visibility.Hidden;
+                    FormatBtn.Visibility = Visibility.Collapsed;
                 }
                 else if ((myList.Items.GetItemAt(0) as ItemPanel).Parent!="")
                 {
@@ -237,11 +238,14 @@ namespace FMS_GUI
                     adr.SetText("C:\\" + addr);
                     myList.Items.Add(wr);
                     UserName_Changed(UserName, null);
-                    FormatBtn.Visibility = Visibility.Hidden;
+                    FormatBtn.Visibility = Visibility.Collapsed;
                 }
 
                 else
                 {
+                    foreach (Window item in App.Current.Windows)
+                        if (item.GetType() == typeof(FileUI))
+                            item.Close();
                     (myList.Items.GetItemAt(0) as ItemPanel).Clear();
                     myList.Items.Clear();
                     var wr = new ItemPanel();
@@ -249,7 +253,7 @@ namespace FMS_GUI
                     adr.SetText("C:\\");
                     myList.Items.Add(wr);
                     UserName_Changed(UserName, null);
-                    FormatBtn.Visibility = Visibility.Hidden;
+                    FormatBtn.Visibility = Visibility.Collapsed;
 
                 }
             }
@@ -338,6 +342,30 @@ namespace FMS_GUI
             try
             {
                 (myList.Items.GetItemAt(0) as ItemPanel).Format();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void RefreshBtn(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                (myList.Items.GetItemAt(0) as ItemPanel).Refresh();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void ExtendBtn_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                (myList.Items.GetItemAt(0) as ItemPanel).Extend(int.Parse((sender as MenuItem).Name.Substring("By".Length)));
             }
             catch (Exception ex)
             {

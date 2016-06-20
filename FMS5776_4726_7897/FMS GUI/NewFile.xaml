@@ -14,9 +14,10 @@
         <Label Content="Create new file!" HorizontalAlignment="Center" FontFamily="Bold"/>
         <local:TextControl x:Name="name"  Grid.Row="1" Str="File Name"/>
         <local:TextControl x:Name="owner" Grid.Row="2" Str="File Owner Name"/>
-        <local:TextControl x:Name="RecordSize" Str="Record Size(B)" HorizontalAlignment="Left" Width="98" Grid.Row="3"/>
-        <local:TextControl x:Name="FileSize" Str="File Size(B)" HorizontalAlignment="Center" Width="98" Grid.Row="3"/>
-        <local:TextControl x:Name="KeyType" Str="I(ntger)/S(tring)" HorizontalAlignment="Right" Width="98" Grid.Row="3"/>
+        <local:TextControl x:Name="RecordSize" Str="Record Size(B)" HorizontalAlignment="Left" Width="89" Grid.Row="3"/>
+        <local:TextControl x:Name="FileSize" Str="File Size(B)" HorizontalAlignment="Center" Width="70" Grid.Row="3" Margin="89,0,133,0"/>
+        <local:TextControl x:Name="KeyType" Str="I/S (Key)" HorizontalAlignment="Right" Width="57" Grid.Row="3" Margin="0,0,76,0" ToolTip="I(ntger)/S(tring)"/>
+        <local:TextControl x:Name="KeySize" Str="Key Size" HorizontalAlignment="Right" Width="76" Grid.Row="3"/>
         <Button Content="Create" Grid.Row="4" Click="Create_Click">
             <Button.Style>
                 <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
@@ -34,6 +35,9 @@
                             <Setter Property="Button.IsEnabled" Value="false"/>
                         </DataTrigger>
                         <DataTrigger Binding="{Binding ElementName=KeyType, Path=ForeG}" Value="Gray">
+                            <Setter Property="Button.IsEnabled" Value="false"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding ElementName=KeySize, Path=ForeG}" Value="Gray">
                             <Setter Property="Button.IsEnabled" Value="false"/>
                         </DataTrigger>
                     </Style.Triggers>

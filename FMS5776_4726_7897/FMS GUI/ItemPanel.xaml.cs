@@ -56,7 +56,7 @@ namespace FMS_GUI
         }
         public void Clear()
         {
-                        if (d != null)
+            if (d != null)
                 d.UnmountDisk();
         }
         ~ItemPanel()
@@ -127,12 +127,21 @@ namespace FMS_GUI
         {
             try
             {
-                if(Username==null)
+                bool ReadOnly = false;
+                if (MessageBox.Show("Do you want to open it in read-only mode?", "Open Mode", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.Yes) == MessageBoxResult.Yes)
+                    ReadOnly = true;
+                if(!ReadOnly)
+                foreach (Window item in App.Current.Windows)
+                    if (item.GetType() == typeof(FileUI))
+                        if ((item as FileUI).GetFileName() == name)
+                            if (!(item as FileUI).ReadOnly)
+                                throw new Exception("You cant open a file in wirting mode more then once!");
+                if (Username == null)
                     throw new Exception("You need to enter your username!");
-               if(MessageBox.Show("Do you want to open it in read-only mode?", "Open Mode", MessageBoxButton.YesNo, MessageBoxImage.Question)==MessageBoxResult.Yes)
-                   new FileUI(d, name, Username, "I").ShowDialog();
-               else
-                new FileUI(d, name, Username, "IO").ShowDialog();
+                if (ReadOnly)
+                    new FileUI(d, name, Username, "I").Show();
+                else
+                    new FileUI(d, name, Username, "IO").Show();
             }
             catch (Exception ex)
             {
@@ -209,6 +218,18 @@ namespace FMS_GUI
             if (Username == null)
                 throw new Exception("You need to enter your username!");
             d.Format(Username);
+            MessageBox.Show("The disk " + d.GetName() + " was format by " + Username);
+            Refresh();
+
+        }
+        public void Extend(int numKB=10)
+        {
+            if (d == null)
+                throw new Exception("you cant extend file outside of a disk!");
+            if (Username == null)
+                throw new Exception("You need to enter your username!");
+            d.ExtendFile(GetFocused(), Username,(uint)numKB);
+            MessageBox.Show("The file " + GetFocused() + " was extended!");
             Refresh();
 
         }

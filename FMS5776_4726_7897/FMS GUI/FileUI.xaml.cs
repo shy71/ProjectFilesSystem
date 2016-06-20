@@ -21,6 +21,14 @@ namespace FMS_GUI
     public partial class FileUI : Window
     {
         FCB fcb;
+        private bool readOnly;
+
+        public bool ReadOnly
+        {
+            get { return readOnly; }
+            set { readOnly = value; }
+        }
+        
         public FileUI()
         {
             InitializeComponent();
@@ -42,12 +50,14 @@ namespace FMS_GUI
         {
             InitializeComponent();
             fcb = d.OpenFile(name, owner, openMode);
+            this.Title ="File: "+ name;
             Refresh();
             if (openMode == "I")
             {
                 CreateRec.Visibility = Visibility.Collapsed;
                 DeleteRec.Visibility = Visibility.Collapsed;
                 OpenRec.Click += OpenRecReadOnly;
+                ReadOnly=true;
             }
         }
         private void Refresh()
@@ -80,13 +90,13 @@ namespace FMS_GUI
                 MessageBox.Show(e.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 fcb.SeekRecord(0, 0);
             }
-            catch
-            {
-                fcb.SeekRecord(0, 0);
-            }
         }
         private void OpenRecReadOnly(object sender, RoutedEventArgs e)
         {
+            try
+            {
+                if (RecordsList.SelectedItem == null)
+                    throw new Exception("You didnt chose anthing to be opend!");
                 string key = RecordsList.SelectedItem.ToString().Substring("Record: ".Length);
                 string record;
                 fcb.SeekRecord(0, 0);
@@ -103,15 +113,22 @@ namespace FMS_GUI
                         if (Key(record) == key)
                         {
                             StringBuilder recbuilder = new StringBuilder(record);
-                            new Opening_Record(ref recbuilder, (int)fcb.GetDirEntry().MaxRecSize,true).ShowDialog();
+                            new Opening_Record(ref recbuilder, (int)fcb.GetDirEntry().MaxRecSize, true).ShowDialog();
                             return;
                         }
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
         private void OpenRec_Click(object sender, RoutedEventArgs e)
         {
             try
             {
+                if (RecordsList.SelectedItem == null)
+                    throw new Exception("You didnt chose anthing to be opend!");
                 string key = RecordsList.SelectedItem.ToString().Substring("Record: ".Length);
                 string record;
                 fcb.SeekRecord(0, 0);
@@ -160,12 +177,17 @@ namespace FMS_GUI
                 new Create_Record(ref record, fcb.GetDirEntry()).ShowDialog();
                 if (record.Length == 0)
                     return;
+                string key = Key(record.ToString());
+                foreach (string item in RecordsList.Items)
+                    if (item.Substring("Record: ".Length) == key)
+                        throw new Exception("You cant create two records with the same key!");
                 string s = record.ToString() + (new string((char)0, (int)fcb.GetDirEntry().MaxRecSize - record.Length));
                 fcb.AddRecord(s);
                 Refresh();
             }
-            catch
+            catch(Exception ex)
             {
+                MessageBox.Show(ex.Message);
                 fcb.SeekRecord(0, 0);
             }
         }
@@ -207,10 +229,25 @@ namespace FMS_GUI
                 fcb.SeekRecord(0, 0);
             }
         }
-
+        public string GetFileName()
+        {
+            return fcb.GetDirEntry().Filename;
+        }
         private void RecordsList_PreviewMouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             OpenRec_Click(sender, null);
+        }
+
+        private void RefreshBtn(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                Refresh();
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
     }
