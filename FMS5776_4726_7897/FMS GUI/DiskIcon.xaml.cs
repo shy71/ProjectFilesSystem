@@ -28,6 +28,12 @@ namespace FMS_GUI
         }
         public DiskIcon(string str) : this(TryOpen(str)) { }
         public DiskIcon(string str,string sub) : this(TryOpen(str,sub)) { }
+        /// <summary>
+        /// tries to open a certain string that represents a disk
+        /// </summary>
+        /// <param name="str"></param>
+        /// <param name="sub"></param>
+        /// <returns></returns>
         static FMS_adapter.Disk TryOpen(string str,string sub="")
         {
             if (sub == "")

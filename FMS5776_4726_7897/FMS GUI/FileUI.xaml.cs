@@ -29,15 +29,24 @@ namespace FMS_GUI
             get { return readOnly; }
             set { readOnly = value; }
         }
-        
         public FileUI()
         {
             InitializeComponent();
         }
+        /// <summary>
+        /// returns the key from a record
+        /// </summary>
+        /// <param name="record"></param>
+        /// <returns></returns>
         public string Key(string record)
         {
             return record.Split('.')[0].Split(',')[1];
         }
+        /// <summary>
+        /// checks if the record exists
+        /// </summary>
+        /// <param name="record"></param>
+        /// <returns></returns>
         public bool RecordExists(string record)
         {
             if (record == "")
@@ -47,6 +56,13 @@ namespace FMS_GUI
                     return true;
             return false;
         }
+        /// <summary>
+        /// opens the file GUI and refreshes it
+        /// </summary>
+        /// <param name="d"></param>
+        /// <param name="name"></param>
+        /// <param name="owner"></param>
+        /// <param name="openMode"></param>
         public FileUI(Disk d,string name, string owner,string openMode)
         {
             InitializeComponent();
@@ -61,6 +77,9 @@ namespace FMS_GUI
                 ReadOnly=true;
             }
         }
+        /// <summary>
+        /// refreshes the file records in the list box
+        /// </summary>
         private void Refresh()
         {
             try
@@ -92,6 +111,11 @@ namespace FMS_GUI
                 fcb.SeekRecord(0, 0);
             }
         }
+        /// <summary>
+        /// opens a record in readonly mode
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void OpenRecReadOnly(object sender, RoutedEventArgs e)
         {
             try
@@ -124,6 +148,11 @@ namespace FMS_GUI
                 MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+        /// <summary>
+        /// opens record in regular mode
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void OpenRec_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -170,6 +199,11 @@ namespace FMS_GUI
                 fcb.SeekRecord(0, 0);
             }
         }
+        /// <summary>
+        /// creates a new record
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void CreateRec_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -192,7 +226,11 @@ namespace FMS_GUI
                 fcb.SeekRecord(0, 0);
             }
         }
-
+        /// <summary>
+        /// deletes the selected record
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void DeleteRec_Click(object sender, RoutedEventArgs e)
         {  
             if(RecordsList.SelectedItem == null)
@@ -230,15 +268,28 @@ namespace FMS_GUI
                 fcb.SeekRecord(0, 0);
             }
         }
+        /// <summary>
+        /// returns the file name
+        /// </summary>
+        /// <returns></returns>
         public string GetFileName()
         {
             return fcb.GetDirEntry().Filename;
         }
+        /// <summary>
+        /// opens a record by double clicking on it
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void RecordsList_PreviewMouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             OpenRec_Click(sender, null);
         }
-
+        /// <summary>
+        /// refreshes the file
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void RefreshBtn(object sender, RoutedEventArgs e)
         {
             try
