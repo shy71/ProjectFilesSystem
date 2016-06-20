@@ -26,12 +26,20 @@ namespace FMS_GUI
             InitializeComponent();
             Name = Content = "";
         }
-
+        /// <summary>
+        /// sets the name of the field
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void name_LostFocus(object sender, RoutedEventArgs e)
         {
             Name = name.GetText();
         }
-
+        /// <summary>
+        /// sets the content of the field
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void content_LostFocus(object sender, RoutedEventArgs e)
         {
             Content = content.GetText();

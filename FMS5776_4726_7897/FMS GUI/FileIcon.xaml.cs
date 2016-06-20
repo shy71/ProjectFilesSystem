@@ -24,7 +24,7 @@ namespace FMS_GUI
         {
             InitializeComponent();
         }
-                /// <summary>
+        /// <summary>
         /// Create a new Disk Icon
         /// </summary>
         /// <param name="d">disk needs to be already open!</param>

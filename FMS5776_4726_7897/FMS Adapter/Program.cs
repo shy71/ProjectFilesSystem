@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 using System.Reflection;
 
+//takes out the methods from the dll file and converts them to c# format
 namespace FMS_adapter
 {
    public class cppToCsharpAdapter
@@ -114,6 +115,9 @@ namespace FMS_adapter
         public static extern void SetEnd(IntPtr THIS,string end);
         #endregion
     }
+    /// <summary>
+    /// represents a disk
+    /// </summary>
     public class Disk
     {
         IntPtr myDiskPointer;
@@ -123,6 +127,9 @@ namespace FMS_adapter
         {
             this.myDiskPointer = cppToCsharpAdapter.MakeDiskObject();
         }
+        /// <summary>
+        /// deletes a disk object
+        /// </summary>
         ~Disk()
         {
             if (myDiskPointer != null)
@@ -313,36 +320,10 @@ namespace FMS_adapter
         }
         #endregion
         #region LEVEL 4 FUNCTIONS
-        public string[] GetFileNames()
-        {
-            try
-            {
-                //VolumeHeader v = new VolumeHeader();
-                //int structSize = Marshal.SizeOf(v.GetType()); //Marshal.SizeOf(typeof(Student));  
-                //IntPtr buffer = Marshal.AllocHGlobal(structSize);
-                //Marshal.StructureToPtr(v, buffer, true);
-
-                //// ... send buffer to dll 
-                //cppToCsharpAdapter.GetVolumeHeader(this.myDiskPointer, buffer);
-                //Marshal.PtrToStructure(buffer, v);
-
-                //// free allocate 
-                //Marshal.FreeHGlobal(buffer);
-
-                //return v;
-                return null;
-            }
-            catch (SEHException)
-            {
-                IntPtr cString = cppToCsharpAdapter.GetLastDiskErrorMessage(this.myDiskPointer);
-                string message = Marshal.PtrToStringAnsi(cString);
-                throw new Exception(message);
-            }
-            catch
-            {
-                throw;
-            }
-        }
+        /// <summary>
+        /// returns the volume header of the disk
+        /// </summary>
+        /// <returns></returns>
         public VolumeHeader GetVolumeHeader()
         {
             try
@@ -386,13 +367,13 @@ namespace FMS_adapter
         public string GetFormatDate() { return vhd.FormatDate; }
         public string GetCreationDate() { return vhd.ProdDate; }
         public List<string> GetFilesNames()
-        { //למחוק ולעשות באמת
+        { 
            var s= Marshal.PtrToStringAnsi(cppToCsharpAdapter.GetFileNames(myDiskPointer)).Split(',').ToList();
            s.RemoveAt(s.Count-1);
            if (s.FirstOrDefault()==null||s.First() == "")
                s.Clear();
            return s;
-        }//לעשות
+        }
 
         #endregion
     }

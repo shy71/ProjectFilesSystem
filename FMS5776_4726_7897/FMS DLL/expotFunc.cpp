@@ -1,6 +1,8 @@
 #include"Disk.h"
 #include"FCB.h"
 
+
+//writes the functions written in lib into a dll file 
 extern "C"
 {
 	//DISK FUNCTIONS:
