@@ -9,5 +9,5 @@ struct FileHeader
 	dirEntry 	fileDesc;
 	DATtype 	FAT;
 	char 	emptyArea[752];
-	FileHeader();
+	FileHeader();//header of a file 
 };
