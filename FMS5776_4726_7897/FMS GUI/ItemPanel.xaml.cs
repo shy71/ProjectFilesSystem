@@ -125,17 +125,23 @@ namespace FMS_GUI
         }
         public void OpenFile(string name)
         {
+            FileUI win=null;
             try
             {
+             
                 bool ReadOnly = false;
                 if (MessageBox.Show("Do you want to open it in read-only mode?", "Open Mode", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.Yes) == MessageBoxResult.Yes)
                     ReadOnly = true;
-                if(!ReadOnly)
-                foreach (Window item in App.Current.Windows)
-                    if (item.GetType() == typeof(FileUI))
-                        if ((item as FileUI).GetFileName() == name)
-                            if (!(item as FileUI).ReadOnly)
-                                throw new Exception("You cant open a file in wirting mode more then once!");
+                if (!ReadOnly)
+                    foreach (Window item in App.Current.Windows)
+                        if (item.GetType() == typeof(FileUI))
+                        {
+                            if (!(item as FileUI).IsFcb())
+                                (item as FileUI).Close();
+                            else if ((item as FileUI).GetFileName() == name)
+                                if (!(item as FileUI).ReadOnly)
+                                    throw new Exception("You cant open a file in wirting mode more then once!");
+                        }
                 if (Username == null)
                     throw new Exception("You need to enter your username!");
                 if (ReadOnly)
