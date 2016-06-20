@@ -21,6 +21,7 @@ namespace FMS_GUI
     public partial class FileUI : Window
     {
         FCB fcb;
+        public bool IsFcb(){return fcb!=null;}
         private bool readOnly;
 
         public bool ReadOnly
