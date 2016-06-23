@@ -322,11 +322,32 @@ void FCB::GoToNextRecord()
 void FCB::addRecord(char *record)//need to be d
 {
 	flushFile();
-	seek(2, 0);//go to the last record
-	//check if this is the last record in the sector
-		//fileDesc.eofRecNr++;
-		//seek(2, 0);//go to end
-		write(record);
+	seek(0, 0);
+	while (currRecNr != fileDesc.eofRecNr)
+	{
+		char *rec =  new char[fileDesc.maxRecSize];
+		read(rec, 1);
+		string key = string(rec).substr(fileDesc.keyOffset, fileDesc.keySize);
+		bool exists = false;
+		for each (char c in key)
+			if (c != 0)
+			{
+				exists = true;
+				break;
+			}
+		if (!exists)
+		{
+			updateRecord(record);
+			return;
+		}
+		else
+		{
+			updateCancel();
+			seek(1, 1);
+		}
+	}
+	seek(2, 0);
+	write(record);
 
 }
 
