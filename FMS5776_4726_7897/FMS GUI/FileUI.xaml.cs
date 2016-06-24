@@ -218,7 +218,6 @@ namespace FMS_GUI
                         throw new Exception("You can't create two records with the same key!");
                 string s = record.ToString() + (new string((char)0, (int)fcb.GetDirEntry().MaxRecSize - record.Length));
                 fcb.AddRecord(s);
-                MessageBox.Show(fcb.GetDirEntry().EofRecNum.ToString());
                 Refresh();
             }
             catch(Exception ex)
