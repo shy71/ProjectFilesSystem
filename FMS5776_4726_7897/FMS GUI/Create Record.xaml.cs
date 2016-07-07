@@ -33,6 +33,9 @@ namespace FMS_GUI
             InitializeComponent();
             record = s;
         }
+        /// <summary>
+        /// fills the combobox with default wording
+        /// </summary>
         public void fillUpKeyFieldCombobox()
         {
             KeyField.Items.Clear();
@@ -42,12 +45,21 @@ namespace FMS_GUI
             if (KeyField.Items.IsEmpty)
                 KeyField.Items.Add("You done have yet any fields to chosse from!");
         }
+        /// <summary>
+        /// adds a field to the listbox
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void AddField_Click(object sender, RoutedEventArgs e)
         {
             field = new FieldItem();
             Fields.Children.Add(field);
         }
-
+        /// <summary>
+        /// checks if all the record is built well and can be added to the file
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Done_Click(object sender, RoutedEventArgs e)
         {
             record.Clear();
@@ -95,7 +107,11 @@ namespace FMS_GUI
             else
                 this.Close();
         }
-
+        /// <summary>
+        /// deletes the last field 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void EraseField_Click(object sender, RoutedEventArgs e)
         {
             Fields.Children.Remove(field);
@@ -103,7 +119,11 @@ namespace FMS_GUI
                 field = (FieldItem)Fields.Children[Fields.Children.Count - 1];
             fillUpKeyFieldCombobox();
         }
-
+        /// <summary>
+        /// reloads the combobox when it's opened 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void KeyField_DropDownOpened(object sender, EventArgs e)
         {
             fillUpKeyFieldCombobox();

@@ -32,9 +32,9 @@ public:
 	void addRecord(char *record);
 
 	//level 4
-	string& GetLastErrorMessage();
-	int FCB::UpdatePlaceByRecordNumber(int num);
-	int GetSectorNumberByIndex(int num);
-	void SetLastErrorMessage(string lastErrorMessage);
-	bool isLast(){ return currRecNr == fileDesc.eofRecNr; }
+	string& GetLastErrorMessage();//returns the message of the last error
+	int FCB::UpdatePlaceByRecordNumber(int num);//changes the curremt place by the record number
+	int GetSectorNumberByIndex(int num);//get the sector number by the index
+	void SetLastErrorMessage(string lastErrorMessage);//sets the message of the error that last occured
+	bool isLast(){ return currRecNr == fileDesc.eofRecNr; }//checks if the current record is the last one
 };

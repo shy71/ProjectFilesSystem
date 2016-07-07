@@ -39,6 +39,11 @@ namespace FMS_GUI
             }
 
         }
+        /// <summary>
+        /// returns a list of all the disk names
+        /// </summary>
+        /// <param name="parentSub"></param>
+        /// <returns></returns>
         static public List<string> GetDisksNames(string parentSub ="" )
         {
             if(parentSub=="")
@@ -46,6 +51,11 @@ namespace FMS_GUI
             else
                 return Directory.GetFiles("../Debug/").Select(x => x.Substring(x.IndexOf('.') + 9)).Where(x => x.Contains(".dsk") &&x.Length>parentSub.Length&& x.Substring(x.Length-parentSub.Length) == parentSub).Select(y => y.Substring(0, y.Length-parentSub.Length-1)).Where(x => x.Substring(x.Length - 4) == ".dsk").Select(y => y.Substring(0, y.IndexOf(".dsk"))).ToList();
         }
+        /// <summary>
+        /// returns all the names of the folder names
+        /// </summary>
+        /// <param name="parentSub"></param>
+        /// <returns></returns>
         static public List<string> GetFolderNames(string parentSub = "")
         {
             if (parentSub == "")
@@ -53,6 +63,11 @@ namespace FMS_GUI
             else
                 return Directory.GetFiles("../Debug/").Where(x => x.Contains(".dsk") &&x.Length>parentSub.Length&& x.Substring(x.Length - parentSub.Length) == parentSub).Select(y => y.Substring(0, y.Length - parentSub.Length-1)).Where(x => x.Substring(x.Length - 4) != ".dsk").Select(y => y.Substring(y.LastIndexOf(".") + 1)).Distinct().ToList();
         }
+        /// <summary>
+        /// open a disk
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void OpenDisk(object sender, EventArgs e)
         {
             try
@@ -67,6 +82,10 @@ namespace FMS_GUI
                 MessageBox.Show(ex.Message);
             }
         }
+        /// <summary>
+        /// opens a folder
+        /// </summary>
+        /// <param name="name"></param>
         private void OpenFolder(string name)
         {
             try
@@ -90,6 +109,10 @@ namespace FMS_GUI
                 MessageBox.Show(e.Message);
             }
         }
+        /// <summary>
+        /// opens a disk by its name
+        /// </summary>
+        /// <param name="name"></param>
         private void OpenDisk(string name)
         {
             try
@@ -108,6 +131,11 @@ namespace FMS_GUI
                 MessageBox.Show(e.Message);
             }
         }
+        /// <summary>
+        /// opens a file
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void OpenFile(object sender, EventArgs e)
         {
             try
@@ -121,6 +149,11 @@ namespace FMS_GUI
                 MessageBox.Show(ex.Message);
             }
         }
+        /// <summary>
+        /// creates a new disk
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void CreteDskMenu_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -131,7 +164,7 @@ namespace FMS_GUI
                     (myList.Items.GetItemAt(0) as ItemPanel).Refresh();
                 }
                 else
-                    MessageBox.Show("You cant cretae a new disk from inside a file");
+                    MessageBox.Show("You can't create a new disk from inside a file");
             }
             catch (Exception ex)
             {
@@ -139,6 +172,11 @@ namespace FMS_GUI
             }
 
         }
+       /// <summary>
+       /// creates a new file
+       /// </summary>
+       /// <param name="sender"></param>
+       /// <param name="e"></param>
         private void CreteNewFile_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -151,7 +189,11 @@ namespace FMS_GUI
             }
 
         }
-
+        /// <summary>
+        /// opens the properties of the selected
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void SelectedItemProperties_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -206,8 +248,12 @@ namespace FMS_GUI
                 MessageBox.Show(ex.Message);
             }
         }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// goes up a level by pressing on the button
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void GoLevelUp_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -262,7 +308,11 @@ namespace FMS_GUI
                 MessageBox.Show(ex.Message);
             }
         }
-
+        /// <summary>
+        /// deletes the selected item
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void DeleteSelectedItem_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -296,6 +346,11 @@ namespace FMS_GUI
                 MessageBox.Show(ex.Message);
             }
         }
+        /// <summary>
+        /// opens the current 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void OpenClick(object sender, RoutedEventArgs e)
         {
             try
@@ -312,7 +367,6 @@ namespace FMS_GUI
                 MessageBox.Show(ex.Message);
             }
         }
-
         private void UserName_Changed(object sender, EventValue e)
         {
             try

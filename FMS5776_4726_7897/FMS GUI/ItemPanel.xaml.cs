@@ -23,7 +23,7 @@ namespace FMS_GUI
     /// </summary>
     public partial class ItemPanel : UserControl
     {
-        Disk d = null;//לדאוג לסגור
+        Disk d = null;
         private string username;
             
         public string Username
@@ -38,22 +38,21 @@ namespace FMS_GUI
             get { return parent; }
             set { parent = value; }
         }
-        
         public event EventHandler DoubleClick;
 
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
-        }
-        protected bool SetField<T>(ref T field, T value, string propertyName)
-        {
-            if (EqualityComparer<T>.Default.Equals(field, value)) return false;
-            field = value;
-            OnPropertyChanged(propertyName);
-            return true;
-        }
+        //public event PropertyChangedEventHandler PropertyChanged;
+        //protected virtual void OnPropertyChanged(string propertyName)
+        //{
+        //    PropertyChangedEventHandler handler = PropertyChanged;
+        //    if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
+        //}
+        //protected bool SetField<T>(ref T field, T value, string propertyName)
+        //{
+        //    if (EqualityComparer<T>.Default.Equals(field, value)) return false;
+        //    field = value;
+        //    OnPropertyChanged(propertyName);
+        //    return true;
+        //}
         public void Clear()
         {
             if (d != null)
@@ -78,6 +77,10 @@ namespace FMS_GUI
             InitializeComponent();
             Refresh();
         }
+        /// <summary>
+        /// refreshes the panel
+        /// </summary>
+        /// <param name="ParentSub"></param>
         public void Refresh(string ParentSub="")
         {
             ParentSub = Parent;
@@ -123,19 +126,29 @@ namespace FMS_GUI
         {
             OpenFile((sender as Button).Name);
         }
+        /// <summary>
+        /// opens a file
+        /// </summary>
+        /// <param name="name"></param>
         public void OpenFile(string name)
         {
+            FileUI win=null;
             try
             {
+             
                 bool ReadOnly = false;
                 if (MessageBox.Show("Do you want to open it in read-only mode?", "Open Mode", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.Yes) == MessageBoxResult.Yes)
                     ReadOnly = true;
-                if(!ReadOnly)
+                if (!ReadOnly)
                 foreach (Window item in App.Current.Windows)
                     if (item.GetType() == typeof(FileUI))
-                        if ((item as FileUI).GetFileName() == name)
+                        {
+                            if (!(item as FileUI).IsFcb())
+                                (item as FileUI).Close();
+                            else if ((item as FileUI).GetFileName() == name)
                             if (!(item as FileUI).ReadOnly)
-                                throw new Exception("You cant open a file in wirting mode more then once!");
+                                    throw new Exception("You cant open a file in wirting mode more then once!");
+                        }
                 if (Username == null)
                     throw new Exception("You need to enter your username!");
                 if (ReadOnly)
@@ -185,6 +198,10 @@ namespace FMS_GUI
                 Refresh();
             }
         }
+        /// <summary>
+        /// the selected item is a folder
+        /// </summary>
+        /// <returns></returns>
         public bool FolderFocused()
         {
             foreach (Button item in win.Children)
@@ -198,6 +215,10 @@ namespace FMS_GUI
                 }
             throw new Exception("You didnt choose anything!");
         }
+        /// <summary>
+        /// returns the name of the selected item
+        /// </summary>
+        /// <returns></returns>
         public string GetFocused()
         {
             foreach (Button item in win.Children)
@@ -211,21 +232,27 @@ namespace FMS_GUI
                 }
             throw new Exception("You didnt choose anything!");
         }
+        /// <summary>
+        /// formats the disk
+        /// </summary>
         public void Format()
         {
             if (d == null)
-                throw new Exception("you cant format outside of a disk!");
+                throw new Exception("you can't format outside of a disk!");
             if (Username == null)
                 throw new Exception("You need to enter your username!");
             d.Format(Username);
             MessageBox.Show("The disk " + d.GetName() + " was format by " + Username);
             Refresh();
-
         }
+        /// <summary>
+        /// extends the file by a specific size
+        /// </summary>
+        /// <param name="numKB"></param>
         public void Extend(int numKB=10)
         {
             if (d == null)
-                throw new Exception("you cant extend file outside of a disk!");
+                throw new Exception("you can't extend file outside of a disk!");
             if (Username == null)
                 throw new Exception("You need to enter your username!");
             d.ExtendFile(GetFocused(), Username,(uint)numKB);
@@ -233,10 +260,13 @@ namespace FMS_GUI
             Refresh();
 
         }
+        /// <summary>
+        /// goes out of the current level if possible
+        /// </summary>
         public void Up()
         {
             if(d==null)
-                throw new Exception("You cant go higher! you are already in root level!");
+                throw new Exception("You can't go higher! you are already in root level!");
             else
             {
                 d.UnmountDisk();
