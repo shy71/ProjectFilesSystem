@@ -30,9 +30,6 @@ public:
 	void deleteRecord();
 	void updateRecord(char* update);
 	void addRecord(char *record);
-	//support functions
-	void GoToNextRecord();
-	void MoveRecord(int num);
 
 	//level 4
 	string& GetLastErrorMessage();

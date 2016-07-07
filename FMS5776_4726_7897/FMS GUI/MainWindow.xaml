@@ -12,17 +12,17 @@
 
         <Menu HorizontalAlignment="Left" Height="23" VerticalAlignment="Top" Width="517" Panel.ZIndex="1">
             <MenuItem Header="_File" Width="37">
-                <MenuItem x:Name="CreteDskMenu" Header="_Create Disk" Click="CreteDskMenu_Click">
+                <MenuItem x:Name="CreteDskMenu" Header="_Create Disk" Click="CreteDskMenu_Click" Visibility="{Binding ElementName=FormatBtn,Path=Visibility,Converter={StaticResource NotVisibility}}">
                     <MenuItem.Icon>
                         <Image Source="Pic\New Disk1.png" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem x:Name="CreateFile" Header="New File" Click="CreteNewFile_Click">
+                <MenuItem x:Name="CreateFile" Header="New File" Click="CreteNewFile_Click" Visibility="{Binding ElementName=FormatBtn,Path=Visibility}">
                     <MenuItem.Icon>
                         <Image Source="Pic\File.jpg" Width="40" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem x:Name="CreateFolder" Header="New Folder" Click="CreateFolder_Click">
+                <MenuItem x:Name="CreateFolder" Header="New Folder" Click="CreateFolder_Click" Visibility="{Binding ElementName=FormatBtn,Path=Visibility,Converter={StaticResource NotVisibility}}">
                     <MenuItem.Icon>
                         <Image Source="Pic\Folder.jpg" Width="40" />
                     </MenuItem.Icon>

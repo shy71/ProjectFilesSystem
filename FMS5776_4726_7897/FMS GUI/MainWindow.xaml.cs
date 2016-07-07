@@ -167,8 +167,8 @@ namespace FMS_GUI
                     string disks = string.Join(" , ", GetDisksNames(path));
                     string folders = string.Join(" , ", GetFolderNames(path));
                       MessageBox.Show("Folder Name: "+name
-                          + "\nNumber Of Files: " + GetDisksNames(path).Count()
-                          + "\nFiles: "+ disks
+                          + "\nNumber Of Disks: " + GetDisksNames(path).Count()
+                          + "\nDisks: "+ disks
                           + "\nNumber Of Subfolders: " + GetFolderNames(path).Count()
                           + "\nSubfolders: " + folders ,"Prperties",MessageBoxButton.OK,MessageBoxImage.Information);
                 }

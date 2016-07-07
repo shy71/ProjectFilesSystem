@@ -31,6 +31,8 @@ namespace FMS_GUI
         {
             try
             {
+                if (name.GetText().Contains(' '))
+                    throw new Exception("You cant use spaces");
                 func(name.GetText());
                 this.Close();
             }

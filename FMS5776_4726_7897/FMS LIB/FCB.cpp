@@ -63,30 +63,7 @@ void FCB::read(char *dest, unsigned int status)//finish function
 		else
 			editLock = true;
 	}
-	//else//varying size of records
-	//{
-	//	int index = 0;
-	//	for (int i = 0; i < currRecNrInBuff; i++)
-	//	{
-	//		for (; Buffer[index] != '~'; index++);
-	//	}
-	//	index++;//to pass the ~
-	//	int size = 0;
-	//	for (int i = index; Buffer[i] != '~'; i++, size++);
-	//	dest = new char[size];
-	//	for (int i = index; i < size; i++)
-	//		dest[i] = Buffer[i];
-	//	//deal with a situation where he put in ~ in the data or eliminate that option from the user
-	//	//or leave that for the higher levels to deal with
-	//	if (status == 0)//read only
-	//		GoToNextRecord();
-	//	else // read & write
-	//	{
-	//		if (IOstatus == "I")
-	//			throw "You can't open it for editing since it's read only.";
-	//		editLock = true;
-	//	}
-	//}
+
 }
 void FCB::write(char *record)//ρεσ?
 {
@@ -190,7 +167,7 @@ int FCB::UpdatePlaceByRecordNumber(int num)
 }
 int FCB::GetSectorNumberByIndex(int num)
 {
-	int count=0;
+	int count = 0;
 	for (int i = 0; i < 1600; i++)
 		if (FAT[i])
 		{
@@ -201,23 +178,6 @@ int FCB::GetSectorNumberByIndex(int num)
 				return i * 2 + 1;
 		}
 	throw "File Out Of Range";
-}
-void FCB::MoveRecord(int num)
-{
-	throw "what???";
-	if (num == 0)
-		return;
-	if (num > 0)
-		if (fileDesc.eofRecNr < num + currRecNr)
-			throw "You have asked for a record out of the range of the file!";
-		else
-			for (int i = 0; i < num; i++)
-				GoToNextRecord();
-	else
-		if (num + currRecNr < 0)
-			throw "You have asked for a record out of the range of the file!";
-		else
-			seek(0, num + currRecNr);
 }
 #pragma region Edit Mode Functions
 void FCB::updateCancel()
@@ -251,74 +211,6 @@ void FCB::updateRecord(char *update)
 	write(update);
 }
 #pragma endregion
-void FCB::GoToNextRecord()
-{
-	throw "what???";
-	if (fileDesc.recFormat[0] == 'F')
-	{
-		if (currRecNrInBuff < 1020 / fileDesc.maxRecSize - 1)//In next sector
-		{
-			currRecNr++;
-			currRecNrInBuff++;
-		}
-		else
-		{
-			bool lastSector = true;
-			for (int i = currSecNr + 1; i < 3200; i++)
-				if (FAT[i / 2])
-					lastSector = false;
-			if (lastSector)
-			{
-				throw "The file has reached his end!";
-				////go back to begining
-				//for (int i = 0; i < 3200 && !FAT[i / 2]; i++)
-				//	currSecNr;
-				//currSecNr++;
-				//currRecNr = currRecNrInBuff = 0;
-			}
-			else
-			{
-				currRecNr++;
-				for (int i = currSecNr + 1; i < 3200 && !FAT[i / 2]; i++)
-					currSecNr = i;
-				currRecNrInBuff = 0;
-			}
-		}
-	}
-	//else // varying sizes
-	//{
-	//	if (currRecNr != fileDesc.eofRecNr)
-	//	{
-	//		int index = 0;
-	//		for (int i = 0; index < 1020 && i < currRecNrInBuff; index++)
-	//		{
-	//			if (Buffer[i] == '~')
-	//				i++;
-	//		}
-	//		if (index + 1 == 1020 || Buffer[index + 1] == NULL)//in next sector
-	//		{
-	//			for (int i = currSecNr + 1; i < 3200 && !FAT[i / 2]; i++)
-	//				currSecNr = i;
-	//			currSecNr++;
-	//			currRecNr++;
-	//			currRecNrInBuff = 0;
-	//		}
-	//		else
-	//		{
-	//			currRecNr++; 
-	//			currRecNrInBuff++;
-	//		}
-	//	}
-	//	else//it's the last record
-	//	{
-	//		//go back to begining
-	//		for (int i = 0; i < 3200 && !FAT[i / 2]; i++)
-	//			currSecNr;
-	//		currSecNr++;
-	//		currRecNr = currRecNrInBuff = 0;
-	//	}
-	//}
-}
 void FCB::addRecord(char *record)//need to be d
 {
 	flushFile();
